@@ -42,11 +42,13 @@ export function enhance(cfg: EnhanceConfig) {
     });
   }
 
-  // Hero 3D tilt follows the pointer (desktop mice only).
-  const stage = document.querySelector<HTMLElement>("[data-tilt]");
-  const inner = stage?.querySelector<HTMLElement>(".stage-inner");
-  const hero = stage?.closest("section");
-  if (inner && hero && !calm && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  // 3D: the hero scene swings with the pointer; cards tilt toward it with a moving glare.
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const scene = document.querySelector<HTMLElement>("[data-scene]");
+  const rig = scene?.querySelector<HTMLElement>(".scene-rig");
+  const glare = scene?.querySelector<HTMLElement>(".glare");
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+  if (!calm && finePointer && rig && hero) {
     let raf = 0;
     hero.addEventListener("pointermove", (e) => {
       cancelAnimationFrame(raf);
@@ -54,13 +56,36 @@ export function enhance(cfg: EnhanceConfig) {
         const r = hero.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
-        inner.style.setProperty("--ry", `${-10 + x * 14}deg`);
-        inner.style.setProperty("--rx", `${6 - y * 10}deg`);
+        rig.style.setProperty("--ry", `${-22 + x * 30}deg`);
+        rig.style.setProperty("--rx", `${12 - y * 18}deg`);
+        glare?.style.setProperty("--gx", `${50 + x * 100}%`);
+        glare?.style.setProperty("--gy", `${50 + y * 100}%`);
       });
     });
     hero.addEventListener("pointerleave", () => {
-      inner.style.removeProperty("--ry");
-      inner.style.removeProperty("--rx");
+      rig.style.removeProperty("--ry");
+      rig.style.removeProperty("--rx");
+    });
+  }
+  if (!calm && finePointer) {
+    document.querySelectorAll<HTMLElement>("[data-tilt3d]").forEach((card) => {
+      let raf = 0;
+      card.addEventListener("pointermove", (e) => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width;
+          const y = (e.clientY - r.top) / r.height;
+          card.style.setProperty("--ty", `${(x - 0.5) * 16}deg`);
+          card.style.setProperty("--tx", `${(0.5 - y) * 12}deg`);
+          card.style.setProperty("--gx", `${x * 100}%`);
+          card.style.setProperty("--gy", `${y * 100}%`);
+        });
+      });
+      card.addEventListener("pointerleave", () => {
+        card.style.setProperty("--tx", "0deg");
+        card.style.setProperty("--ty", "0deg");
+      });
     });
   }
 

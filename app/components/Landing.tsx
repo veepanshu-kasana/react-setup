@@ -13,6 +13,17 @@ const ICONS: Record<string, (p: { className?: string }) => React.JSX.Element> = 
 };
 const PROOF_ICONS = [I.Calendar, I.Users, I.Code, I.Award];
 
+/** Accent colours that rotate across cards, steps and stats (brand teal + Indian festive hues). */
+const ACCENTS = [
+  { tile: "bg-teal-50 text-teal-700 ring-teal-200", bar: "from-teal-300 via-teal-500 to-teal-700", glow: "rgb(31 165 156 / 0.35)", solid: "bg-teal-600", text: "text-teal-300" },
+  { tile: "bg-amber-50 text-amber-700 ring-amber-200", bar: "from-amber-300 via-orange-400 to-orange-600", glow: "rgb(245 158 11 / 0.35)", solid: "bg-amber-500", text: "text-amber-300" },
+  { tile: "bg-violet-50 text-violet-700 ring-violet-200", bar: "from-violet-300 via-violet-500 to-fuchsia-600", glow: "rgb(139 92 246 / 0.35)", solid: "bg-violet-600", text: "text-violet-300" },
+  { tile: "bg-rose-50 text-rose-700 ring-rose-200", bar: "from-rose-300 via-rose-500 to-pink-600", glow: "rgb(244 63 94 / 0.32)", solid: "bg-rose-600", text: "text-rose-300" },
+  { tile: "bg-sky-50 text-sky-700 ring-sky-200", bar: "from-sky-300 via-sky-500 to-blue-600", glow: "rgb(14 165 233 / 0.33)", solid: "bg-sky-600", text: "text-sky-300" },
+  { tile: "bg-lime-50 text-lime-800 ring-lime-200", bar: "from-lime-300 via-lime-500 to-green-600", glow: "rgb(101 163 13 / 0.33)", solid: "bg-lime-600", text: "text-lime-300" },
+];
+const acc = (i: number) => ACCENTS[i % ACCENTS.length];
+
 const NAV = [
   ["#features", "Features"],
   ["#services", "Services"],
@@ -31,10 +42,18 @@ function WaButton({ location, className = "", label = "Chat on WhatsApp" }: { lo
   );
 }
 
-function SectionHead({ eyebrow, title, sub, id, dark = false }: { eyebrow: string; title: string; sub?: string; id: string; dark?: boolean }) {
+const TONES = {
+  teal: "text-teal-700",
+  amber: "text-amber-700",
+  violet: "text-violet-700",
+  rose: "text-rose-700",
+  sky: "text-sky-700",
+} as const;
+
+function SectionHead({ eyebrow, title, sub, id, dark = false, tone = "teal" }: { eyebrow: string; title: string; sub?: string; id: string; dark?: boolean; tone?: keyof typeof TONES }) {
   return (
     <div className="reveal mx-auto max-w-2xl text-center">
-      <p className={`eyebrow ${dark ? "eyebrow-dark" : ""}`}>{eyebrow}</p>
+      <p className={`eyebrow ${dark ? "eyebrow-dark" : TONES[tone]}`}>{eyebrow}</p>
       <h2 id={id} className={`mt-3 text-3xl font-bold sm:text-4xl ${dark ? "text-white" : "text-ink"}`}>{title}</h2>
       {sub && <p className={`mt-4 text-lg ${dark ? "text-white/75" : "text-muted"}`}>{sub}</p>}
     </div>
@@ -107,116 +126,138 @@ const SHOP = [
 
 function Stars({ n }: { n: number }) {
   return (
-    <span className="flex gap-px text-[#d4a017]">
+    <span className="flex gap-px text-[#e0a100]">
       {[0, 1, 2, 3, 4].map((i) => (
-        <I.Star key={i} className={`size-2.5 ${i < n ? "" : "opacity-25"}`} />
+        <I.Star key={i} className={`size-3 ${i < n ? "" : "opacity-25"}`} />
       ))}
     </span>
   );
 }
 
+const SALES = [38, 52, 44, 67, 58, 81, 96];
+const BAR_COLORS = ["#5cc2c8", "#34b3b0", "#f59e0b", "#1fa59c", "#8b5cf6", "#f43f5e", "#1fa59c"];
+
+/*
+ * Hero 3D scene: three layers in real 3D space.
+ *   back  – WooCommerce sales dashboard
+ *   mid   – a WooCommerce single-product page
+ *   front – phone checkout with UPI, order + customer message chips
+ * Product photos: Unsplash License (free for commercial use). "Kalaa Ghar" is a made-up example store.
+ */
 function StoreShowcase() {
   return (
-    <div className="stage relative mx-auto w-full max-w-[35rem] px-1 pb-12 pt-4 sm:px-6" aria-hidden="true" data-tilt>
-     <div className="stage-inner relative">
-      {/* Desktop: a WooCommerce shop page */}
-      <div className="depth-0 overflow-hidden rounded-xl bg-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10">
-        <div className="flex items-center gap-1.5 border-b border-[#ececec] bg-[#f6f6f6] px-3 py-2">
-          <span className="size-2.5 rounded-full bg-[#ff5f57]" /><span className="size-2.5 rounded-full bg-[#febc2e]" /><span className="size-2.5 rounded-full bg-[#28c840]" />
-          <span className="ml-2 flex h-5 flex-1 items-center gap-1 rounded-md bg-white px-2 text-[10px] text-[#5f6368] ring-1 ring-[#e3e3e3]">
-            <svg viewBox="0 0 24 24" className="size-2.5" fill="currentColor"><path d="M17 9V7A5 5 0 0 0 7 7v2H5v13h14V9Zm-8-2a3 3 0 0 1 6 0v2H9Z" /></svg>
-            kalaaghar.in/shop
-          </span>
-        </div>
-        <div className="flex items-center justify-between gap-3 px-4 pb-2.5 pt-3">
-          <span className="leading-none">
-            <span className="block font-display text-[15px] font-bold tracking-tight text-[#3d2817]">Kalaa Ghar</span>
-            <span className="text-[8px] uppercase tracking-[0.18em] text-[#8a6d4f]">Handcrafted in India</span>
-          </span>
-          <span className="hidden h-6 flex-1 items-center rounded border border-[#ddd] px-2 text-[9px] text-[#999] sm:flex">Search products…</span>
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold text-[#333]">
-            ₹3,148 <span className="relative"><I.Cart className="size-4" /><span className="absolute -right-1.5 -top-1.5 grid size-3.5 place-items-center rounded-full bg-[#3d2817] text-[8px] text-white">3</span></span>
-          </span>
-        </div>
-        <div className="flex gap-4 border-y border-[#ececec] px-4 py-1.5 text-[10px] font-medium text-[#555]">
-          <span className="font-semibold text-[#3d2817]">Shop</span><span>Kurtas</span><span>Jewellery</span><span className="hidden sm:inline">Home décor</span><span>Gifts</span>
-        </div>
-        <div className="px-4 pb-4 pt-2.5">
-          <p className="text-[9px] text-[#777]">Home / Shop</p>
-          <div className="mt-1 flex items-end justify-between">
-            <p className="font-display text-sm font-bold text-[#222]">Shop</p>
-            <span className="rounded border border-[#ddd] px-1.5 py-0.5 text-[9px] text-[#555]">Sort by popularity ▾</span>
-          </div>
-          <p className="mt-0.5 text-[9px] text-[#777]">Showing 1–12 of 48 results</p>
-          <ul className="mt-2.5 grid grid-cols-3 gap-2.5">
-            {SHOP.map((p) => (
-              <li key={p.name} className="text-center">
-                <div className="relative">
-                  <img src={p.img} alt="" width={240} height={240} loading="lazy" decoding="async" className="aspect-square w-full rounded-sm object-cover" />
-                  {p.was && (
-                    <span className="absolute -left-1 -top-1 grid size-7 place-items-center rounded-full bg-[#5b8a4a] text-[8px] font-bold text-white shadow">Sale!</span>
-                  )}
-                </div>
-                <p className="mt-1.5 line-clamp-2 text-[9.5px] font-medium leading-tight text-[#333]">{p.name}</p>
-                <div className="mt-1 flex items-center justify-center gap-1"><Stars n={p.rating} /><span className="text-[8px] text-[#888]">({p.reviews})</span></div>
-                <p className="mt-0.5 text-[10px]">
-                  {p.was && <del className="mr-1 text-[#999]">{p.was}</del>}
-                  <ins className="font-bold text-[#222] no-underline">{p.now}</ins>
-                </p>
-                <span className="mt-1.5 inline-block rounded-sm bg-[#3d2817] px-2 py-1 text-[8.5px] font-semibold text-white">Add to cart</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Phone: WooCommerce "Order received" page */}
-      <div className="depth-2 absolute -bottom-1 right-0 w-[44%] max-w-[12.5rem] rounded-[1.6rem] bg-[#1b1b1b] p-1.5 shadow-[0_30px_60px_-15px_rgb(0_0_0/0.7)] ring-1 ring-white/15 sm:right-2">
-        <div className="overflow-hidden rounded-[1.25rem] bg-white">
-          <div className="flex items-center justify-between px-3 pt-1.5 text-[8px] font-semibold text-[#222]"><span>10:42</span><span className="mt-0.5 h-1.5 w-10 rounded-full bg-[#1b1b1b]" /><span>5G</span></div>
-          <div className="px-2.5 pb-3 pt-2">
-            <p className="font-display text-[11px] font-bold text-[#222]">Order received</p>
-            <p className="mt-1 rounded bg-[#f0f7ee] px-1.5 py-1 text-[8.5px] leading-snug text-[#3f6b2f]">Thank you. Your order has been received.</p>
-            <dl className="mt-2 space-y-1 text-[8.5px] text-[#555]">
-              <div className="flex justify-between"><dt>Order number:</dt><dd className="font-bold text-[#222]">4821</dd></div>
-              <div className="flex justify-between"><dt>Date:</dt><dd className="font-bold text-[#222]">15 Oct 2026</dd></div>
-              <div className="flex justify-between"><dt>Total:</dt><dd className="font-bold text-[#222]">₹3,148</dd></div>
-              <div className="flex justify-between"><dt>Payment:</dt><dd className="font-bold text-[#222]">UPI · Razorpay</dd></div>
-            </dl>
-            <div className="mt-2 flex items-center gap-1.5 border-t border-[#eee] pt-2">
-              <img src="/showcase/kurta.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-7 rounded-sm object-cover" />
-              <img src="/showcase/bangles.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-7 rounded-sm object-cover" />
-              <span className="text-[8px] leading-tight text-[#777]">2 items · Delivery by Sat, 18 Oct</span>
+    <div className="scene relative mx-auto w-full max-w-[36rem] px-3 pb-24 pt-44 sm:px-8 lg:pt-40" aria-hidden="true" data-scene>
+      <div className="scene-in">
+        <div className="scene-rig relative">
+          {/* BACK: WooCommerce admin sales card */}
+          <div className="layer-back absolute -left-2 -top-40 w-[56%] rounded-2xl bg-[#1d2327] p-3.5 text-white shadow-2xl ring-1 ring-white/10 sm:-left-8">
+            <div className="flex items-center justify-between text-[10px] text-white/70">
+              <span className="flex items-center gap-1.5"><span className="grid size-4 place-items-center rounded bg-[#7f54b3] text-[8px] font-bold text-white">W</span>WooCommerce · Analytics</span>
+              <span>This week</span>
+            </div>
+            <div className="mt-2 flex items-end justify-between">
+              <div>
+                <p className="text-[10px] text-white/60">Net sales</p>
+                <p className="font-display text-xl font-bold">₹4,82,350</p>
+              </div>
+              <span className="rounded-full bg-[#22c55e]/20 px-2 py-0.5 text-[10px] font-bold text-[#4ade80]">▲ 38%</span>
+            </div>
+            <div className="mt-3 flex h-14 items-end gap-1.5">
+              {SALES.map((v, i) => (
+                <span key={i} className="sales-bar flex-1 rounded-t" style={{ height: `${v}%`, background: BAR_COLORS[i], animationDelay: `${0.6 + i * 0.08}s` }} />
+              ))}
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* WooCommerce admin: new order */}
-      <div className="depth-3 float-a absolute -top-3 right-0 w-[15rem] rounded-xl bg-white p-3 shadow-xl ring-1 ring-black/5 sm:right-4">
-        <div className="flex items-center justify-between text-[10px] text-[#646970]">
-          <span className="font-semibold text-[#2271b1]">#4821 Priya Sharma</span>
-          <span className="rounded bg-[#c6e1c6] px-1.5 py-0.5 font-semibold text-[#2c4a1f]">Processing</span>
-        </div>
-        <div className="mt-1.5 flex items-center justify-between text-[10px]">
-          <span className="text-[#646970]">Pune · 2 min ago</span>
-          <span className="font-bold text-[#1d2327]">₹3,148.00</span>
-        </div>
-      </div>
+          {/* MID: WooCommerce single product page */}
+          <div className="layer-mid glare relative overflow-hidden rounded-2xl bg-white shadow-[0_40px_90px_-25px_rgb(0_0_0/0.75)] ring-1 ring-white/20">
+            <div className="flex items-center gap-1.5 border-b border-[#ececec] bg-[#f6f6f6] px-3 py-2">
+              <span className="size-2.5 rounded-full bg-[#ff5f57]" /><span className="size-2.5 rounded-full bg-[#febc2e]" /><span className="size-2.5 rounded-full bg-[#28c840]" />
+              <span className="ml-2 flex h-5 flex-1 items-center gap-1 rounded-md bg-white px-2 text-[10px] text-[#5f6368] ring-1 ring-[#e3e3e3]">
+                <svg viewBox="0 0 24 24" className="size-2.5" fill="currentColor"><path d="M17 9V7A5 5 0 0 0 7 7v2H5v13h14V9Zm-8-2a3 3 0 0 1 6 0v2H9Z" /></svg>
+                kalaaghar.in/product/chanderi-silk-kurta-set
+              </span>
+            </div>
+            <div className="flex items-center justify-between px-4 py-2.5">
+              <span className="leading-none">
+                <span className="block font-display text-[14px] font-bold tracking-tight text-[#3d2817]">Kalaa Ghar</span>
+                <span className="text-[7.5px] uppercase tracking-[0.18em] text-[#8a6d4f]">Handcrafted in India</span>
+              </span>
+              <span className="hidden gap-3 text-[10px] font-medium text-[#555] sm:flex"><span>Kurtas</span><span>Jewellery</span><span>Gifts</span></span>
+              <span className="relative text-[#333]"><I.Cart className="size-4" /><span className="absolute -right-1.5 -top-1.5 grid size-3.5 place-items-center rounded-full bg-[#e2581c] text-[8px] font-bold text-white">2</span></span>
+            </div>
+            <div className="grid grid-cols-[44%_1fr] gap-3.5 px-4 pb-4">
+              <div className="relative">
+                <img src="/showcase/kurta.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="aspect-[4/5] w-full rounded-lg object-cover" />
+                <span className="absolute left-1.5 top-1.5 grid size-8 place-items-center rounded-full bg-[#e2581c] text-[9px] font-bold text-white shadow-md">Sale!</span>
+                <div className="mt-1.5 grid grid-cols-3 gap-1">
+                  {["/showcase/kurta.webp", "/showcase/bangles.webp", "/showcase/earrings.webp"].map((src, i) => (
+                    <img key={src} src={src} alt="" width={240} height={240} loading="lazy" decoding="async" className={`aspect-square w-full rounded object-cover ${i === 0 ? "ring-2 ring-[#3d2817]" : "opacity-80"}`} />
+                  ))}
+                </div>
+              </div>
+              <div className="min-w-0 pt-0.5">
+                <p className="text-[8.5px] text-[#888]">Home / Kurtas</p>
+                <p className="mt-0.5 font-display text-[13px] font-bold leading-tight text-[#222]">Chanderi Silk Kurta Set</p>
+                <div className="mt-1 flex items-center gap-1"><Stars n={5} /><span className="text-[8.5px] text-[#666]">(38 reviews)</span></div>
+                <p className="mt-1.5 text-[13px]"><del className="mr-1 text-[10px] text-[#999]">₹3,499</del><ins className="font-bold text-[#e2581c] no-underline">₹2,449</ins></p>
+                <p className="mt-2 text-[8.5px] font-semibold text-[#444]">Size</p>
+                <div className="mt-1 flex gap-1">
+                  {["S", "M", "L", "XL"].map((z) => (
+                    <span key={z} className={`grid h-5 min-w-5 place-items-center rounded border px-1 text-[8.5px] font-semibold ${z === "L" ? "border-[#3d2817] bg-[#3d2817] text-white" : "border-[#ddd] text-[#444]"}`}>{z}</span>
+                  ))}
+                </div>
+                <div className="mt-2 flex gap-1.5">
+                  <span className="grid h-6 w-8 place-items-center rounded border border-[#ddd] text-[9px] text-[#444]">1</span>
+                  <span className="grid h-6 flex-1 place-items-center rounded bg-[#3d2817] text-[9px] font-semibold text-white">Add to cart</span>
+                </div>
+                <ul className="mt-2 space-y-0.5 text-[8.5px] text-[#2f6b3a]">
+                  <li>✓ UPI, cards & Cash on Delivery</li>
+                  <li>✓ Delivery to 302001 by Sat</li>
+                  <li>✓ Free shipping above ₹999</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-      {/* A customer message on WhatsApp */}
-      <div className="depth-3 float-b absolute bottom-10 left-0 w-[15.5rem] rounded-xl bg-[#efeae2] p-2 shadow-xl ring-1 ring-black/5 sm:-left-5">
-        <div className="flex items-center gap-2 px-1 pb-1.5">
-          <img src="/showcase/necklace.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-6 rounded-full object-cover" />
-          <span className="text-[10px] font-semibold text-[#111b21]">Ananya M.</span>
-          <span className="ml-auto text-[#0b7a3b]"><I.WhatsApp className="size-3.5" /></span>
+          {/* FRONT: phone with UPI checkout */}
+          <div className="layer-front absolute -bottom-20 left-0 w-[40%] max-w-[11.5rem] rounded-[1.7rem] bg-[#111] p-1.5 shadow-[0_40px_70px_-15px_rgb(0_0_0/0.8)] ring-1 ring-white/20 sm:-left-8">
+            <div className="overflow-hidden rounded-[1.35rem] bg-white">
+              <div className="flex items-center justify-between px-3 pt-1.5 text-[8px] font-semibold text-[#222]"><span>10:42</span><span className="h-1.5 w-9 rounded-full bg-[#111]" /><span>5G</span></div>
+              <div className="px-2.5 pb-3 pt-2">
+                <p className="text-[9px] font-semibold text-[#666]">Checkout · Pay ₹2,449</p>
+                <p className="mt-1.5 text-[8.5px] font-semibold text-[#444]">Pay with UPI</p>
+                <div className="mt-1 grid grid-cols-3 gap-1">
+                  {[["GPay", "#1a73e8"], ["PhonePe", "#5f259f"], ["Paytm", "#00b9f1"]].map(([n, c]) => (
+                    <span key={n} className="rounded-md py-1.5 text-center text-[7.5px] font-bold text-white" style={{ background: c }}>{n}</span>
+                  ))}
+                </div>
+                <div className="mt-1.5 flex items-center justify-between rounded-md px-2 py-1.5 text-[8.5px] font-semibold text-[#444] ring-1 ring-[#e5e5e5]">Cash on Delivery <span className="size-2.5 rounded-full ring-1 ring-[#bbb]" /></div>
+                <div className="mt-2 rounded-md bg-[#0b6e6a] py-1.5 text-center text-[9px] font-bold text-white">Pay securely</div>
+              </div>
+            </div>
+          </div>
+
+          {/* FRONT: new order chip */}
+          <div className="layer-chip float-a absolute -right-2 -top-16 flex items-center gap-2.5 rounded-xl bg-white px-3 py-2 shadow-2xl ring-1 ring-black/5 sm:-right-8">
+            <span className="grid size-8 place-items-center rounded-full bg-[#c6e1c6] text-[#2c4a1f]"><I.Cart className="size-4" /></span>
+            <span className="text-[10px] leading-tight">
+              <b className="block text-[11px] text-[#1d2327]">New order #4821 · ₹2,449</b>
+              <span className="text-[#646970]">Priya S., Pune · </span><span className="rounded bg-[#c6e1c6] px-1 font-semibold text-[#2c4a1f]">Processing</span>
+            </span>
+          </div>
+
+          {/* FRONT: customer WhatsApp message */}
+          <div className="layer-chip2 float-b absolute -bottom-20 -right-2 w-[52%] max-w-[15rem] rounded-xl bg-[#e7ffdb] p-2.5 shadow-2xl ring-1 ring-black/5 sm:-right-6">
+            <div className="flex items-center gap-1.5 text-[9.5px] font-semibold text-[#111b21]">
+              <img src="/showcase/necklace.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-5 rounded-full object-cover" />
+              Ananya M. <span className="ml-auto text-[#0b7a3b]"><I.WhatsApp className="size-3.5" /></span>
+            </div>
+            <p className="mt-1 text-[10.5px] leading-snug text-[#111b21]">Got my jhumkas today, they look even better than the photos!</p>
+            <p className="text-right text-[8px] text-[#667781]">11:06 am ✓✓</p>
+          </div>
         </div>
-        <p className="rounded-lg rounded-tl-none bg-white px-2.5 py-1.5 text-[11px] leading-snug text-[#111b21]">
-          Got my jhumkas today, they look even better than the photos. Ordering the bangles for my sister too!
-          <span className="mt-0.5 block text-right text-[8px] text-[#667781]">11:06 am</span>
-        </p>
       </div>
-     </div>
     </div>
   );
 }
@@ -225,8 +266,11 @@ function StoreShowcase() {
 
 function Hero() {
   return (
-    <section id="top" aria-labelledby="hero-title" className="band-dark">
-      <Circuit className="-right-24 top-10 hidden w-[38rem] lg:block" />
+    <section id="top" aria-labelledby="hero-title" className="band-dark hero" data-hero>
+      <div className="grid-floor" aria-hidden="true" />
+      <div className="orb orb-teal" aria-hidden="true" />
+      <div className="orb orb-amber" aria-hidden="true" />
+      <div className="orb orb-violet" aria-hidden="true" />
       <Circuit className="-left-40 bottom-0 w-[30rem] opacity-60" />
       <div className="container-x grid gap-10 pb-14 pt-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:pb-24 lg:pt-14">
         <div>
@@ -241,7 +285,7 @@ function Hero() {
             <span className="size-2 rounded-full bg-teal-300" aria-hidden="true" /> 10+ years · 100+ projects delivered
           </p>
           <h1 id="hero-title" className="mt-5 text-[2.35rem] font-bold leading-[1.12] sm:text-5xl lg:text-[3.35rem]">
-            WooCommerce Website Development Company in <span className="text-teal-300">India</span>
+            WooCommerce Website Development Company in <span className="tricolour">India</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-white/85 sm:text-xl">
             RannLab builds fast, mobile-first online stores that turn visitors into paying customers, with Indian payments, shipping and GST ready from day one.
@@ -279,7 +323,7 @@ function Proof() {
             const Icon = PROOF_ICONS[i];
             return (
               <li key={p.label} className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
-                <span className="icon-tile shrink-0"><Icon /></span>
+                <span className={`grid size-12 shrink-0 place-items-center rounded-xl ring-1 ${acc(i).tile}`}><Icon /></span>
                 <span>
                   <span className="block whitespace-nowrap font-display text-2xl font-bold text-ink sm:text-3xl">{p.value}</span>
                   <span className="block text-sm text-muted">{p.label}</span>
@@ -307,14 +351,15 @@ function Pains() {
       <div className="container-x">
         <SectionHead
           id="pains-title"
+          tone="rose"
           eyebrow="Why most online stores don't sell"
           title="A good-looking website is not the same as a store that sells"
           sub="These are the problems we hear most from Indian business owners, and exactly what our WooCommerce builds are designed to fix."
         />
         <ul className="mt-12 grid gap-6 md:grid-cols-3">
-          {PAINS.map((p) => (
-            <li key={p.title} className="reveal rounded-2xl bg-surface p-6 ring-1 ring-line">
-              <span className="grid size-10 place-items-center rounded-full bg-danger-50 text-danger ring-1 ring-danger/15"><I.Cross /></span>
+          {PAINS.map((p, i) => (
+            <li key={p.title} className={`tilt reveal rounded-2xl p-6 ring-1 ${["bg-rose-50 ring-rose-100", "bg-amber-50 ring-amber-100", "bg-violet-50 ring-violet-100"][i]}`} data-tilt3d style={{ "--glow": [acc(3), acc(1), acc(2)][i].glow } as React.CSSProperties}>
+              <span className={`pop grid size-10 place-items-center rounded-full bg-white ring-1 ${["text-rose-600 ring-rose-200", "text-amber-700 ring-amber-200", "text-violet-600 ring-violet-200"][i]}`}><I.Cross /></span>
               <h3 className="mt-4 text-lg font-bold text-ink">{p.title}</h3>
               <p className="mt-2 text-muted">{p.body}</p>
             </li>
@@ -327,7 +372,7 @@ function Pains() {
 
 function StoreTypes() {
   return (
-    <section aria-labelledby="types-title" className="bg-white pb-16 sm:pb-24">
+    <section aria-labelledby="types-title" className="bg-gradient-to-b from-white via-amber-50/70 to-white pb-16 sm:pb-24">
       <div className="container-x">
         <div className="reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
@@ -342,10 +387,11 @@ function StoreTypes() {
         <ul className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 xl:grid-cols-6">
           {STORE_TYPES.map((t, i) => (
             <li key={t.title} className="reveal photo-card group" style={{ animationDelay: `${(i % 3) * 90}ms` }}>
-              <div className="relative overflow-hidden rounded-2xl bg-surface">
+              <div className="tilt relative overflow-hidden rounded-2xl bg-surface shadow-lg" data-tilt3d style={{ "--glow": acc(i).glow } as React.CSSProperties}>
                 <img src={t.img} srcSet={`${t.img.replace(".webp", "-240.webp")} 240w, ${t.img} 400w`} sizes="(min-width: 1280px) 200px, (min-width: 768px) 31vw, 46vw" alt={t.title} width={400} height={500} loading="lazy" decoding="async" className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/25 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
+                <span className={`absolute left-3 top-3 h-1.5 w-8 rounded-full bg-gradient-to-r ${acc(i).bar}`} aria-hidden="true" />
+                <div className="pop absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
                   <h3 className="font-display text-[0.95rem] font-bold leading-snug text-white sm:text-base">{t.title}</h3>
                   <p className="mt-1 text-xs leading-snug text-white/85">{t.detail}</p>
                 </div>
@@ -358,14 +404,15 @@ function StoreTypes() {
   );
 }
 
-function IconCards({ items }: { items: readonly { icon: string; title: string; body: string }[] }) {
+function IconCards({ items, offset = 0 }: { items: readonly { icon: string; title: string; body: string }[]; offset?: number }) {
   return (
     <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((f, i) => {
         const Icon = ICONS[f.icon];
         return (
-          <li key={f.title} className="card reveal" style={{ animationDelay: `${(i % 3) * 90}ms` }}>
-            <span className="icon-tile"><Icon /></span>
+          <li key={f.title} className="card tilt reveal" data-tilt3d style={{ animationDelay: `${(i % 3) * 90}ms`, "--glow": acc(i + offset).glow } as React.CSSProperties}>
+            <span className={`absolute inset-x-6 top-0 h-1 rounded-b-full bg-gradient-to-r ${acc(i + offset).bar}`} aria-hidden="true" />
+            <span className={`pop grid size-12 place-items-center rounded-xl ring-1 ${acc(i + offset).tile}`}><Icon /></span>
             <h3 className="mt-5 text-lg font-bold text-ink">{f.title}</h3>
             <p className="mt-2 text-muted">{f.body}</p>
           </li>
@@ -377,10 +424,11 @@ function IconCards({ items }: { items: readonly { icon: string; title: string; b
 
 function Features() {
   return (
-    <section id="features" aria-labelledby="features-title" className="scroll-mt-20 bg-surface py-16 sm:py-24">
+    <section id="features" aria-labelledby="features-title" className="mesh-warm scroll-mt-20 py-16 sm:py-24">
       <div className="container-x">
         <SectionHead
           id="features-title"
+          tone="amber"
           eyebrow="Built for India"
           title="Everything your store needs to sell from day one"
           sub="Every store we launch comes with the payments, shipping, tax and tracking Indian e-commerce businesses rely on."
@@ -429,10 +477,10 @@ function QuoteBlock() {
 
 function Services() {
   return (
-    <section id="services" aria-labelledby="services-title" className="scroll-mt-20 bg-surface py-16 sm:py-24">
+    <section id="services" aria-labelledby="services-title" className="mesh-cool scroll-mt-20 py-16 sm:py-24">
       <div className="container-x">
-        <SectionHead id="services-title" eyebrow="Our WooCommerce services" title="From a brand-new store to a complete rebuild" />
-        <IconCards items={SERVICES} />
+        <SectionHead id="services-title" tone="violet" eyebrow="Our WooCommerce services" title="From a brand-new store to a complete rebuild" />
+        <IconCards items={SERVICES} offset={3} />
         <div className="mt-10 text-center">
           <a href="#quote" data-track="cta_click" data-loc="services" className="btn btn-primary">Discuss my project <I.Arrow /></a>
         </div>
@@ -448,11 +496,12 @@ function Process() {
       <div className="container-x">
         <SectionHead dark id="process-title" eyebrow="How it works" title="Your store live in about 4 weeks" sub="A simple, transparent process with your approval at every step." />
         <ol className="relative mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <span className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-teal-500/0 via-teal-500/60 to-teal-500/0 lg:block" aria-hidden="true" />
-          {PROCESS.map((p) => (
-            <li key={p.step} className="reveal relative rounded-2xl bg-night-2 p-6 ring-1 ring-white/10 transition hover:-translate-y-1 hover:ring-teal-500/50">
+          <span className="absolute left-0 right-0 top-6 hidden h-0.5 bg-gradient-to-r from-teal-400/0 via-amber-400/70 to-rose-400/0 lg:block" aria-hidden="true" />
+          {PROCESS.map((p, i) => (
+            <li key={p.step} className="tilt reveal relative rounded-2xl bg-night-2 p-6 ring-1 ring-white/10" data-tilt3d style={{ "--glow": [acc(0), acc(1), acc(2), acc(3)][i].glow } as React.CSSProperties}>
+              <span className={`absolute inset-x-6 top-0 h-1 rounded-b-full bg-gradient-to-r ${[acc(0), acc(1), acc(2), acc(3)][i].bar}`} aria-hidden="true" />
               <div className="flex items-center justify-between">
-                <span className="step-num grid size-12 place-items-center rounded-xl bg-teal-700 font-display text-lg font-bold text-white ring-4 ring-night">{p.step}</span>
+                <span className={`pop step-num grid size-12 place-items-center rounded-xl bg-gradient-to-br font-display text-lg font-bold text-white ring-4 ring-night ${[acc(0), acc(1), acc(2), acc(3)][i].bar}`}>{p.step}</span>
                 <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/90">{p.time}</span>
               </div>
               <h3 className="mt-5 text-lg font-bold text-white">{p.title}</h3>
@@ -467,10 +516,11 @@ function Process() {
 
 function Packages() {
   return (
-    <section id="packages" aria-labelledby="packages-title" className="scroll-mt-20 bg-white py-16 sm:py-24">
+    <section id="packages" aria-labelledby="packages-title" className="mesh-cool scroll-mt-20 py-16 sm:py-24">
       <div className="container-x">
         <SectionHead
           id="packages-title"
+          tone="sky"
           eyebrow="Packages"
           title="Choose a starting point. We tailor the rest."
           sub="Every package is a fixed-price project. Tell us what you need and get an exact quote within 24 hours."
@@ -479,10 +529,12 @@ function Packages() {
           {PACKAGES.map((p) => (
             <li
               key={p.name}
-              className={`reveal relative flex flex-col rounded-2xl p-7 ${p.featured ? "bg-night text-white shadow-[0_30px_60px_-25px_rgb(11_110_106/0.7)] ring-2 ring-teal-500" : "bg-white ring-1 ring-line"}`}
+              data-tilt3d
+              style={{ "--glow": p.featured ? "rgb(245 158 11 / 0.35)" : acc(PACKAGES.indexOf(p) * 2).glow } as React.CSSProperties}
+              className={`tilt reveal relative flex flex-col rounded-2xl p-7 ${p.featured ? "featured-ring bg-night text-white shadow-[0_30px_60px_-25px_rgb(11_110_106/0.7)]" : "bg-white ring-1 ring-line"}`}
             >
               {p.featured && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-teal-500 px-4 py-1 text-sm font-bold text-night">Most popular</span>
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 px-4 py-1 text-sm font-bold text-night shadow-lg">Most popular</span>
               )}
               <h3 className={`text-xl font-bold ${p.featured ? "text-white" : "text-ink"}`}>{p.name}</h3>
               <p className={p.featured ? "mt-1 text-white/75" : "mt-1 text-muted"}>{p.forWho}</p>
@@ -575,11 +627,11 @@ function WhyRannlab() {
           </a>
         </div>
         <ul className="grid gap-5 sm:grid-cols-2">
-          {WHY.map((w) => {
+          {WHY.map((w, i) => {
             const Icon = ICONS[w.icon];
             return (
-              <li key={w.title} className="reveal rounded-2xl bg-surface p-6 ring-1 ring-line">
-                <span className="icon-tile bg-white"><Icon /></span>
+              <li key={w.title} className="tilt reveal rounded-2xl bg-surface p-6 ring-1 ring-line" data-tilt3d style={{ "--glow": acc(i + 1).glow } as React.CSSProperties}>
+                <span className={`pop grid size-12 place-items-center rounded-xl ring-1 ${acc(i + 1).tile}`}><Icon /></span>
                 <h3 className="mt-4 text-lg font-bold text-ink">{w.title}</h3>
                 <p className="mt-2 text-muted">{w.body}</p>
               </li>
