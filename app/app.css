@@ -1,15 +1,146 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+/* Self-hosted variable font (latin + latin-ext for ₹), bundled by Vite: no third-party request */
+@font-face {
+  font-family: "Plus Jakarta Sans Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("../node_modules/@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("../node_modules/@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+@theme {
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-brand: #5b21b6;
+  --color-brand-600: #4c1d95;
+  --color-brand-50: #f5f3ff;
+  --color-ink: #0f172a;
+  --color-ink-2: #334155;
+  --color-muted: #52607a;
+  --color-line: #e2e8f0;
+  --color-surface: #f8fafc;
+  --color-success: #15803d;
+  --color-success-50: #ecfdf3;
+  --color-danger: #b91c1c;
+  --color-danger-50: #fef2f2;
+  --color-wa: #0b7a3b;
+  --color-wa-600: #08622f;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+/* Font is self-hosted via @fontsource (bundled by Vite): no third-party request.
+   Metric-adjusted fallback so the font swap causes no layout shift (CLS) */
+@font-face {
+  font-family: "Plus Jakarta Sans Fallback";
+  src: local("Arial");
+  ascent-override: 96%;
+  descent-override: 21%;
+  line-gap-override: 0%;
+  size-adjust: 106%;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  :focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold transition-colors;
+  }
+  .btn-sm {
+    @apply min-h-11 rounded-lg px-4 py-2 text-sm;
+  }
+  .btn-primary {
+    @apply bg-brand text-white hover:bg-brand-600 disabled:opacity-70;
+  }
+  .btn-outline {
+    @apply bg-white text-brand ring-2 ring-brand ring-inset hover:bg-brand-50;
+  }
+  .btn-light {
+    @apply bg-white text-brand hover:bg-brand-50;
+  }
+  .btn-wa {
+    @apply bg-wa text-white hover:bg-wa-600;
+  }
+  .btn-ghost {
+    @apply bg-white text-ink ring-1 ring-line ring-inset hover:bg-surface;
+  }
+
+  .eyebrow {
+    @apply text-sm font-bold uppercase tracking-wider text-brand;
+  }
+  .eyebrow-dark {
+    @apply text-[#c4b5fd];
+  }
+
+  .card {
+    @apply rounded-2xl bg-white p-6 ring-1 ring-line transition-shadow hover:shadow-lg;
+  }
+  .icon-tile {
+    @apply grid size-12 place-items-center rounded-xl bg-brand-50 text-brand;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+  .field {
+    @apply block min-h-12 w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-[#64748b] focus:border-brand focus:ring-2 focus:ring-brand/30 focus:outline-none;
+  }
+  .field[aria-invalid="true"] {
+    @apply border-danger;
+  }
+  .err {
+    @apply mt-1.5 text-sm font-medium text-danger;
+  }
+
+  .hero-bg {
+    background:
+      radial-gradient(60rem 30rem at 85% -10%, rgb(167 139 250 / 0.35), transparent 60%),
+      radial-gradient(40rem 25rem at -10% 110%, rgb(56 189 248 / 0.18), transparent 60%),
+      linear-gradient(135deg, #2e1065 0%, #4c1d95 55%, #3b0764 100%);
+  }
+
+  .skip-link {
+    @apply absolute left-3 top-3 z-[60] -translate-y-24 rounded-lg bg-white px-4 py-2 font-bold text-brand shadow-lg focus:translate-y-0;
   }
 }
