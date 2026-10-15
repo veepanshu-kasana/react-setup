@@ -509,9 +509,23 @@ function WhyRannlab() {
 function Faq() {
   return (
     <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 bg-surface py-16 sm:py-24">
-      <div className="container-x max-w-3xl">
-        <SectionHead id="faq-title" eyebrow="FAQ" title="WooCommerce development: common questions" />
-        <div className="mt-10 space-y-3">
+      <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <p className="eyebrow">FAQ</p>
+          <h2 id="faq-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">WooCommerce development: common questions</h2>
+          <p className="mt-4 text-lg text-muted">Straight answers on cost, timelines, payments and what happens after launch.</p>
+          <div className="mt-8 rounded-2xl bg-white p-6 ring-1 ring-line">
+            <p className="font-display text-lg font-bold text-ink">Still have a question?</p>
+            <p className="mt-1 text-muted">Talk to a WooCommerce expert. We usually reply within a few hours.</p>
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+              <WaButton location="faq" className="flex-1" label="WhatsApp us" />
+              <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="faq" className="btn btn-ghost flex-1">
+                <I.Phone /> Call now
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="min-w-0 space-y-3 lg:mt-4">
           {FAQS.map((f, i) => (
             <details key={f.q} className="group rounded-2xl bg-white p-5 ring-1 ring-line open:ring-teal-300 sm:p-6" open={i === 0}>
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
