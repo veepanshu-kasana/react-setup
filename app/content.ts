@@ -209,3 +209,16 @@ export const FAQS = [
     a: "We can arrange fast hosting and a domain for you, or use your existing ones. Every package includes free support after launch, and ongoing care plans are available.",
   },
 ];
+
+/**
+ * Store types shown with photos. Photos: Unsplash License (free for commercial use).
+ * Sources: unsplash.com/photos/ DsSm6HDsgT4, e1pWGcMEaqU, YfsZ5QJXsYA, gzOhplzhdc8, jhm3WYB91AU, sCFL6R7loQk
+ */
+export const STORE_TYPES = [
+  { img: "/showcase/cat-fashion.webp", title: "Fashion & ethnic wear", detail: "Size charts, colour swatches and easy exchanges" },
+  { img: "/showcase/cat-jewellery.webp", title: "Jewellery & accessories", detail: "Zoomable photos, gift wrap and COD limits" },
+  { img: "/showcase/cat-handicrafts.webp", title: "Handicrafts & gifting", detail: "Made-to-order items, gift notes and bulk orders" },
+  { img: "/showcase/cat-spices.webp", title: "Food, spices & organic", detail: "Weight-based pricing, FSSAI details and subscriptions" },
+  { img: "/showcase/cat-decor.webp", title: "Home décor & pottery", detail: "Fragile-item shipping rules and pincode checks" },
+  { img: "/showcase/cat-beauty.webp", title: "Beauty & wellness", detail: "Ingredient tabs, bundles and repeat-order reminders" },
+];

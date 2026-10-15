@@ -17,6 +17,53 @@ export function enhance(cfg: EnhanceConfig) {
     if (el) dl.push({ event: el.dataset.track, location: el.dataset.loc, package: el.dataset.pkg });
   });
 
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Scroll reveal: only blocks that start below the fold are hidden, so nothing visible ever flickers.
+  if (!calm && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          en.target.classList.remove("reveal-pending");
+          en.target.classList.add("reveal-show");
+          io.unobserve(en.target);
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px" },
+    );
+    // Measure everything first, then write, so the browser lays out the page only once.
+    const below = Array.from(document.querySelectorAll<HTMLElement>(".reveal")).filter(
+      (el) => el.getBoundingClientRect().top > innerHeight,
+    );
+    below.forEach((el) => {
+      el.classList.add("reveal-pending");
+      io.observe(el);
+    });
+  }
+
+  // Hero 3D tilt follows the pointer (desktop mice only).
+  const stage = document.querySelector<HTMLElement>("[data-tilt]");
+  const inner = stage?.querySelector<HTMLElement>(".stage-inner");
+  const hero = stage?.closest("section");
+  if (inner && hero && !calm && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let raf = 0;
+    hero.addEventListener("pointermove", (e) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = hero.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        inner.style.setProperty("--ry", `${-10 + x * 14}deg`);
+        inner.style.setProperty("--rx", `${6 - y * 10}deg`);
+      });
+    });
+    hero.addEventListener("pointerleave", () => {
+      inner.style.removeProperty("--ry");
+      inner.style.removeProperty("--rx");
+    });
+  }
+
   document.querySelectorAll<HTMLFormElement>("form[data-lead]").forEach((form) => {
     const box = form.parentElement!;
     const done = box.querySelector<HTMLElement>("[data-done]")!;

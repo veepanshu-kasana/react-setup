@@ -1,7 +1,7 @@
 import { SITE, WA_DEFAULT } from "../site";
 import { enhance } from "../lib/enhance";
 import {
-  COMPARE, FAQS, FEATURES, HERO_POINTS, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, REGIONS, SERVICES, WHY,
+  COMPARE, FAQS, FEATURES, HERO_POINTS, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, REGIONS, SERVICES, STORE_TYPES, WHY,
 } from "../content";
 import { LeadForm } from "./LeadForm";
 import * as I from "./icons";
@@ -33,7 +33,7 @@ function WaButton({ location, className = "", label = "Chat on WhatsApp" }: { lo
 
 function SectionHead({ eyebrow, title, sub, id, dark = false }: { eyebrow: string; title: string; sub?: string; id: string; dark?: boolean }) {
   return (
-    <div className="mx-auto max-w-2xl text-center">
+    <div className="reveal mx-auto max-w-2xl text-center">
       <p className={`eyebrow ${dark ? "eyebrow-dark" : ""}`}>{eyebrow}</p>
       <h2 id={id} className={`mt-3 text-3xl font-bold sm:text-4xl ${dark ? "text-white" : "text-ink"}`}>{title}</h2>
       {sub && <p className={`mt-4 text-lg ${dark ? "text-white/75" : "text-muted"}`}>{sub}</p>}
@@ -43,13 +43,20 @@ function SectionHead({ eyebrow, title, sub, id, dark = false }: { eyebrow: strin
 
 /** Decorative circuit traces, echoing the circuit-board "A" in the RannLab logo. */
 function Circuit({ className = "" }: { className?: string }) {
+  const paths = [
+    "M0 60h180l40 40h160l30-30h190",
+    "M0 140h120l40 40h220l60 60h160",
+    "M60 400V300l40-40h140l40-40h320",
+    "M320 0v80l40 40v120l-40 40v120",
+    "M460 0v60l-40 40",
+  ];
   return (
     <svg className={`circuit ${className}`} viewBox="0 0 600 400" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" focusable="false">
-      <path d="M0 60h180l40 40h160l30-30h190" />
-      <path d="M0 140h120l40 40h220l60 60h160" />
-      <path d="M60 400V300l40-40h140l40-40h320" />
-      <path d="M320 0v80l40 40v120l-40 40v120" />
-      <path d="M460 0v60l-40 40" />
+      {paths.map((d) => <path key={d} d={d} />)}
+      {/* Data pulses travelling along the traces */}
+      {paths.slice(0, 4).map((d, i) => (
+        <path key={`p-${d}`} d={d} className="pulse" style={{ animationDelay: `${i * 1.3}s` }} pathLength={100} />
+      ))}
       {[[180, 60], [380, 100], [410, 70], [160, 180], [380, 180], [440, 240], [100, 260], [280, 220], [360, 120], [360, 240], [420, 100], [320, 80]].map(([x, y]) => (
         <circle key={`${x}-${y}`} cx={x} cy={y} r="5" fill="var(--color-night)" />
       ))}
@@ -87,84 +94,129 @@ function Header() {
 
 /* ---------- Hero illustration: storefront + phone checkout, built in HTML/CSS (no image requests) ---------- */
 
-function ProductTile({ from, to, name, price }: { from: string; to: string; name: string; price: string }) {
+/*
+ * Product photos: Unsplash License (free for commercial use, no attribution required).
+ * Kurta: Naseebo · Bangles: Rajeev Krishna · Earrings: Valentina Vehkalahti · Necklace: Sibeesh Venu
+ * "Kalaa Ghar" is a made-up example store.
+ */
+const SHOP = [
+  { img: "/showcase/kurta.webp", name: "Chanderi Silk Kurta Set", was: "₹3,499", now: "₹2,449", rating: 5, reviews: 38 },
+  { img: "/showcase/bangles.webp", name: "Hand-painted Lac Bangles", was: "₹899", now: "₹699", rating: 5, reviews: 112 },
+  { img: "/showcase/earrings.webp", name: "Carved Wooden Jhumkas", was: "", now: "₹449", rating: 4, reviews: 27 },
+];
+
+function Stars({ n }: { n: number }) {
   return (
-    <div className="rounded-lg bg-white p-1.5 ring-1 ring-black/5">
-      <div className="aspect-square rounded-md" style={{ background: `linear-gradient(140deg, ${from}, ${to})` }} />
-      <p className="mt-1.5 truncate text-[10px] font-semibold text-ink">{name}</p>
-      <p className="text-[10px] font-bold text-teal-700">{price}</p>
-    </div>
+    <span className="flex gap-px text-[#d4a017]">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <I.Star key={i} className={`size-2.5 ${i < n ? "" : "opacity-25"}`} />
+      ))}
+    </span>
   );
 }
 
 function StoreShowcase() {
   return (
-    <div className="relative mx-auto w-full max-w-[34rem] px-2 pb-10 pt-14 sm:px-6" aria-hidden="true">
-      {/* Desktop storefront */}
-      <div className="overflow-hidden rounded-2xl bg-[#eef3f3] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10">
-        <div className="flex items-center gap-1.5 bg-white px-3 py-2">
-          <span className="size-2.5 rounded-full bg-[#f87171]" /><span className="size-2.5 rounded-full bg-[#fbbf24]" /><span className="size-2.5 rounded-full bg-[#34d399]" />
-          <span className="ml-2 flex h-5 flex-1 items-center gap-1 rounded-md bg-surface px-2 text-[10px] text-muted">
-            <I.Shield className="size-3 text-success" /> yourbrand.in
+    <div className="stage relative mx-auto w-full max-w-[35rem] px-1 pb-12 pt-4 sm:px-6" aria-hidden="true" data-tilt>
+     <div className="stage-inner relative">
+      {/* Desktop: a WooCommerce shop page */}
+      <div className="depth-0 overflow-hidden rounded-xl bg-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10">
+        <div className="flex items-center gap-1.5 border-b border-[#ececec] bg-[#f6f6f6] px-3 py-2">
+          <span className="size-2.5 rounded-full bg-[#ff5f57]" /><span className="size-2.5 rounded-full bg-[#febc2e]" /><span className="size-2.5 rounded-full bg-[#28c840]" />
+          <span className="ml-2 flex h-5 flex-1 items-center gap-1 rounded-md bg-white px-2 text-[10px] text-[#5f6368] ring-1 ring-[#e3e3e3]">
+            <svg viewBox="0 0 24 24" className="size-2.5" fill="currentColor"><path d="M17 9V7A5 5 0 0 0 7 7v2H5v13h14V9Zm-8-2a3 3 0 0 1 6 0v2H9Z" /></svg>
+            kalaaghar.in/shop
           </span>
         </div>
-        <div className="flex items-center justify-between bg-white px-3 pb-2 text-[10px] font-semibold text-ink-2">
-          <span className="font-display text-xs font-bold text-ink">yourbrand</span>
-          <span className="hidden gap-3 sm:flex"><span>New</span><span>Women</span><span>Men</span><span>Sale</span></span>
-          <span className="relative"><I.Cart className="size-4" /><span className="absolute -right-1.5 -top-1.5 grid size-3.5 place-items-center rounded-full bg-teal-700 text-[8px] text-white">2</span></span>
+        <div className="flex items-center justify-between gap-3 px-4 pb-2.5 pt-3">
+          <span className="leading-none">
+            <span className="block font-display text-[15px] font-bold tracking-tight text-[#3d2817]">Kalaa Ghar</span>
+            <span className="text-[8px] uppercase tracking-[0.18em] text-[#8a6d4f]">Handcrafted in India</span>
+          </span>
+          <span className="hidden h-6 flex-1 items-center rounded border border-[#ddd] px-2 text-[9px] text-[#999] sm:flex">Search products…</span>
+          <span className="flex items-center gap-1.5 text-[10px] font-semibold text-[#333]">
+            ₹3,148 <span className="relative"><I.Cart className="size-4" /><span className="absolute -right-1.5 -top-1.5 grid size-3.5 place-items-center rounded-full bg-[#3d2817] text-[8px] text-white">3</span></span>
+          </span>
         </div>
-        <div className="p-3">
-          <div className="flex items-center justify-between overflow-hidden rounded-xl bg-gradient-to-r from-teal-800 to-teal-500 p-3 text-white">
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-wider text-white/85">Festive sale</p>
-              <p className="font-display text-sm font-bold leading-tight">Flat 30% off<br />+ free shipping</p>
-              <span className="mt-2 inline-block rounded-md bg-white px-2 py-0.5 text-[9px] font-bold text-teal-800">Shop now</span>
-            </div>
-            <div className="flex gap-1.5">
-              <span className="h-16 w-10 rounded-t-full bg-[#fcd34d]/90" />
-              <span className="mt-4 h-12 w-10 rounded-t-full bg-white/80" />
-            </div>
+        <div className="flex gap-4 border-y border-[#ececec] px-4 py-1.5 text-[10px] font-medium text-[#555]">
+          <span className="font-semibold text-[#3d2817]">Shop</span><span>Kurtas</span><span>Jewellery</span><span className="hidden sm:inline">Home décor</span><span>Gifts</span>
+        </div>
+        <div className="px-4 pb-4 pt-2.5">
+          <p className="text-[9px] text-[#777]">Home / Shop</p>
+          <div className="mt-1 flex items-end justify-between">
+            <p className="font-display text-sm font-bold text-[#222]">Shop</p>
+            <span className="rounded border border-[#ddd] px-1.5 py-0.5 text-[9px] text-[#555]">Sort by popularity ▾</span>
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
-            <ProductTile from="#fde68a" to="#f59e0b" name="Cotton kurta" price="₹1,299" />
-            <ProductTile from="#a7f3d0" to="#1fa59c" name="Linen shirt" price="₹999" />
-            <ProductTile from="#fecaca" to="#e11d48" name="Silk dupatta" price="₹1,599" />
-            <div className="hidden sm:block"><ProductTile from="#c7d2fe" to="#6366f1" name="Denim jacket" price="₹2,199" /></div>
-          </div>
+          <p className="mt-0.5 text-[9px] text-[#777]">Showing 1–12 of 48 results</p>
+          <ul className="mt-2.5 grid grid-cols-3 gap-2.5">
+            {SHOP.map((p) => (
+              <li key={p.name} className="text-center">
+                <div className="relative">
+                  <img src={p.img} alt="" width={240} height={240} loading="lazy" decoding="async" className="aspect-square w-full rounded-sm object-cover" />
+                  {p.was && (
+                    <span className="absolute -left-1 -top-1 grid size-7 place-items-center rounded-full bg-[#5b8a4a] text-[8px] font-bold text-white shadow">Sale!</span>
+                  )}
+                </div>
+                <p className="mt-1.5 line-clamp-2 text-[9.5px] font-medium leading-tight text-[#333]">{p.name}</p>
+                <div className="mt-1 flex items-center justify-center gap-1"><Stars n={p.rating} /><span className="text-[8px] text-[#888]">({p.reviews})</span></div>
+                <p className="mt-0.5 text-[10px]">
+                  {p.was && <del className="mr-1 text-[#999]">{p.was}</del>}
+                  <ins className="font-bold text-[#222] no-underline">{p.now}</ins>
+                </p>
+                <span className="mt-1.5 inline-block rounded-sm bg-[#3d2817] px-2 py-1 text-[8.5px] font-semibold text-white">Add to cart</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      {/* Phone: UPI checkout */}
-      <div className="absolute -bottom-2 right-0 w-[42%] max-w-[12rem] rounded-[1.6rem] bg-ink p-1.5 shadow-[0_30px_60px_-15px_rgb(0_0_0/0.7)] ring-1 ring-white/15 sm:right-2">
+      {/* Phone: WooCommerce "Order received" page */}
+      <div className="depth-2 absolute -bottom-1 right-0 w-[44%] max-w-[12.5rem] rounded-[1.6rem] bg-[#1b1b1b] p-1.5 shadow-[0_30px_60px_-15px_rgb(0_0_0/0.7)] ring-1 ring-white/15 sm:right-2">
         <div className="overflow-hidden rounded-[1.25rem] bg-white">
-          <div className="mx-auto mt-1.5 h-1.5 w-12 rounded-full bg-ink/80" />
-          <div className="p-2.5">
-            <p className="text-[10px] font-semibold text-muted">Checkout</p>
-            <p className="font-display text-base font-bold text-ink">₹2,598</p>
-            <div className="mt-2 space-y-1.5 text-[10px] font-semibold">
-              <div className="flex items-center justify-between rounded-md bg-teal-50 px-2 py-1.5 text-teal-800 ring-1 ring-teal-500">
-                UPI <span className="grid size-3 place-items-center rounded-full bg-teal-700"><span className="size-1.5 rounded-full bg-white" /></span>
-              </div>
-              <div className="flex items-center justify-between rounded-md px-2 py-1.5 text-ink-2 ring-1 ring-line">Cards <span className="size-3 rounded-full ring-1 ring-line" /></div>
-              <div className="flex items-center justify-between rounded-md px-2 py-1.5 text-ink-2 ring-1 ring-line">Cash on Delivery <span className="size-3 rounded-full ring-1 ring-line" /></div>
+          <div className="flex items-center justify-between px-3 pt-1.5 text-[8px] font-semibold text-[#222]"><span>10:42</span><span className="mt-0.5 h-1.5 w-10 rounded-full bg-[#1b1b1b]" /><span>5G</span></div>
+          <div className="px-2.5 pb-3 pt-2">
+            <p className="font-display text-[11px] font-bold text-[#222]">Order received</p>
+            <p className="mt-1 rounded bg-[#f0f7ee] px-1.5 py-1 text-[8.5px] leading-snug text-[#3f6b2f]">Thank you. Your order has been received.</p>
+            <dl className="mt-2 space-y-1 text-[8.5px] text-[#555]">
+              <div className="flex justify-between"><dt>Order number:</dt><dd className="font-bold text-[#222]">4821</dd></div>
+              <div className="flex justify-between"><dt>Date:</dt><dd className="font-bold text-[#222]">15 Oct 2026</dd></div>
+              <div className="flex justify-between"><dt>Total:</dt><dd className="font-bold text-[#222]">₹3,148</dd></div>
+              <div className="flex justify-between"><dt>Payment:</dt><dd className="font-bold text-[#222]">UPI · Razorpay</dd></div>
+            </dl>
+            <div className="mt-2 flex items-center gap-1.5 border-t border-[#eee] pt-2">
+              <img src="/showcase/kurta.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-7 rounded-sm object-cover" />
+              <img src="/showcase/bangles.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-7 rounded-sm object-cover" />
+              <span className="text-[8px] leading-tight text-[#777]">2 items · Delivery by Sat, 18 Oct</span>
             </div>
-            <div className="mt-2.5 rounded-md bg-teal-700 py-1.5 text-center text-[10px] font-bold text-white">Pay securely</div>
           </div>
         </div>
       </div>
 
-      {/* Floating proof chips */}
-      <div className="absolute right-2 top-0 flex items-center gap-2.5 rounded-xl bg-white px-3 py-2 shadow-xl ring-1 ring-black/5 sm:right-8">
-        <svg viewBox="0 0 36 36" className="size-9 -rotate-90" aria-hidden="true">
-          <circle cx="18" cy="18" r="15" fill="none" stroke="#d3efed" strokeWidth="4" />
-          <circle cx="18" cy="18" r="15" fill="none" stroke="#15803d" strokeWidth="4" strokeDasharray="94.2 94.2" strokeLinecap="round" />
-        </svg>
-        <span className="text-xs leading-tight"><b className="block font-display text-sm text-ink">100</b><span className="text-muted">PageSpeed</span></span>
+      {/* WooCommerce admin: new order */}
+      <div className="depth-3 float-a absolute -top-3 right-0 w-[15rem] rounded-xl bg-white p-3 shadow-xl ring-1 ring-black/5 sm:right-4">
+        <div className="flex items-center justify-between text-[10px] text-[#646970]">
+          <span className="font-semibold text-[#2271b1]">#4821 Priya Sharma</span>
+          <span className="rounded bg-[#c6e1c6] px-1.5 py-0.5 font-semibold text-[#2c4a1f]">Processing</span>
+        </div>
+        <div className="mt-1.5 flex items-center justify-between text-[10px]">
+          <span className="text-[#646970]">Pune · 2 min ago</span>
+          <span className="font-bold text-[#1d2327]">₹3,148.00</span>
+        </div>
       </div>
-      <div className="absolute bottom-6 left-0 flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 shadow-xl ring-1 ring-black/5 sm:-left-4">
-        <span className="grid size-9 place-items-center rounded-full bg-success-50 text-success"><I.Check className="size-5" /></span>
-        <span className="text-xs leading-tight"><b className="block text-sm text-ink">New order · ₹2,598</b><span className="text-muted">Paid via UPI · Jaipur</span></span>
+
+      {/* A customer message on WhatsApp */}
+      <div className="depth-3 float-b absolute bottom-10 left-0 w-[15.5rem] rounded-xl bg-[#efeae2] p-2 shadow-xl ring-1 ring-black/5 sm:-left-5">
+        <div className="flex items-center gap-2 px-1 pb-1.5">
+          <img src="/showcase/necklace.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-6 rounded-full object-cover" />
+          <span className="text-[10px] font-semibold text-[#111b21]">Ananya M.</span>
+          <span className="ml-auto text-[#0b7a3b]"><I.WhatsApp className="size-3.5" /></span>
+        </div>
+        <p className="rounded-lg rounded-tl-none bg-white px-2.5 py-1.5 text-[11px] leading-snug text-[#111b21]">
+          Got my jhumkas today, they look even better than the photos. Ordering the bangles for my sister too!
+          <span className="mt-0.5 block text-right text-[8px] text-[#667781]">11:06 am</span>
+        </p>
       </div>
+     </div>
     </div>
   );
 }
@@ -261,7 +313,7 @@ function Pains() {
         />
         <ul className="mt-12 grid gap-6 md:grid-cols-3">
           {PAINS.map((p) => (
-            <li key={p.title} className="rounded-2xl bg-surface p-6 ring-1 ring-line">
+            <li key={p.title} className="reveal rounded-2xl bg-surface p-6 ring-1 ring-line">
               <span className="grid size-10 place-items-center rounded-full bg-danger-50 text-danger ring-1 ring-danger/15"><I.Cross /></span>
               <h3 className="mt-4 text-lg font-bold text-ink">{p.title}</h3>
               <p className="mt-2 text-muted">{p.body}</p>
@@ -273,13 +325,46 @@ function Pains() {
   );
 }
 
+function StoreTypes() {
+  return (
+    <section aria-labelledby="types-title" className="bg-white pb-16 sm:pb-24">
+      <div className="container-x">
+        <div className="reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <p className="eyebrow">Stores we build</p>
+            <h2 id="types-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">Set up for what you sell</h2>
+            <p className="mt-4 text-lg text-muted">Every category sells differently. We set up the product pages, shipping rules and checkout your customers expect.</p>
+          </div>
+          <a href="#quote" data-track="cta_click" data-loc="store-types" className="inline-flex items-center gap-2 font-bold text-teal-700 underline-offset-4 hover:underline">
+            Tell us what you sell <I.Arrow className="size-4" />
+          </a>
+        </div>
+        <ul className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 xl:grid-cols-6">
+          {STORE_TYPES.map((t, i) => (
+            <li key={t.title} className="reveal photo-card group" style={{ animationDelay: `${(i % 3) * 90}ms` }}>
+              <div className="relative overflow-hidden rounded-2xl bg-surface">
+                <img src={t.img} srcSet={`${t.img.replace(".webp", "-240.webp")} 240w, ${t.img} 400w`} sizes="(min-width: 1280px) 200px, (min-width: 768px) 31vw, 46vw" alt={t.title} width={400} height={500} loading="lazy" decoding="async" className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/25 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
+                  <h3 className="font-display text-[0.95rem] font-bold leading-snug text-white sm:text-base">{t.title}</h3>
+                  <p className="mt-1 text-xs leading-snug text-white/85">{t.detail}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 function IconCards({ items }: { items: readonly { icon: string; title: string; body: string }[] }) {
   return (
     <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((f) => {
+      {items.map((f, i) => {
         const Icon = ICONS[f.icon];
         return (
-          <li key={f.title} className="card">
+          <li key={f.title} className="card reveal" style={{ animationDelay: `${(i % 3) * 90}ms` }}>
             <span className="icon-tile"><Icon /></span>
             <h3 className="mt-5 text-lg font-bold text-ink">{f.title}</h3>
             <p className="mt-2 text-muted">{f.body}</p>
@@ -365,9 +450,9 @@ function Process() {
         <ol className="relative mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <span className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-teal-500/0 via-teal-500/60 to-teal-500/0 lg:block" aria-hidden="true" />
           {PROCESS.map((p) => (
-            <li key={p.step} className="relative rounded-2xl bg-night-2 p-6 ring-1 ring-white/10">
+            <li key={p.step} className="reveal relative rounded-2xl bg-night-2 p-6 ring-1 ring-white/10 transition hover:-translate-y-1 hover:ring-teal-500/50">
               <div className="flex items-center justify-between">
-                <span className="grid size-12 place-items-center rounded-xl bg-teal-700 font-display text-lg font-bold text-white ring-4 ring-night">{p.step}</span>
+                <span className="step-num grid size-12 place-items-center rounded-xl bg-teal-700 font-display text-lg font-bold text-white ring-4 ring-night">{p.step}</span>
                 <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/90">{p.time}</span>
               </div>
               <h3 className="mt-5 text-lg font-bold text-white">{p.title}</h3>
@@ -394,7 +479,7 @@ function Packages() {
           {PACKAGES.map((p) => (
             <li
               key={p.name}
-              className={`relative flex flex-col rounded-2xl p-7 ${p.featured ? "bg-night text-white shadow-[0_30px_60px_-25px_rgb(11_110_106/0.7)] ring-2 ring-teal-500" : "bg-white ring-1 ring-line"}`}
+              className={`reveal relative flex flex-col rounded-2xl p-7 ${p.featured ? "bg-night text-white shadow-[0_30px_60px_-25px_rgb(11_110_106/0.7)] ring-2 ring-teal-500" : "bg-white ring-1 ring-line"}`}
             >
               {p.featured && (
                 <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-teal-500 px-4 py-1 text-sm font-bold text-night">Most popular</span>
@@ -493,7 +578,7 @@ function WhyRannlab() {
           {WHY.map((w) => {
             const Icon = ICONS[w.icon];
             return (
-              <li key={w.title} className="rounded-2xl bg-surface p-6 ring-1 ring-line">
+              <li key={w.title} className="reveal rounded-2xl bg-surface p-6 ring-1 ring-line">
                 <span className="icon-tile bg-white"><Icon /></span>
                 <h3 className="mt-4 text-lg font-bold text-ink">{w.title}</h3>
                 <p className="mt-2 text-muted">{w.body}</p>
@@ -564,12 +649,12 @@ function FinalCta() {
 
 function Footer() {
   const year = new Date().getFullYear();
-  const socials: [string, string][] = [
-    ["LinkedIn", SITE.social.linkedin],
-    ["Instagram", SITE.social.instagram],
-    ["Facebook", SITE.social.facebook],
-    ["YouTube", SITE.social.youtube],
-    ["X (Twitter)", SITE.social.x],
+  const socials: [string, string, (p: { className?: string }) => React.JSX.Element][] = [
+    ["LinkedIn", SITE.social.linkedin, I.LinkedIn],
+    ["Instagram", SITE.social.instagram, I.Instagram],
+    ["Facebook", SITE.social.facebook, I.Facebook],
+    ["YouTube", SITE.social.youtube, I.YouTube],
+    ["X", SITE.social.x, I.XLogo],
   ];
   const a = "underline-offset-2 transition-colors hover:text-teal-300 hover:underline";
   return (
@@ -578,9 +663,20 @@ function Footer() {
         <div>
           <img src="/brand/rannlab-logo-light-203.webp" srcSet="/brand/rannlab-logo-light-203.webp 203w, /brand/rannlab-logo-light.webp 405w" sizes="203px" alt={`${SITE.brand}: ${SITE.tagline}`} width={203} height={56} loading="lazy" className="h-14 w-auto" />
           <p className="mt-4 max-w-sm">AI-first software development company building websites, e-commerce stores, mobile apps and custom software for businesses worldwide.</p>
-          <ul className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-            {socials.map(([label, href]) => (
-              <li key={label}><a className={a} href={href} rel="noopener" target="_blank">{label}</a></li>
+          <ul className="mt-6 flex flex-wrap gap-2.5">
+            {socials.map(([label, href, Icon]) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  rel="noopener"
+                  target="_blank"
+                  aria-label={`${SITE.shortBrand} on ${label}`}
+                  title={label}
+                  className="grid size-11 place-items-center rounded-full bg-white/[0.07] text-white/85 ring-1 ring-white/15 transition hover:-translate-y-0.5 hover:bg-teal-500 hover:text-night hover:ring-teal-500"
+                >
+                  <Icon className="size-[18px]" />
+                </a>
+              </li>
             ))}
           </ul>
         </div>
@@ -640,6 +736,7 @@ export function Landing() {
         <Hero />
         <Proof />
         <Pains />
+        <StoreTypes />
         <Features />
         <QuoteBlock />
         <Services />
