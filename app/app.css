@@ -1,50 +1,83 @@
 @import "tailwindcss";
 
-/* Self-hosted variable font (latin + latin-ext for ₹), bundled by Vite: no third-party request */
+/*
+ * RannLab brand system
+ * Layout: dark "circuit" bands (hero, process, final CTA, footer) alternate with
+ * calm light sections; teal is the only accent, taken from the RannLab logo.
+ */
+
+/* Self-hosted variable fonts, subset to the characters this page uses (≈33 kB total), bundled by Vite.
+   Regenerate with pyftsubset if you add text in another script/language. */
 @font-face {
   font-family: "Plus Jakarta Sans Variable";
   font-style: normal;
   font-display: swap;
   font-weight: 200 800;
-  src: url("../node_modules/@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2-variations");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url("./fonts/jakarta-sub.woff2") format("woff2-variations");
+  unicode-range: U+0020-007E, U+00A0, U+00A9, U+00B7, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2022, U+2026, U+2122, U+2192;
 }
 @font-face {
   font-family: "Plus Jakarta Sans Variable";
   font-style: normal;
   font-display: swap;
   font-weight: 200 800;
-  src: url("../node_modules/@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-ext-wght-normal.woff2") format("woff2-variations");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  src: url("./fonts/jakarta-rupee.woff2") format("woff2-variations");
+  unicode-range: U+20B9;
+}
+@font-face {
+  font-family: "Sora Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url("./fonts/sora-sub.woff2") format("woff2-variations");
+  unicode-range: U+0020-007E, U+00A0, U+00A9, U+00B7, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2022, U+2026, U+2122, U+2192;
+}
+/* Metric-adjusted fallbacks so the font swap causes no layout shift (CLS) */
+@font-face {
+  font-family: "Body Fallback";
+  src: local("Arial");
+  ascent-override: 96%;
+  descent-override: 21%;
+  line-gap-override: 0%;
+  size-adjust: 106%;
+}
+@font-face {
+  font-family: "Display Fallback";
+  src: local("Arial");
+  ascent-override: 92%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+  size-adjust: 108%;
 }
 
 @theme {
-  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --color-brand: #5b21b6;
-  --color-brand-600: #4c1d95;
-  --color-brand-50: #f5f3ff;
-  --color-ink: #0f172a;
-  --color-ink-2: #334155;
-  --color-muted: #52607a;
-  --color-line: #e2e8f0;
-  --color-surface: #f8fafc;
+  --font-sans: "Plus Jakarta Sans Variable", "Body Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Sora Variable", "Display Fallback", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand — from the RannLab logo */
+  --color-teal-300: #5cc2c8;
+  --color-teal-400: #34b3b0;
+  --color-teal-500: #1fa59c;
+  --color-teal-700: #0b6e6a;
+  --color-teal-800: #095a57;
+  --color-teal-50: #ecf8f7;
+  --color-teal-100: #d3efed;
+
+  /* Neutrals with a slight teal bias */
+  --color-ink: #121a1c;
+  --color-ink-2: #2f3b3e;
+  --color-muted: #4f5e62;
+  --color-line: #dde6e6;
+  --color-surface: #f4f8f8;
+  --color-night: #0e1416;
+  --color-night-2: #162023;
+
   --color-success: #15803d;
   --color-success-50: #ecfdf3;
   --color-danger: #b91c1c;
   --color-danger-50: #fef2f2;
   --color-wa: #0b7a3b;
   --color-wa-600: #08622f;
-}
-
-/* Font is self-hosted via @fontsource (bundled by Vite): no third-party request.
-   Metric-adjusted fallback so the font swap causes no layout shift (CLS) */
-@font-face {
-  font-family: "Plus Jakarta Sans Fallback";
-  src: local("Arial");
-  ascent-override: 96%;
-  descent-override: 21%;
-  line-gap-override: 0%;
-  size-adjust: 106%;
 }
 
 @layer base {
@@ -56,7 +89,14 @@
   body {
     @apply bg-white font-sans text-ink antialiased;
     font-size: 1.0625rem;
-    line-height: 1.6;
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: -0.02em;
   }
   :focus-visible {
     outline: 3px solid #f59e0b;
@@ -85,19 +125,19 @@
   }
 
   .btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold transition-colors;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold transition;
   }
   .btn-sm {
     @apply min-h-11 rounded-lg px-4 py-2 text-sm;
   }
   .btn-primary {
-    @apply bg-brand text-white hover:bg-brand-600 disabled:opacity-70;
+    @apply bg-teal-700 text-white shadow-[0_8px_24px_-8px_rgb(11_110_106/0.6)] hover:bg-teal-800;
   }
   .btn-outline {
-    @apply bg-white text-brand ring-2 ring-brand ring-inset hover:bg-brand-50;
+    @apply bg-white text-teal-700 ring-2 ring-teal-700 ring-inset hover:bg-teal-50;
   }
   .btn-light {
-    @apply bg-white text-brand hover:bg-brand-50;
+    @apply bg-white text-ink hover:bg-teal-50;
   }
   .btn-wa {
     @apply bg-wa text-white hover:bg-wa-600;
@@ -105,26 +145,40 @@
   .btn-ghost {
     @apply bg-white text-ink ring-1 ring-line ring-inset hover:bg-surface;
   }
+  .btn-ghost-dark {
+    @apply bg-white/5 text-white ring-1 ring-white/25 ring-inset hover:bg-white/10;
+  }
 
   .eyebrow {
-    @apply text-sm font-bold uppercase tracking-wider text-brand;
+    @apply inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-teal-700;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-0.5 w-6 rounded-full bg-teal-500;
+  }
+  @media (max-width: 639px) {
+    .eyebrow::before {
+      display: none;
+    }
   }
   .eyebrow-dark {
-    @apply text-[#c4b5fd];
+    @apply text-teal-300;
   }
 
   .card {
-    @apply rounded-2xl bg-white p-6 ring-1 ring-line transition-shadow hover:shadow-lg;
+    @apply rounded-2xl bg-white p-6 ring-1 ring-line transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(18_26_28/0.35)] hover:ring-teal-300;
   }
   .icon-tile {
-    @apply grid size-12 place-items-center rounded-xl bg-brand-50 text-brand;
+    @apply grid size-12 place-items-center rounded-xl text-teal-700;
+    background: linear-gradient(135deg, var(--color-teal-50), var(--color-teal-100));
+    box-shadow: inset 0 0 0 1px rgb(31 165 156 / 0.18);
   }
 
   .label {
     @apply mb-1.5 block text-sm font-semibold text-ink;
   }
   .field {
-    @apply block min-h-12 w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-[#64748b] focus:border-brand focus:ring-2 focus:ring-brand/30 focus:outline-none;
+    @apply block min-h-12 w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-[#62727a] focus:border-teal-700 focus:ring-2 focus:ring-teal-500/30 focus:outline-none;
   }
   .field[aria-invalid="true"] {
     @apply border-danger;
@@ -133,14 +187,27 @@
     @apply mt-1.5 text-sm font-medium text-danger;
   }
 
-  .hero-bg {
+  /* Dark bands: night background, teal glow and the circuit-trace motif from the logo's "A" */
+  .band-dark {
+    @apply relative isolate overflow-hidden bg-night text-white;
+  }
+  .band-dark::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
     background:
-      radial-gradient(60rem 30rem at 85% -10%, rgb(167 139 250 / 0.35), transparent 60%),
-      radial-gradient(40rem 25rem at -10% 110%, rgb(56 189 248 / 0.18), transparent 60%),
-      linear-gradient(135deg, #2e1065 0%, #4c1d95 55%, #3b0764 100%);
+      radial-gradient(42rem 26rem at 88% -8%, rgb(31 165 156 / 0.32), transparent 62%),
+      radial-gradient(30rem 22rem at -6% 108%, rgb(92 194 200 / 0.16), transparent 60%);
+  }
+  .circuit {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    color: rgb(92 194 200 / 0.22);
   }
 
   .skip-link {
-    @apply absolute left-3 top-3 z-[60] -translate-y-24 rounded-lg bg-white px-4 py-2 font-bold text-brand shadow-lg focus:translate-y-0;
+    @apply absolute left-3 top-3 z-[60] -translate-y-24 rounded-lg bg-white px-4 py-2 font-bold text-teal-700 shadow-lg focus:translate-y-0;
   }
 }

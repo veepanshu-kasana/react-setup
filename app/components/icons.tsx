@@ -70,6 +70,27 @@ export const Wrench = ({ className = "size-6" }: P) => (
 export const Chart = ({ className = "size-6" }: P) => (
   <svg {...base} className={className}><path d="M3 3v18h18" /><path d="m7 15 4-4 3 3 5-6" /></svg>
 );
-export const Cart = ({ className = "size-6" }: P) => (
+export const Users = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" /></svg>
+);
+export const Code = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><path d="m16 18 6-6-6-6M8 6l-6 6 6 6" /></svg>
+);
+export const Award = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><circle cx="12" cy="8" r="6" /><path d="M15.5 13 17 22l-5-3-5 3 1.5-9" /></svg>
+);
+export const Calendar = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+);
+export const Globe = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20" /></svg>
+);
+export const Mail = ({ className = "size-5" }: P) => (
+  <svg {...base} className={className}><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-10 6L2 7" /></svg>
+);
+export const Pin = ({ className = "size-5" }: P) => (
+  <svg {...base} className={className}><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+);
+export const Cart =({ className = "size-6" }: P) => (
   <svg {...base} className={className}><circle cx="9" cy="20" r="1.5" /><circle cx="18" cy="20" r="1.5" /><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L22 7H6" /></svg>
 );

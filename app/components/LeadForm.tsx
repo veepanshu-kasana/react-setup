@@ -25,7 +25,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
         target="_blank"
         noValidate
         aria-labelledby={f("h")}
-        className="rounded-2xl bg-white p-6 text-ink shadow-xl ring-1 ring-line sm:p-8"
+        className="relative rounded-2xl border-t-4 border-teal-500 bg-white p-6 text-ink shadow-[0_30px_60px_-30px_rgb(18_26_28/0.45)] ring-1 ring-line sm:p-8"
       >
         <h2 id={f("h")} className="text-xl font-bold sm:text-2xl">{heading}</h2>
         <p className="mt-1 text-sm text-muted">Takes 30 seconds. No spam, no obligation.</p>
@@ -69,6 +69,12 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
           </div>
         </div>
 
+        {/* Spam trap: hidden from people, bots tend to fill it in */}
+        <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+          <label htmlFor={f("website")}>Leave this field empty</label>
+          <input id={f("website")} name="website" type="text" tabIndex={-1} autoComplete="off" />
+        </div>
+
         <button type="submit" className="btn btn-primary mt-6 w-full text-lg">
           Get my free quote <Arrow />
         </button>
@@ -83,7 +89,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
         tabIndex={-1}
         role="status"
         aria-live="polite"
-        className="rounded-2xl bg-white p-6 text-ink shadow-xl ring-1 ring-line sm:p-8"
+        className="rounded-2xl border-t-4 border-teal-500 bg-white p-6 text-ink shadow-[0_30px_60px_-30px_rgb(18_26_28/0.45)] ring-1 ring-line sm:p-8"
       >
         <div className="mx-auto grid size-12 place-items-center rounded-full bg-success-50 text-success">
           <Check className="size-6" />
@@ -97,7 +103,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
         </a>
         <p className="mt-4 text-center text-sm text-muted">
           Or call us on{" "}
-          <a className="font-semibold text-brand underline" href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="form-success">
+          <a className="font-semibold text-teal-700 underline" href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="form-success">
             {SITE.phoneDisplay}
           </a>
         </p>

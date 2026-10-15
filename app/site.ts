@@ -3,41 +3,55 @@
  * Change values here — the page, SEO tags and JSON-LD all read from this file.
  */
 export const SITE = {
-  brand: "Midvana Intelligence",
+  brand: "RannLab Technologies",
+  shortBrand: "RannLab",
+  tagline: "Your Problems Are Our Priority",
   /** Final public URL of this page (used for canonical, OG and schema). No trailing slash. */
   url: "https://react-setup-xi-rose.vercel.app",
-  mainSite: "https://midvanaintelligence.com",
-  phoneDisplay: "+91 95829 94410",
-  phoneE164: "+919582994410",
-  whatsappNumber: "919582994410",
-  email: "info@midvanaintelligence.com",
+  mainSite: "https://rannlab.com",
+  phoneDisplay: "+91 99906 13366",
+  phoneE164: "+919990613366",
+  phoneAltDisplay: "+91 88000 25033",
+  whatsappNumber: "918800025033",
+  email: "info@rannlab.com",
   address: {
-    street: "Sector 63",
-    city: "Noida",
+    street: "805, Om Tower, Alpha-I Commercial Belt, Block E, Alpha I",
+    city: "Greater Noida",
     region: "Uttar Pradesh",
-    postalCode: "201307",
+    postalCode: "201310",
     country: "IN",
   },
+  mapUrl: "https://maps.app.goo.gl/HDbajonfvrYxDQRe7",
   social: {
-    facebook: "https://www.facebook.com/midvana.nz",
-    instagram: "https://www.instagram.com/midvana.nz/",
+    linkedin: "https://www.linkedin.com/company/rannlab",
+    instagram: "https://www.instagram.com/rannlab/",
+    facebook: "https://www.facebook.com/rannlab",
+    youtube: "https://www.youtube.com/@rannlab",
+    x: "https://twitter.com/rannlab",
+  },
+  links: {
+    about: "https://rannlab.com/about-us/",
+    services: "https://rannlab.com/services/",
+    ecommerce: "https://rannlab.com/industries/e-commerce/",
+    caseStudies: "https://rannlab.com/case-studie/",
+    contact: "https://rannlab.com/contact-us/",
   },
   legal: {
-    terms: "https://midvanaintelligence.com/terms-condition/",
-    refund: "https://midvanaintelligence.com/refund-policy/",
-    privacy: "https://midvanaintelligence.com/privacy-policy/",
+    privacy: "https://rannlab.com/privacy/",
+    terms: "https://rannlab.com/terms-and-conditions/",
+    refund: "https://rannlab.com/refund-and-cancellation-policy/",
   },
   /**
-   * Optional: POST endpoint for leads (Web3Forms, Formspree, your CRM webhook…).
-   * Leave empty and every enquiry is sent straight to WhatsApp instead.
+   * Leads are POSTed here (app/routes/api.lead.ts), which signs and forwards them to RannCX.
+   * The visitor is also handed off to WhatsApp. Set to "" to use WhatsApp only.
    */
-  leadEndpoint: "",
+  leadEndpoint: "/api/lead",
 } as const;
 
 export const SEO = {
-  title: "WooCommerce Website Development Company in India | Midvana",
+  title: "WooCommerce Website Development Company in India | RannLab",
   description:
-    "Get a fast, mobile-first WooCommerce store built in India — UPI, Razorpay & COD payments, GST invoices, Shiprocket shipping and SEO set up. Free quote in 24 hours.",
+    "RannLab builds fast, mobile-first WooCommerce stores in India — UPI, Razorpay & COD, GST invoices, Shiprocket and SEO set up. Free quote in 24 hours.",
   ogImage: "/og-woocommerce.png",
 } as const;
 
@@ -46,5 +60,5 @@ export function waLink(text: string) {
 }
 
 export const WA_DEFAULT = waLink(
-  "Hi Midvana, I want a WooCommerce website for my business. Please share details."
+  "Hi RannLab, I want a WooCommerce website for my business. Please share details."
 );

@@ -85,7 +85,7 @@ export function meta({}: Route.MetaArgs) {
     { property: "og:image", content: ogImage },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: "WooCommerce website development in India by Midvana Intelligence" },
+    { property: "og:image:alt", content: "WooCommerce website development in India by RannLab Technologies" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: SEO.title },
     { name: "twitter:description", content: SEO.description },

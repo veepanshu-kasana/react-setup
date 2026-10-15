@@ -130,7 +130,7 @@ export const PACKAGES = [
 ];
 
 export const COMPARE = {
-  cols: ["Midvana", "Typical freelancer", "DIY website builder"],
+  cols: ["RannLab", "Typical freelancer", "DIY website builder"],
   rows: [
     { label: "Indian payments, COD & GST set up", v: [true, "Sometimes", "Extra apps"] },
     { label: "Designed for conversions, not just looks", v: [true, false, false] },
@@ -142,19 +142,36 @@ export const COMPARE = {
   ] as { label: string; v: (boolean | string)[] }[],
 };
 
-/** Genuine Google reviews of Midvana, quoted verbatim (excerpted). Never add or reword reviews. */
-export const REVIEWS = [
+/** Company facts as published on rannlab.com. Keep these in sync with the main site. */
+export const PROOF = [
+  { value: "10+", label: "Years building software" },
+  { value: "50+", label: "In-house developers" },
+  { value: "100+", label: "Projects delivered" },
+  { value: "ISO 27001", label: "Certified security practices" },
+];
+
+export const REGIONS = ["India", "USA", "UK", "Canada", "Australia"];
+
+export const WHY = [
   {
-    name: "Prof. Amisha Dawda",
-    text: "He is able to align & shape the brand's vision, mission & objectives into reality. I would highly recommend brands to opt for his services.",
+    icon: "layers",
+    title: "A full product team, not one freelancer",
+    body: "Designers, WooCommerce developers, QA and SEO specialists work on your store together, under one project manager.",
   },
   {
-    name: "Jagruti Swargam",
-    text: "The overall experience was good. Since the beginning Prashant was very cooperative and helpful and guided in a correct way. The team was able to deliver as expected.",
+    icon: "shield",
+    title: "Security built in",
+    body: "Hardened WordPress setup, SSL, secure payment flows and daily backups, run by a team with ISO 27001 practices.",
   },
   {
-    name: "Parag Kotecha",
-    text: "Absolutely they try level best for making these project better… Professional advisors, Polite nature, 100% Committed Nature.",
+    icon: "chart",
+    title: "Built to grow with you",
+    body: "From your first 50 products to ERP sync, marketplaces and custom plugins, the same team can take your store further.",
+  },
+  {
+    icon: "chat",
+    title: "Support across time zones",
+    body: "Talk to us on WhatsApp, phone or email. We support clients in India, the USA, UK, Canada and Australia.",
   },
 ];
 

@@ -55,12 +55,25 @@ export function enhance(cfg: EnhanceConfig) {
       }
 
       if (cfg.endpoint) {
+        // Captured in the CRM even if the visitor never presses Send in WhatsApp.
+        const q = new URLSearchParams(location.search);
+        const utm: Record<string, string> = {};
+        ["utm_source", "utm_medium", "utm_campaign", "gclid"].forEach((k) => {
+          const v = q.get(k);
+          if (v) utm[k] = v;
+        });
+        const idempotencyKey =
+          form.dataset.key || (form.dataset.key = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12));
         try {
           fetch(cfg.endpoint, {
             method: "POST",
             keepalive: true,
             headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({ name, phone, need, details, page: location.href }),
+            body: JSON.stringify({
+              name, phone, need, details, utm, idempotencyKey,
+              website: String(fd.get("website") || ""),
+              page: location.pathname,
+            }),
           }).catch(() => {});
         } catch {
           /* WhatsApp hand-off below still captures the lead */

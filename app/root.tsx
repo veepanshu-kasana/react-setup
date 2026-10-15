@@ -14,7 +14,6 @@ import css from "./app.css?inline";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.ico", sizes: "32x32" },
-  { rel: "icon", href: "/icon.svg", type: "image/svg+xml" },
   { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
   { rel: "manifest", href: "/site.webmanifest" },
 ];
@@ -29,7 +28,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#4c1d95" />
+        <meta name="theme-color" content="#0e1416" />
         <meta name="format-detection" content="telephone=no" />
         <Meta />
         <Links />
@@ -70,7 +69,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="container-x py-24 text-center">
-      <title>{`${message} | Midvana Intelligence`}</title>
+      <title>{`${message} | RannLab Technologies`}</title>
       <meta name="robots" content="noindex" />
       <h1 className="text-4xl font-extrabold">{message}</h1>
       <p className="mt-4 text-muted">{details}</p>
