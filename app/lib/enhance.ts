@@ -42,31 +42,126 @@ export function enhance(cfg: EnhanceConfig) {
     });
   }
 
-  // 3D: the hero scene swings with the pointer; cards tilt toward it with a moving glare.
+  // 3D: the hero product ring and the CTA lettering lean toward the pointer.
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
-  const scene = document.querySelector<HTMLElement>("[data-scene]");
-  const rig = scene?.querySelector<HTMLElement>(".scene-rig");
-  const glare = scene?.querySelector<HTMLElement>(".glare");
-  const hero = document.querySelector<HTMLElement>("[data-hero]");
-  if (!calm && finePointer && rig && hero) {
+  const lean = (zone: HTMLElement | null, target: HTMLElement | null, apply: (x: number, y: number) => void, reset: () => void) => {
+    if (!zone || !target || calm || !finePointer) return;
     let raf = 0;
-    hero.addEventListener("pointermove", (e) => {
+    zone.addEventListener("pointermove", (e) => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        const r = hero.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        rig.style.setProperty("--ry", `${-22 + x * 30}deg`);
-        rig.style.setProperty("--rx", `${12 - y * 18}deg`);
-        glare?.style.setProperty("--gx", `${50 + x * 100}%`);
-        glare?.style.setProperty("--gy", `${50 + y * 100}%`);
+        const r = zone.getBoundingClientRect();
+        apply((e.clientX - r.left) / r.width - 0.5, (e.clientY - r.top) / r.height - 0.5);
       });
     });
-    hero.addEventListener("pointerleave", () => {
-      rig.style.removeProperty("--ry");
-      rig.style.removeProperty("--rx");
-    });
+    zone.addEventListener("pointerleave", reset);
+  };
+  const ringTilt = document.querySelector<HTMLElement>(".ring-tilt");
+  lean(
+    document.querySelector<HTMLElement>("[data-hero]"),
+    ringTilt,
+    (x, y) => {
+      ringTilt!.style.setProperty("--turn", `${x * 40}deg`);
+      ringTilt!.style.setProperty("--tilt", `${-10 - y * 16}deg`);
+    },
+    () => {
+      ringTilt!.style.removeProperty("--turn");
+      ringTilt!.style.removeProperty("--tilt");
+    },
+  );
+  const extrude = document.querySelector<HTMLElement>(".extrude");
+  lean(
+    document.querySelector<HTMLElement>("[data-cta3d]"),
+    extrude,
+    (x, y) => {
+      extrude!.style.setProperty("--ey", `${x * 30}deg`);
+      extrude!.style.setProperty("--ex", `${18 - y * 24}deg`);
+    },
+    () => {
+      extrude!.style.removeProperty("--ey");
+      extrude!.style.removeProperty("--ex");
+    },
+  );
+
+  // Stats count up when they come into view.
+  if (!calm && "IntersectionObserver" in window) {
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        cio.unobserve(en.target);
+        const el = en.target as HTMLElement;
+        const target = parseInt(el.dataset.count || "0", 10);
+        const suffix = (el.dataset.count || "").replace(/^\d+/, "");
+        const t0 = performance.now();
+        const tick = (now: number) => {
+          const k = Math.min(1, (now - t0) / 1400);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - k, 3))) + suffix;
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    }, { threshold: 0.6 });
+    document.querySelectorAll<HTMLElement>("[data-count]").forEach((el) => cio.observe(el));
   }
+
+  // Live 3D dot-wave (canvas). Starts after load, pauses off-screen, one still frame for reduced motion.
+  const startWaves = () => {
+    document.querySelectorAll<HTMLCanvasElement>("canvas[data-wave]").forEach((cv) => {
+      const ctx = cv.getContext("2d");
+      if (!ctx) return;
+      const dpr = Math.min(1.5, devicePixelRatio || 1);
+      let W = 0, H = 0, visible = false, raf = 0;
+      const size = () => {
+        W = cv.clientWidth; H = cv.clientHeight;
+        cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+      const COLS = innerWidth < 640 ? 34 : 64, ROWS = 20;
+      const draw = (t: number) => {
+        ctx.clearRect(0, 0, W, H);
+        const time = t / 1000;
+        for (let j = 0; j < ROWS; j++) {
+          const z = j / (ROWS - 1);              // 0 = far, 1 = near
+          const persp = 0.35 + z * 0.9;
+          for (let i = 0; i < COLS; i++) {
+            const u = i / (COLS - 1) - 0.5;
+            const wave = Math.sin(u * 7 + time * 1.1 + z * 3) * Math.cos(z * 5 - time * 0.8) * 0.5 + Math.sin(u * 3 - time * 0.6) * 0.3;
+            const x = W / 2 + u * W * 1.25 * persp;
+            const y = H * (0.12 + z * 0.86) - wave * 26 * persp;
+            const mix = (u + 0.5);               // teal → saffron across the width
+            const rC = Math.round(31 + (245 - 31) * mix * 0.7);
+            const gC = Math.round(165 + (158 - 165) * mix);
+            const bC = Math.round(156 + (11 - 156) * mix * 0.8);
+            ctx.fillStyle = `rgba(${rC},${gC},${bC},${0.15 + z * 0.65})`;
+            ctx.beginPath();
+            ctx.arc(x, y, 0.6 + z * 1.9 + Math.max(0, wave) * 1.2, 0, 6.283);
+            ctx.fill();
+          }
+        }
+      };
+      const loop = (t: number) => {
+        draw(t);
+        if (visible) raf = requestAnimationFrame(loop);
+      };
+      size();
+      addEventListener("resize", () => { size(); if (calm || !visible) draw(0); }, { passive: true });
+      if (calm) { draw(0); return; }
+      new IntersectionObserver(([en]) => {
+        visible = en.isIntersecting && !document.hidden;
+        cancelAnimationFrame(raf);
+        if (visible) raf = requestAnimationFrame(loop);
+      }).observe(cv);
+      document.addEventListener("visibilitychange", () => {
+        cancelAnimationFrame(raf);
+        visible = !document.hidden && cv.getBoundingClientRect().top < innerHeight;
+        if (visible) raf = requestAnimationFrame(loop);
+      });
+    });
+  };
+  const idle = (cb: () => void) => ("requestIdleCallback" in window ? (window as unknown as { requestIdleCallback: (f: () => void, o?: object) => void }).requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300));
+  if (document.readyState === "complete") idle(startWaves);
+  else addEventListener("load", () => idle(startWaves), { once: true });
+
   if (!calm && finePointer) {
     document.querySelectorAll<HTMLElement>("[data-tilt3d]").forEach((card) => {
       let raf = 0;

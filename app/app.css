@@ -214,52 +214,219 @@
 
   /* ---------- Motion & 3D (all disabled by the prefers-reduced-motion rule above) ---------- */
 
-  /* Hero 3D scene: perspective camera > entrance wrapper > rig rotated by pointer */
-  .scene {
-    perspective: 1200px;
-    perspective-origin: 50% 40%;
-  }
-  .scene-in {
-    transform-style: preserve-3d;
-    animation: scene-in 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s backwards;
-  }
-  .scene-rig {
-    --rx: 12deg;
-    --ry: -22deg;
-    transform-style: preserve-3d;
-    transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(1.5deg);
-    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  @media (max-width: 1023px) {
-    .scene-rig {
-      --rx: 9deg;
-      --ry: -12deg;
-    }
-  }
-  .layer-back {
-    transform: translateZ(-90px);
-  }
-  .layer-mid {
-    transform: translateZ(0);
-  }
-  .layer-front {
-    transform: translateZ(130px);
-  }
-  .layer-chip {
-    transform: translateZ(170px);
-  }
-  .layer-chip2 {
-    transform: translateZ(110px);
-  }
   .float-a {
     animation: float 5s ease-in-out infinite;
   }
   .float-b {
     animation: float 6s ease-in-out -2.5s infinite;
   }
-  .sales-bar {
-    transform-origin: bottom;
-    animation: grow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+
+  /* ---------- 3D product ring (hero) ---------- */
+  .ring-stage {
+    height: 30rem;
+    perspective: 1100px;
+    perspective-origin: 50% 30%;
+    animation: ring-in 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s backwards;
+  }
+  .ring-tilt {
+    --tilt: -10deg;
+    --turn: 0deg;
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: 0;
+    height: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--tilt)) rotateY(var(--turn));
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .ring-spin {
+    position: absolute;
+    transform-style: preserve-3d;
+    animation: ring-spin 36s linear infinite;
+  }
+  .ring-stage:hover .ring-spin {
+    animation-play-state: paused;
+  }
+  .ring-card {
+    --r: 225px;
+    position: absolute;
+    left: -70px;
+    top: -110px;
+    width: 140px;
+    transform-style: preserve-3d;
+    transform: rotateY(var(--a)) translateZ(var(--r));
+  }
+  .ring-face,
+  .ring-back {
+    border-radius: 0.9rem;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .ring-face {
+    background: #fff;
+    padding: 8px;
+    box-shadow: 0 30px 50px -20px rgb(0 0 0 / 0.65), 0 0 0 1px rgb(255 255 255 / 0.6);
+  }
+  .ring-back {
+    position: absolute;
+    inset: 0;
+    transform: rotateY(180deg);
+    opacity: 0.5;
+    filter: saturate(0.6) brightness(0.55);
+  }
+  .ring-floor {
+    position: absolute;
+    left: -300px;
+    top: 150px;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    transform: rotateX(90deg);
+    background: radial-gradient(circle, rgb(31 165 156 / 0.55) 0%, rgb(31 165 156 / 0.15) 38%, transparent 62%);
+    box-shadow: 0 0 0 1px rgb(92 194 200 / 0.25) inset;
+  }
+  .chip {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 0.9rem;
+    background: rgb(255 255 255 / 0.96);
+    padding: 0.55rem 0.8rem;
+    box-shadow: 0 24px 40px -16px rgb(0 0 0 / 0.6);
+  }
+  .chip-a {
+    left: 0;
+    top: 0.5rem;
+    animation: float 5s ease-in-out infinite;
+  }
+  .chip-b {
+    right: 0;
+    top: 46%;
+    animation: float 6s ease-in-out -2s infinite;
+  }
+  .chip-c {
+    left: 8%;
+    bottom: 0.5rem;
+    animation: float 7s ease-in-out -4s infinite;
+  }
+  @media (max-width: 639px) {
+    .ring-stage {
+      height: 24rem;
+    }
+    .ring-card {
+      --r: 175px;
+      left: -54px;
+      top: -88px;
+      width: 108px;
+    }
+    .chip-b {
+      top: auto;
+      bottom: 0.5rem;
+    }
+    .chip-c {
+      display: none;
+    }
+  }
+
+  /* ---------- Dot-wave canvas + ghost word ---------- */
+  .dot-wave {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 62%;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .dot-wave-cta {
+    height: 100%;
+    opacity: 0.8;
+  }
+  .ghost-word {
+    position: absolute;
+    right: -2rem;
+    top: 3.5rem;
+    z-index: -1;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(6rem, 17vw, 15rem);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(92 194 200 / 0.18);
+    user-select: none;
+  }
+
+  /* ---------- 3D marquee wall (store types) ---------- */
+  .marquee-wall {
+    display: grid;
+    gap: 1.25rem;
+    transform: perspective(1400px) rotateX(14deg) rotateY(-8deg) rotateZ(-2.5deg);
+    transform-origin: center;
+    margin-inline: -3rem;
+  }
+  .marquee-row {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 1.25rem;
+    width: max-content;
+    padding-block: 1.5rem;
+    animation: marquee 48s linear infinite;
+  }
+  .marquee-rev .marquee-track {
+    animation-direction: reverse;
+    animation-duration: 56s;
+  }
+  .marquee-wall:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  .type-card {
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .type-card:hover {
+    transform: translateY(-10px) scale(1.04);
+  }
+
+  /* ---------- 3D podium (packages) ---------- */
+  @media (min-width: 1024px) {
+    .podium {
+      perspective: 1400px;
+    }
+    .podium-0 {
+      --by: 7deg;
+      transform-origin: right center;
+    }
+    .podium-2 {
+      --by: -7deg;
+      transform-origin: left center;
+    }
+    .podium-1 {
+      --bz: 50px;
+    }
+  }
+
+  /* ---------- Extruded 3D lettering (final CTA) ---------- */
+  .extrude {
+    margin: 0 auto 1.5rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3.5rem, 13vw, 9.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: #ecf8f7;
+    text-shadow:
+      0 1px 0 #5cc2c8, 0 2px 0 #34b3b0, 0 3px 0 #1fa59c, 0 4px 0 #1b958d, 0 5px 0 #17857e,
+      0 6px 0 #13766f, 0 7px 0 #0f6661, 0 8px 0 #0b5753, 0 9px 0 #084844,
+      0 14px 20px rgb(0 0 0 / 0.55), 0 0 60px rgb(31 165 156 / 0.35);
+    transform: perspective(800px) rotateX(var(--ex, 18deg)) rotateY(var(--ey, 0deg));
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    user-select: none;
   }
 
   /* Light glare that follows the pointer across a surface */
@@ -277,25 +444,6 @@
   }
 
   /* Hero backdrop: moving 3D grid floor + coloured glows */
-  .hero {
-    --floor: rgb(92 194 200 / 0.42);
-  }
-  .grid-floor {
-    position: absolute;
-    left: -60%;
-    right: -60%;
-    bottom: 0;
-    height: 160%;
-    z-index: -1;
-    background-image:
-      linear-gradient(var(--floor) 1.5px, transparent 1.5px),
-      linear-gradient(90deg, var(--floor) 1.5px, transparent 1.5px);
-    background-size: 72px 72px;
-    transform: perspective(900px) rotateX(64deg);
-    transform-origin: bottom;
-    mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.6) 30%, transparent 70%);
-    animation: floor 3s linear infinite;
-  }
   .orb {
     position: absolute;
     z-index: -1;
@@ -363,7 +511,7 @@
     --ty: 0deg;
     position: relative;
     transform-style: preserve-3d;
-    transform: perspective(900px) rotateX(var(--tx)) rotateY(var(--ty));
+    transform: perspective(900px) translateZ(var(--bz, 0px)) rotateX(var(--tx)) rotateY(calc(var(--by, 0deg) + var(--ty)));
     transition: transform 0.25s ease-out, box-shadow 0.3s ease;
     will-change: transform;
   }
@@ -438,21 +586,26 @@
     --angle: 360deg;
   }
 }
-@keyframes scene-in {
+@keyframes ring-in {
   from {
     opacity: 0;
-    rotate: y 35deg;
-    translate: 0 60px;
+    translate: 0 50px;
+    scale: 0.9;
+  }
+}
+@keyframes ring-spin {
+  to {
+    transform: rotateY(-360deg);
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
   }
 }
 @keyframes grow {
   from {
     scale: 1 0;
-  }
-}
-@keyframes floor {
-  to {
-    background-position: 0 72px;
   }
 }
 @keyframes drift {
@@ -482,7 +635,7 @@
 @keyframes reveal {
   from {
     opacity: 0;
-    translate: 0 28px;
+    transform: perspective(1000px) rotateX(24deg) translateY(48px) scale(0.96);
   }
 }
 @keyframes glow {

@@ -111,163 +111,75 @@ function Header() {
   );
 }
 
-/* ---------- Hero illustration: storefront + phone checkout, built in HTML/CSS (no image requests) ---------- */
+/* ---------- Hero visual: 3D product ring over a live dot-wave ---------- */
 
 /*
  * Product photos: Unsplash License (free for commercial use, no attribution required).
- * Kurta: Naseebo · Bangles: Rajeev Krishna · Earrings: Valentina Vehkalahti · Necklace: Sibeesh Venu
- * "Kalaa Ghar" is a made-up example store.
+ * "Kalaa Ghar" style products are made-up examples of what a client's store sells.
  */
-const SHOP = [
-  { img: "/showcase/kurta.webp", name: "Chanderi Silk Kurta Set", was: "₹3,499", now: "₹2,449", rating: 5, reviews: 38 },
-  { img: "/showcase/bangles.webp", name: "Hand-painted Lac Bangles", was: "₹899", now: "₹699", rating: 5, reviews: 112 },
-  { img: "/showcase/earrings.webp", name: "Carved Wooden Jhumkas", was: "", now: "₹449", rating: 4, reviews: 27 },
+const RING = [
+  { img: "/showcase/kurta.webp", name: "Chanderi Silk Kurta", was: "₹3,499", now: "₹2,449", tag: "Sale", tone: "#e2581c" },
+  { img: "/showcase/bangles.webp", name: "Hand-painted Lac Bangles", was: "₹899", now: "₹699", tag: "Bestseller", tone: "#0b6e6a" },
+  { img: "/showcase/earrings.webp", name: "Carved Wooden Jhumkas", was: "", now: "₹449", tag: "New", tone: "#7c3aed" },
+  { img: "/showcase/cat-spices-240.webp", name: "Organic Masala Box", was: "", now: "₹549", tag: "Organic", tone: "#4d7c0f" },
+  { img: "/showcase/cat-decor-240.webp", name: "Painted Terracotta Vase", was: "₹1,599", now: "₹1,299", tag: "Sale", tone: "#e2581c" },
+  { img: "/showcase/necklace.webp", name: "Tribal Bead Necklace", was: "", now: "₹1,199", tag: "Handmade", tone: "#be123c" },
+  { img: "/showcase/cat-beauty-240.webp", name: "Glow Skincare Kit", was: "", now: "₹899", tag: "Bundle", tone: "#0369a1" },
+  { img: "/showcase/cat-handicrafts-240.webp", name: "Festive Gift Hamper", was: "₹1,499", now: "₹999", tag: "Diwali", tone: "#b45309" },
 ];
 
-function Stars({ n }: { n: number }) {
+function ProductRing() {
+  const step = 360 / RING.length;
   return (
-    <span className="flex gap-px text-[#e0a100]">
-      {[0, 1, 2, 3, 4].map((i) => (
-        <I.Star key={i} className={`size-3 ${i < n ? "" : "opacity-25"}`} />
-      ))}
-    </span>
-  );
-}
-
-const SALES = [38, 52, 44, 67, 58, 81, 96];
-const BAR_COLORS = ["#5cc2c8", "#34b3b0", "#f59e0b", "#1fa59c", "#8b5cf6", "#f43f5e", "#1fa59c"];
-
-/*
- * Hero 3D scene: three layers in real 3D space.
- *   back  – WooCommerce sales dashboard
- *   mid   – a WooCommerce single-product page
- *   front – phone checkout with UPI, order + customer message chips
- * Product photos: Unsplash License (free for commercial use). "Kalaa Ghar" is a made-up example store.
- */
-function StoreShowcase() {
-  return (
-    <div className="scene relative mx-auto w-full max-w-[36rem] px-3 pb-24 pt-44 sm:px-8 lg:pt-40" aria-hidden="true" data-scene>
-      <div className="scene-in">
-        <div className="scene-rig relative">
-          {/* BACK: WooCommerce admin sales card */}
-          <div className="layer-back absolute -left-2 -top-40 w-[56%] rounded-2xl bg-[#1d2327] p-3.5 text-white shadow-2xl ring-1 ring-white/10 sm:-left-8">
-            <div className="flex items-center justify-between text-[10px] text-white/70">
-              <span className="flex items-center gap-1.5"><span className="grid size-4 place-items-center rounded bg-[#7f54b3] text-[8px] font-bold text-white">W</span>WooCommerce · Analytics</span>
-              <span>This week</span>
-            </div>
-            <div className="mt-2 flex items-end justify-between">
-              <div>
-                <p className="text-[10px] text-white/60">Net sales</p>
-                <p className="font-display text-xl font-bold">₹4,82,350</p>
-              </div>
-              <span className="rounded-full bg-[#22c55e]/20 px-2 py-0.5 text-[10px] font-bold text-[#4ade80]">▲ 38%</span>
-            </div>
-            <div className="mt-3 flex h-14 items-end gap-1.5">
-              {SALES.map((v, i) => (
-                <span key={i} className="sales-bar flex-1 rounded-t" style={{ height: `${v}%`, background: BAR_COLORS[i], animationDelay: `${0.6 + i * 0.08}s` }} />
-              ))}
-            </div>
-          </div>
-
-          {/* MID: WooCommerce single product page */}
-          <div className="layer-mid glare relative overflow-hidden rounded-2xl bg-white shadow-[0_40px_90px_-25px_rgb(0_0_0/0.75)] ring-1 ring-white/20">
-            <div className="flex items-center gap-1.5 border-b border-[#ececec] bg-[#f6f6f6] px-3 py-2">
-              <span className="size-2.5 rounded-full bg-[#ff5f57]" /><span className="size-2.5 rounded-full bg-[#febc2e]" /><span className="size-2.5 rounded-full bg-[#28c840]" />
-              <span className="ml-2 flex h-5 flex-1 items-center gap-1 rounded-md bg-white px-2 text-[10px] text-[#5f6368] ring-1 ring-[#e3e3e3]">
-                <svg viewBox="0 0 24 24" className="size-2.5" fill="currentColor"><path d="M17 9V7A5 5 0 0 0 7 7v2H5v13h14V9Zm-8-2a3 3 0 0 1 6 0v2H9Z" /></svg>
-                kalaaghar.in/product/chanderi-silk-kurta-set
-              </span>
-            </div>
-            <div className="flex items-center justify-between px-4 py-2.5">
-              <span className="leading-none">
-                <span className="block font-display text-[14px] font-bold tracking-tight text-[#3d2817]">Kalaa Ghar</span>
-                <span className="text-[7.5px] uppercase tracking-[0.18em] text-[#8a6d4f]">Handcrafted in India</span>
-              </span>
-              <span className="hidden gap-3 text-[10px] font-medium text-[#555] sm:flex"><span>Kurtas</span><span>Jewellery</span><span>Gifts</span></span>
-              <span className="relative text-[#333]"><I.Cart className="size-4" /><span className="absolute -right-1.5 -top-1.5 grid size-3.5 place-items-center rounded-full bg-[#e2581c] text-[8px] font-bold text-white">2</span></span>
-            </div>
-            <div className="grid grid-cols-[44%_1fr] gap-3.5 px-4 pb-4">
-              <div className="relative">
-                <img src="/showcase/kurta.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="aspect-[4/5] w-full rounded-lg object-cover" />
-                <span className="absolute left-1.5 top-1.5 grid size-8 place-items-center rounded-full bg-[#e2581c] text-[9px] font-bold text-white shadow-md">Sale!</span>
-                <div className="mt-1.5 grid grid-cols-3 gap-1">
-                  {["/showcase/kurta.webp", "/showcase/bangles.webp", "/showcase/earrings.webp"].map((src, i) => (
-                    <img key={src} src={src} alt="" width={240} height={240} loading="lazy" decoding="async" className={`aspect-square w-full rounded object-cover ${i === 0 ? "ring-2 ring-[#3d2817]" : "opacity-80"}`} />
-                  ))}
+    <div className="ring-stage relative mx-auto w-full max-w-[36rem]" aria-hidden="true" data-ring>
+      <div className="ring-tilt">
+        <div className="ring-spin">
+          {RING.map((p, i) => (
+            <div key={p.name} className="ring-card" style={{ "--a": `${i * step}deg` } as React.CSSProperties}>
+              <div className="ring-face">
+                <div className="relative">
+                  <img src={p.img} alt="" width={240} height={240} decoding="async" className="aspect-square w-full rounded-lg object-cover" />
+                  <span className="absolute left-1.5 top-1.5 rounded-full px-2 py-0.5 text-[9px] font-bold text-white" style={{ background: p.tone }}>{p.tag}</span>
                 </div>
+                <p className="mt-2 truncate text-[11px] font-bold text-ink">{p.name}</p>
+                <p className="text-[11px]">
+                  {p.was && <del className="mr-1 text-[#9aa5a8]">{p.was}</del>}
+                  <b className="text-[#c2410c]">{p.now}</b>
+                </p>
+                <span className="mt-1.5 block rounded-md bg-ink py-1 text-center text-[10px] font-bold text-white">Add to cart</span>
               </div>
-              <div className="min-w-0 pt-0.5">
-                <p className="text-[8.5px] text-[#888]">Home / Kurtas</p>
-                <p className="mt-0.5 font-display text-[13px] font-bold leading-tight text-[#222]">Chanderi Silk Kurta Set</p>
-                <div className="mt-1 flex items-center gap-1"><Stars n={5} /><span className="text-[8.5px] text-[#666]">(38 reviews)</span></div>
-                <p className="mt-1.5 text-[13px]"><del className="mr-1 text-[10px] text-[#999]">₹3,499</del><ins className="font-bold text-[#e2581c] no-underline">₹2,449</ins></p>
-                <p className="mt-2 text-[8.5px] font-semibold text-[#444]">Size</p>
-                <div className="mt-1 flex gap-1">
-                  {["S", "M", "L", "XL"].map((z) => (
-                    <span key={z} className={`grid h-5 min-w-5 place-items-center rounded border px-1 text-[8.5px] font-semibold ${z === "L" ? "border-[#3d2817] bg-[#3d2817] text-white" : "border-[#ddd] text-[#444]"}`}>{z}</span>
-                  ))}
-                </div>
-                <div className="mt-2 flex gap-1.5">
-                  <span className="grid h-6 w-8 place-items-center rounded border border-[#ddd] text-[9px] text-[#444]">1</span>
-                  <span className="grid h-6 flex-1 place-items-center rounded bg-[#3d2817] text-[9px] font-semibold text-white">Add to cart</span>
-                </div>
-                <ul className="mt-2 space-y-0.5 text-[8.5px] text-[#2f6b3a]">
-                  <li>✓ UPI, cards & Cash on Delivery</li>
-                  <li>✓ Delivery to 302001 by Sat</li>
-                  <li>✓ Free shipping above ₹999</li>
-                </ul>
-              </div>
+              <div className="ring-back"><img src={p.img} alt="" width={240} height={240} decoding="async" className="h-full w-full rounded-xl object-cover" /></div>
             </div>
-          </div>
-
-          {/* FRONT: phone with UPI checkout */}
-          <div className="layer-front absolute -bottom-20 left-0 w-[40%] max-w-[11.5rem] rounded-[1.7rem] bg-[#111] p-1.5 shadow-[0_40px_70px_-15px_rgb(0_0_0/0.8)] ring-1 ring-white/20 sm:-left-8">
-            <div className="overflow-hidden rounded-[1.35rem] bg-white">
-              <div className="flex items-center justify-between px-3 pt-1.5 text-[8px] font-semibold text-[#222]"><span>10:42</span><span className="h-1.5 w-9 rounded-full bg-[#111]" /><span>5G</span></div>
-              <div className="px-2.5 pb-3 pt-2">
-                <p className="text-[9px] font-semibold text-[#666]">Checkout · Pay ₹2,449</p>
-                <p className="mt-1.5 text-[8.5px] font-semibold text-[#444]">Pay with UPI</p>
-                <div className="mt-1 grid grid-cols-3 gap-1">
-                  {[["GPay", "#1a73e8"], ["PhonePe", "#5f259f"], ["Paytm", "#00b9f1"]].map(([n, c]) => (
-                    <span key={n} className="rounded-md py-1.5 text-center text-[7.5px] font-bold text-white" style={{ background: c }}>{n}</span>
-                  ))}
-                </div>
-                <div className="mt-1.5 flex items-center justify-between rounded-md px-2 py-1.5 text-[8.5px] font-semibold text-[#444] ring-1 ring-[#e5e5e5]">Cash on Delivery <span className="size-2.5 rounded-full ring-1 ring-[#bbb]" /></div>
-                <div className="mt-2 rounded-md bg-[#0b6e6a] py-1.5 text-center text-[9px] font-bold text-white">Pay securely</div>
-              </div>
-            </div>
-          </div>
-
-          {/* FRONT: new order chip */}
-          <div className="layer-chip float-a absolute -right-2 -top-16 flex items-center gap-2.5 rounded-xl bg-white px-3 py-2 shadow-2xl ring-1 ring-black/5 sm:-right-8">
-            <span className="grid size-8 place-items-center rounded-full bg-[#c6e1c6] text-[#2c4a1f]"><I.Cart className="size-4" /></span>
-            <span className="text-[10px] leading-tight">
-              <b className="block text-[11px] text-[#1d2327]">New order #4821 · ₹2,449</b>
-              <span className="text-[#646970]">Priya S., Pune · </span><span className="rounded bg-[#c6e1c6] px-1 font-semibold text-[#2c4a1f]">Processing</span>
-            </span>
-          </div>
-
-          {/* FRONT: customer WhatsApp message */}
-          <div className="layer-chip2 float-b absolute -bottom-20 -right-2 w-[52%] max-w-[15rem] rounded-xl bg-[#e7ffdb] p-2.5 shadow-2xl ring-1 ring-black/5 sm:-right-6">
-            <div className="flex items-center gap-1.5 text-[9.5px] font-semibold text-[#111b21]">
-              <img src="/showcase/necklace.webp" alt="" width={240} height={240} loading="lazy" decoding="async" className="size-5 rounded-full object-cover" />
-              Ananya M. <span className="ml-auto text-[#0b7a3b]"><I.WhatsApp className="size-3.5" /></span>
-            </div>
-            <p className="mt-1 text-[10.5px] leading-snug text-[#111b21]">Got my jhumkas today, they look even better than the photos!</p>
-            <p className="text-right text-[8px] text-[#667781]">11:06 am ✓✓</p>
-          </div>
+          ))}
         </div>
+        <div className="ring-floor" />
+      </div>
+
+      {/* Floating proof chips at different depths */}
+      <div className="chip chip-a">
+        <span className="grid size-8 place-items-center rounded-full bg-[#c6e1c6] text-[#2c4a1f]"><I.Cart className="size-4" /></span>
+        <span className="text-[11px] leading-tight">
+          <b className="block text-[12px] text-ink">New order #4821 · ₹3,148</b>
+          <span className="text-muted">Priya S., Pune · </span><span className="rounded bg-[#c6e1c6] px-1 font-semibold text-[#2c4a1f]">Processing</span>
+        </span>
+      </div>
+      <div className="chip chip-b">
+        <span className="grid size-8 place-items-center rounded-full bg-teal-50 text-teal-700"><I.Check className="size-4" /></span>
+        <span className="text-[11px] leading-tight"><b className="block text-[12px] text-ink">Paid ₹2,449 via UPI</b><span className="text-muted">GST invoice sent</span></span>
+      </div>
+      <div className="chip chip-c">
+        <span className="text-[13px] font-bold text-[#d4a017]">★ 4.9</span>
+        <span className="text-[11px] leading-tight text-muted">from 380+<br />customer reviews</span>
       </div>
     </div>
   );
 }
 
-/* ---------- Sections ---------- */
-
 function Hero() {
   return (
     <section id="top" aria-labelledby="hero-title" className="band-dark hero" data-hero>
-      <div className="grid-floor" aria-hidden="true" />
+      <canvas className="dot-wave" data-wave aria-hidden="true" />
+      <div className="ghost-word" aria-hidden="true">ONLINE</div>
       <div className="orb orb-teal" aria-hidden="true" />
       <div className="orb orb-amber" aria-hidden="true" />
       <div className="orb orb-violet" aria-hidden="true" />
@@ -308,7 +220,7 @@ function Hero() {
             <span>You own your store</span>
           </p>
         </div>
-        <StoreShowcase />
+        <ProductRing />
       </div>
     </section>
   );
@@ -325,7 +237,7 @@ function Proof() {
               <li key={p.label} className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <span className={`grid size-12 shrink-0 place-items-center rounded-xl ring-1 ${acc(i).tile}`}><Icon /></span>
                 <span>
-                  <span className="block whitespace-nowrap font-display text-2xl font-bold text-ink sm:text-3xl">{p.value}</span>
+                  <span className="block whitespace-nowrap font-display text-2xl font-bold text-ink sm:text-3xl" data-count={/^\d+/.test(p.value) ? p.value : undefined}>{p.value}</span>
                   <span className="block text-sm text-muted">{p.label}</span>
                 </span>
               </li>
@@ -370,13 +282,29 @@ function Pains() {
   );
 }
 
-function StoreTypes() {
+function TypeCard({ t, i }: { t: (typeof STORE_TYPES)[number]; i: number }) {
   return (
-    <section aria-labelledby="types-title" className="bg-gradient-to-b from-white via-amber-50/70 to-white pb-16 sm:pb-24">
+    <div className="type-card relative w-40 shrink-0 overflow-hidden rounded-2xl bg-surface shadow-xl sm:w-48">
+      <img src={t.img} srcSet={`${t.img.replace(".webp", "-240.webp")} 240w, ${t.img} 400w`} sizes="192px" alt="" width={400} height={500} loading="lazy" decoding="async" className="aspect-[4/5] w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/20 to-transparent" />
+      <span className={`absolute left-3 top-3 h-1.5 w-8 rounded-full bg-gradient-to-r ${acc(i).bar}`} />
+      <div className="absolute inset-x-0 bottom-0 p-4">
+        <p className="font-display text-[0.95rem] font-bold leading-snug text-white">{t.title}</p>
+        <p className="mt-1 text-xs leading-snug text-white/85">{t.detail}</p>
+      </div>
+    </div>
+  );
+}
+
+function StoreTypes() {
+  const half = Math.ceil(STORE_TYPES.length / 2);
+  const rows = [STORE_TYPES.slice(0, half), STORE_TYPES.slice(half)];
+  return (
+    <section aria-labelledby="types-title" className="overflow-hidden bg-gradient-to-b from-white via-amber-50/70 to-white pb-20 sm:pb-28">
       <div className="container-x">
         <div className="reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <p className="eyebrow">Stores we build</p>
+            <p className="eyebrow text-amber-700">Stores we build</p>
             <h2 id="types-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">Set up for what you sell</h2>
             <p className="mt-4 text-lg text-muted">Every category sells differently. We set up the product pages, shipping rules and checkout your customers expect.</p>
           </div>
@@ -384,21 +312,19 @@ function StoreTypes() {
             Tell us what you sell <I.Arrow className="size-4" />
           </a>
         </div>
-        <ul className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 xl:grid-cols-6">
-          {STORE_TYPES.map((t, i) => (
-            <li key={t.title} className="reveal photo-card group" style={{ animationDelay: `${(i % 3) * 90}ms` }}>
-              <div className="tilt relative overflow-hidden rounded-2xl bg-surface shadow-lg" data-tilt3d style={{ "--glow": acc(i).glow } as React.CSSProperties}>
-                <img src={t.img} srcSet={`${t.img.replace(".webp", "-240.webp")} 240w, ${t.img} 400w`} sizes="(min-width: 1280px) 200px, (min-width: 768px) 31vw, 46vw" alt={t.title} width={400} height={500} loading="lazy" decoding="async" className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/25 to-transparent" />
-                <span className={`absolute left-3 top-3 h-1.5 w-8 rounded-full bg-gradient-to-r ${acc(i).bar}`} aria-hidden="true" />
-                <div className="pop absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
-                  <h3 className="font-display text-[0.95rem] font-bold leading-snug text-white sm:text-base">{t.title}</h3>
-                  <p className="mt-1 text-xs leading-snug text-white/85">{t.detail}</p>
-                </div>
-              </div>
-            </li>
-          ))}
+        {/* Accessible list for screen readers; the 3D wall below is decorative */}
+        <ul className="sr-only">
+          {STORE_TYPES.map((t) => <li key={t.title}><h3>{t.title}</h3><p>{t.detail}</p></li>)}
         </ul>
+      </div>
+      <div className="marquee-wall mt-12" aria-hidden="true">
+        {rows.map((row, r) => (
+          <div key={r} className={`marquee-row ${r ? "marquee-rev" : ""}`}>
+            <div className="marquee-track">
+              {[...row, ...row, ...row, ...row].map((t, i) => <TypeCard key={`${t.title}-${i}`} t={t} i={STORE_TYPES.indexOf(t)} />)}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -525,13 +451,13 @@ function Packages() {
           title="Choose a starting point. We tailor the rest."
           sub="Every package is a fixed-price project. Tell us what you need and get an exact quote within 24 hours."
         />
-        <ul className="mt-14 grid gap-6 lg:grid-cols-3 lg:items-stretch">
-          {PACKAGES.map((p) => (
+        <ul className="podium mt-14 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+          {PACKAGES.map((p, i) => (
             <li
               key={p.name}
               data-tilt3d
               style={{ "--glow": p.featured ? "rgb(245 158 11 / 0.35)" : acc(PACKAGES.indexOf(p) * 2).glow } as React.CSSProperties}
-              className={`tilt reveal relative flex flex-col rounded-2xl p-7 ${p.featured ? "featured-ring bg-night text-white shadow-[0_30px_60px_-25px_rgb(11_110_106/0.7)]" : "bg-white ring-1 ring-line"}`}
+              className={`tilt reveal podium-${i} relative flex flex-col rounded-2xl p-7 ${p.featured ? "featured-ring bg-night text-white shadow-[0_30px_60px_-25px_rgb(11_110_106/0.7)]" : "bg-white ring-1 ring-line"}`}
             >
               {p.featured && (
                 <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 px-4 py-1 text-sm font-bold text-night shadow-lg">Most popular</span>
@@ -682,10 +608,10 @@ function Faq() {
 
 function FinalCta() {
   return (
-    <section aria-labelledby="final-title" className="band-dark py-16 sm:py-20">
-      <Circuit className="-left-40 -top-24 w-[30rem] opacity-50" />
-      <Circuit className="-right-24 -bottom-24 hidden w-[32rem] opacity-80 md:block" />
+    <section aria-labelledby="final-title" className="band-dark py-16 sm:py-24" data-cta3d>
+      <canvas className="dot-wave dot-wave-cta" data-wave aria-hidden="true" />
       <div className="container-x text-center">
+        <p className="extrude" aria-hidden="true">LAUNCH</p>
         <h2 id="final-title" className="mx-auto max-w-3xl text-3xl font-bold sm:text-4xl">
           Ready to start selling online? Let's build your WooCommerce store.
         </h2>
