@@ -235,7 +235,9 @@ export function enhance(cfg: EnhanceConfig) {
           fetch(cfg.endpoint, {
             method: "POST",
             keepalive: true,
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            // text/plain keeps this a "simple" cross-origin request (no preflight), so it
+            // still sends with keepalive while the visitor switches to WhatsApp.
+            headers: { "Content-Type": "text/plain;charset=UTF-8" },
             body: JSON.stringify({
               name, phone, need, details, utm, idempotencyKey,
               website: String(fd.get("website") || ""),

@@ -42,10 +42,12 @@ export const SITE = {
     refund: "https://rannlab.com/refund-and-cancellation-policy/",
   },
   /**
-   * Leads are POSTed here (app/routes/api.lead.ts), which signs and forwards them to RannCX.
-   * The visitor is also handed off to WhatsApp. Set to "" to use WhatsApp only.
+   * Where the form POSTs leads. The RannLab lead connector (separate Vercel project,
+   * holds the RannCX keys) signs and forwards them to RannCX; the visitor is also handed
+   * off to WhatsApp. "/api/lead" uses this site's own route instead (needs the
+   * RANNCX_* env vars on this site's Vercel project). "" = WhatsApp only.
    */
-  leadEndpoint: "/api/lead",
+  leadEndpoint: "https://rannlab-lead-connector.vercel.app/api/lead",
 } as const;
 
 export const SEO = {
