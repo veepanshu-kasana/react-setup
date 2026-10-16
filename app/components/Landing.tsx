@@ -24,7 +24,19 @@ const ACCENTS = [
 ];
 const acc = (i: number) => ACCENTS[i % ACCENTS.length];
 
-/** Icons that show what each platform does (not the companies' logos). */
+/**
+ * Official platform logos, if present: put files in app/assets/platform-logos/ named by slug
+ * (woocommerce, wordpress, razorpay, phonepe, paytm, shiprocket, google-analytics-4, meta-pixel)
+ * as .svg, .png or .webp. Any platform without a file falls back to the icon below.
+ */
+const LOGO_FILES = import.meta.glob<string>("../assets/platform-logos/*.{svg,png,webp}", { eager: true, query: "?url", import: "default" });
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const logoFor = (name: string) => {
+  const key = Object.keys(LOGO_FILES).find((k) => k.split("/").pop()!.replace(/\.[a-z]+$/, "") === slug(name));
+  return key ? LOGO_FILES[key] : undefined;
+};
+
+/** Icons that show what each platform does (used until a logo file is added). */
 const PLATFORM_ICONS: Record<string, (p: { className?: string }) => React.JSX.Element> = {
   WooCommerce: I.Cart,
   WordPress: I.Layout,
@@ -261,9 +273,14 @@ function Proof() {
           <ul className="flex flex-wrap justify-center gap-2.5">
             {PLATFORMS.map((p, i) => {
               const Icon = PLATFORM_ICONS[p] ?? I.Layers;
+              const logo = logoFor(p);
               return (
                 <li key={p} className="flex items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 text-sm font-semibold text-ink-2 shadow-sm ring-1 ring-line transition hover:-translate-y-0.5 hover:shadow-md">
-                  <span className={`grid size-7 place-items-center rounded-full ring-1 ${acc(i).tile}`}><Icon className="size-4" /></span>
+                  {logo ? (
+                    <span className="grid size-7 place-items-center rounded-full bg-white ring-1 ring-line"><img src={logo} alt="" width={20} height={20} loading="lazy" decoding="async" className="size-5 object-contain" /></span>
+                  ) : (
+                    <span className={`grid size-7 place-items-center rounded-full ring-1 ${acc(i).tile}`}><Icon className="size-4" /></span>
+                  )}
                   {p}
                 </li>
               );
