@@ -16,7 +16,7 @@ export type Page = {
   /** Layout choices so each page looks different */
   layout: {
     hero: "dark" | "light" | "centered" | "split";
-    features: "prism" | "cards" | "ring";
+    features: "prism" | "cards" | "ring" | "hub";
     packages: "towers" | "cards";
     pains: "rows" | "cards" | "cards-dark";
     process: "stairs" | "timeline";

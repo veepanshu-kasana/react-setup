@@ -699,8 +699,40 @@ function FeatureRing() {
   );
 }
 
+/** eCommerce: dark violet band, six glass cards around a glowing 3D ring core. */
+function FeatureHub() {
+  const P = usePage();
+  const { FEATURES } = P.c;
+  const card = (f: (typeof FEATURES)[number], i: number) => {
+    const Icon = ICONS[f.icon];
+    return (
+      <li key={f.title} className="fh-card tilt reveal" data-tilt3d style={{ "--fc": FACE_GRADS[i], "--glow": acc(i).glow, animationDelay: `${(i % 3) * 90}ms` } as React.CSSProperties}>
+        <span className="feat-ic"><Icon className="size-5" /></span>
+        <h3 className="mt-4 text-lg font-bold text-white">{f.title}</h3>
+        <p className="mt-1.5 text-[0.93rem] leading-relaxed text-white/70">{f.body}</p>
+      </li>
+    );
+  };
+  return (
+    <section id="features" aria-labelledby="features-title" className="band-dark dk dk-why dk-dots scroll-mt-20 py-10 sm:py-14">
+      <div className="container-x">
+        <SectionHead dark id="features-title" eyebrow="Built for India" title="Everything your store needs to sell from day one" sub={P.copy.featuresSub} />
+        <div className="fh mt-8 lg:mt-10">
+          <ul className="fh-col reveal">{FEATURES.slice(0, 3).map((f, i) => card(f, i))}</ul>
+          <div className="fh-core" aria-hidden="true">
+            <i className="fh-r1" /><i className="fh-r2" /><i className="fh-r3" />
+            <span className="fh-orb"><I.Cart className="size-9" /><b>Your store</b></span>
+          </div>
+          <ul className="fh-col reveal">{FEATURES.slice(3).map((f, i) => card(f, i + 3))}</ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Features() {
   const P = usePage();
+  if (P.layout.features === "hub") return <FeatureHub />;
   const { FEATURES } = P.c;
   const FEATURE_FACES = P.copy.featureFaces;
   const card = (f: (typeof FEATURES)[number], i: number) => {
