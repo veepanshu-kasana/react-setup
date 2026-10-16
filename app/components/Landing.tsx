@@ -1,7 +1,7 @@
 import { SITE, WA_DEFAULT } from "../site";
 import { enhance } from "../lib/enhance";
 import {
-  COMPARE, FAQS, FEATURES, HERO_POINTS, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, REGIONS, SERVICES, STORE_TYPES, WHY,
+  COMPARE, FAQS, FEATURES, HERO_POINTS, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, SERVICES, STORE_TYPES, WHY,
 } from "../content";
 import { LeadForm } from "./LeadForm";
 import * as I from "./icons";
@@ -587,67 +587,66 @@ function Compare() {
   );
 }
 
-/** Wireframe 3D globe (CSS only) with glowing client regions. Decorative. */
+/** Client regions for the live dotted globe (drawn on canvas by enhance.ts). First entry is the hub. */
 const GLOBE_PINS = [
-  { label: "India", lat: 21, lon: 78, c: "#f59e0b" },
-  { label: "USA", lat: 39, lon: -98, c: "#1fa59c" },
-  { label: "UK", lat: 54, lon: -2, c: "#8b5cf6" },
-  { label: "Canada", lat: 57, lon: -106, c: "#f43f5e" },
-  { label: "Australia", lat: -25, lon: 134, c: "#0ea5e9" },
+  { label: "India", lat: 21, lon: 78, c: "#fbbf24" },
+  { label: "USA", lat: 39, lon: -98, c: "#2dd4bf" },
+  { label: "UK", lat: 53, lon: -2, c: "#a78bfa" },
+  { label: "Canada", lat: 56, lon: -106, c: "#fb7185" },
+  { label: "Australia", lat: -25, lon: 134, c: "#38bdf8" },
 ];
-function Globe3D() {
-  return (
-    <div className="globe-wrap mt-10" aria-hidden="true">
-      <div className="globe">
-        <div className="globe-spin">
-          {[0, 30, 60, 90, 120, 150].map((d) => <span key={`m${d}`} className="globe-ring" style={{ transform: `rotateY(${d}deg)` }} />)}
-          {[-60, -30, 0, 30, 60].map((lat) => (
-            <span key={`p${lat}`} className="globe-lat" style={{ "--lat": `${lat}deg`, "--s": Math.cos((lat * Math.PI) / 180) } as React.CSSProperties} />
-          ))}
-          {GLOBE_PINS.map((p) => (
-            <span key={p.label} className="globe-pin" style={{ "--lon": `${p.lon}deg`, "--lat": `${p.lat}deg`, "--c": p.c } as React.CSSProperties}>
-              <i />
-              <b>{p.label}</b>
-            </span>
-          ))}
-        </div>
-        <div className="globe-glow" />
-      </div>
-    </div>
-  );
-}
+const WHY_STATS = [
+  { v: "10+", l: "Years of engineering", c: "from-teal-200 to-emerald-400" },
+  { v: "5", l: "Countries served", c: "from-amber-200 to-orange-400" },
+  { v: "ISO", l: "27001 security practices", c: "from-violet-200 to-fuchsia-400" },
+];
 
 function WhyRannlab() {
   return (
-    <section aria-labelledby="why-title" className="bg-white py-16 sm:py-24">
-      <div className="container-x grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div>
-          <p className="eyebrow">Why {SITE.shortBrand}</p>
-          <h2 id="why-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">An AI-first software company that builds stores to last</h2>
-          <p className="mt-4 text-lg text-muted">
-            {SITE.brand} has spent 10+ years building web, mobile and custom software for businesses worldwide. Your WooCommerce store gets the same engineering standards.
-          </p>
-          <div className="mt-6 flex items-center gap-3 text-sm font-semibold text-ink-2">
-            <I.Globe className="size-5 text-teal-700" /> Serving clients in
+    <section aria-labelledby="why-title" className="band-dark why-band py-16 sm:py-24">
+      <div className="container-x">
+        <div className="grid items-center gap-6 lg:grid-cols-[1fr_1.1fr]">
+          <div className="reveal">
+            <p className="eyebrow eyebrow-dark">Why {SITE.shortBrand}</p>
+            <h2 id="why-title" className="mt-3 text-3xl font-bold leading-tight text-white sm:text-5xl sm:leading-[1.08]">
+              An AI-first software company that <span className="why-grad">builds stores to last</span>
+            </h2>
+            <p className="mt-5 max-w-xl text-lg text-white/75">
+              {SITE.brand} has spent 10+ years building web, mobile and custom software for businesses worldwide. Your WooCommerce store gets the same engineering standards.
+            </p>
+            <dl className="mt-8 grid max-w-lg grid-cols-3 gap-3">
+              {WHY_STATS.map((st) => (
+                <div key={st.l} className="why-stat">
+                  <dt className="order-2 mt-1 text-xs font-medium leading-snug text-white/70 sm:text-sm">{st.l}</dt>
+                  <dd className={`order-1 bg-gradient-to-r bg-clip-text font-display text-2xl font-bold text-transparent sm:text-3xl ${st.c}`} data-count={/^\d+/.test(st.v) ? st.v : undefined}>{st.v}</dd>
+                </div>
+              ))}
+            </dl>
+            <a href={SITE.links.about} className="mt-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-5 py-3 font-bold text-white ring-1 ring-white/20 transition hover:bg-white/15">
+              About {SITE.brand} <I.Arrow className="size-4" />
+            </a>
           </div>
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {REGIONS.map((r) => (
-              <li key={r} className="rounded-full bg-teal-50 px-3.5 py-1.5 text-sm font-semibold text-teal-800 ring-1 ring-teal-100">{r}</li>
-            ))}
-          </ul>
-          <a href={SITE.links.about} className="mt-8 inline-flex items-center gap-2 font-bold text-teal-700 underline-offset-4 hover:underline">
-            About {SITE.brand} <I.Arrow className="size-4" />
-          </a>
-          <Globe3D />
+          <div className="globe-stage reveal">
+            <div className="globe-box">
+              <div className="globe-halo" aria-hidden="true" />
+              <canvas className="globe-canvas" data-globe={JSON.stringify(GLOBE_PINS)} aria-hidden="true" />
+            </div>
+            <ul className="globe-legend" aria-label="Countries we serve">
+              {GLOBE_PINS.map((p) => (
+                <li key={p.label}><i style={{ background: p.c, color: p.c }} aria-hidden="true" />{p.label}</li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <ul className="grid gap-5 sm:grid-cols-2">
+        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
           {WHY.map((w, i) => {
             const Icon = ICONS[w.icon];
             return (
-              <li key={w.title} className="tilt reveal rounded-2xl bg-surface p-6 ring-1 ring-line" data-tilt3d style={{ "--glow": acc(i + 1).glow } as React.CSSProperties}>
-                <span className={`pop grid size-12 place-items-center rounded-xl ring-1 ${acc(i + 1).tile}`}><Icon /></span>
-                <h3 className="mt-4 text-lg font-bold text-ink">{w.title}</h3>
-                <p className="mt-2 text-muted">{w.body}</p>
+              <li key={w.title} className="why-card tilt reveal" data-tilt3d style={{ "--glow": acc(i).glow, animationDelay: `${i * 90}ms` } as React.CSSProperties}>
+                <span className="why-num" aria-hidden="true">{`0${i + 1}`}</span>
+                <span className={`cube grid size-12 place-items-center rounded-xl bg-gradient-to-br text-white ${acc(i).bar}`} style={{ "--cube": acc(i).glow } as React.CSSProperties}><Icon /></span>
+                <h3 className="mt-5 text-lg font-bold text-white">{w.title}</h3>
+                <p className="mt-2 text-white/70">{w.body}</p>
               </li>
             );
           })}

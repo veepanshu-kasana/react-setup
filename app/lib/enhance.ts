@@ -172,9 +172,147 @@ export function enhance(cfg: EnhanceConfig) {
       });
     });
   };
+  // Live dotted globe with arcs from India to client countries. Pauses off-screen; still frame for reduced motion.
+  const startGlobes = () => {
+    document.querySelectorAll<HTMLCanvasElement>("canvas[data-globe]").forEach((cv) => {
+      const ctx = cv.getContext("2d");
+      if (!ctx) return;
+      type Pin = { label: string; lat: number; lon: number; c: string };
+      const pins = JSON.parse(cv.dataset.globe || "[]") as Pin[];
+      if (!pins.length) return;
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      const D = Math.PI / 180, TILT = 0.42, ct = Math.cos(TILT), st = Math.sin(TILT);
+      let W = 0, R = 0, visible = false, raf = 0;
+      const size = () => {
+        W = cv.clientWidth;
+        cv.width = cv.height = Math.round(W * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        R = W * 0.34;
+      };
+      const vec = (lat: number, lon: number) => [Math.cos(lat * D) * Math.sin(lon * D), Math.sin(lat * D), Math.cos(lat * D) * Math.cos(lon * D)];
+      const N = innerWidth < 640 ? 700 : 1200, GA = Math.PI * (3 - Math.sqrt(5));
+      const dots: number[][] = [];
+      for (let i = 0; i < N; i++) {
+        const y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y);
+        dots.push([Math.cos(GA * i) * r, y, Math.sin(GA * i) * r]);
+      }
+      const hub = vec(pins[0].lat, pins[0].lon);
+      const SEG = 56;
+      const arcs = pins.slice(1).map((p) => {
+        const b = vec(p.lat, p.lon);
+        const om = Math.acos(Math.min(1, hub[0] * b[0] + hub[1] * b[1] + hub[2] * b[2]));
+        const lift = Math.min(0.26, 0.1 + om * 0.09);
+        const pts: number[][] = [];
+        for (let j = 0; j <= SEG; j++) {
+          const s = j / SEG, k = 1 + Math.sin(Math.PI * s) * lift;
+          const A = Math.sin((1 - s) * om) / Math.sin(om), B = Math.sin(s * om) / Math.sin(om);
+          pts.push([(A * hub[0] + B * b[0]) * k, (A * hub[1] + B * b[1]) * k, (A * hub[2] + B * b[2]) * k]);
+        }
+        return { c: p.c, pts };
+      });
+      const proj = (v: number[], rot: number) => {
+        const cr = Math.cos(rot), sr = Math.sin(rot);
+        const x = v[0] * cr + v[2] * sr, z0 = -v[0] * sr + v[2] * cr, y = v[1] * ct - z0 * st;
+        // [screen x, screen y, depth, visible?] — a raised arc point is visible in front or outside the disc
+        return [W / 2 + x * R, W / 2 - y * R, v[1] * st + z0 * ct, v[1] * st + z0 * ct > 0 || x * x + y * y > 1 ? 1 : 0];
+      };
+      const draw = (t: number) => {
+        ctx.clearRect(0, 0, W, W);
+        const rot = -pins[0].lon * D + 0.75 - t * 0.0001;
+        // sphere of dots, back ones faint
+        for (const d of dots) {
+          const [x, y, z] = proj(d, rot);
+          if (z < 0) {
+            ctx.fillStyle = "rgba(94,234,212,0.07)";
+            ctx.fillRect(x - 0.5, y - 0.5, 1, 1);
+            continue;
+          }
+          const lat = d[1];
+          ctx.fillStyle = `rgba(${Math.round(94 + 120 * Math.max(0, lat))},${Math.round(234 - 20 * Math.abs(lat))},${Math.round(212 + 40 * lat)},${0.18 + z * 0.62})`;
+          ctx.beginPath();
+          ctx.arc(x, y, 0.6 + z * 1.15, 0, 6.283);
+          ctx.fill();
+        }
+        ctx.strokeStyle = "rgba(94,234,212,0.28)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(W / 2, W / 2, R, 0, 6.283);
+        ctx.stroke();
+        // arcs with travelling comets
+        ctx.lineCap = "round";
+        arcs.forEach((a, i) => {
+          const P = a.pts.map((v) => proj(v, rot));
+          ctx.strokeStyle = a.c;
+          ctx.globalAlpha = 0.32;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          for (let j = 1; j < P.length; j++) {
+            if (P[j][3] && P[j - 1][3]) { ctx.moveTo(P[j - 1][0], P[j - 1][1]); ctx.lineTo(P[j][0], P[j][1]); }
+          }
+          ctx.stroke();
+          const head = ((t * 0.00022 + i * 0.27) % 1.35);
+          ctx.lineWidth = 2.4;
+          for (let j = 1; j < P.length; j++) {
+            const s = j / SEG, f = (s - (head - 0.28)) / 0.28;
+            if (f <= 0 || s > head || !P[j][3] || !P[j - 1][3]) continue;
+            ctx.globalAlpha = Math.min(1, f);
+            ctx.beginPath();
+            ctx.moveTo(P[j - 1][0], P[j - 1][1]);
+            ctx.lineTo(P[j][0], P[j][1]);
+            ctx.stroke();
+          }
+          ctx.globalAlpha = 1;
+        });
+        // pins with pulse rings and labels
+        ctx.font = '700 12px "Plus Jakarta Sans Variable", system-ui, sans-serif';
+        pins.forEach((p, i) => {
+          const [x, y, z] = proj(vec(p.lat, p.lon), rot);
+          if (z < 0.05) return;
+          const al = Math.min(1, z * 3);
+          const ph = ((t / 1000) * 0.8 + i * 0.37) % 1;
+          ctx.globalAlpha = al * (1 - ph);
+          ctx.strokeStyle = p.c;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(x, y, 5 + ph * 16, 0, 6.283);
+          ctx.stroke();
+          ctx.globalAlpha = al;
+          ctx.shadowColor = p.c;
+          ctx.shadowBlur = 14;
+          ctx.fillStyle = p.c;
+          ctx.beginPath();
+          ctx.arc(x, y, i === 0 ? 6 : 4.5, 0, 6.283);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          const tw = ctx.measureText(p.label).width + 16, lx = x + 10, ly = y - 24;
+          ctx.fillStyle = "rgba(255,255,255,0.94)";
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(lx, ly, tw, 20, 10); else ctx.rect(lx, ly, tw, 20);
+          ctx.fill();
+          ctx.fillStyle = "#0b1f24";
+          ctx.fillText(p.label, lx + 8, ly + 14);
+          ctx.globalAlpha = 1;
+        });
+      };
+      const loop = (t: number) => {
+        draw(t);
+        if (visible) raf = requestAnimationFrame(loop);
+      };
+      size();
+      addEventListener("resize", () => { size(); if (calm || !visible) draw(0); }, { passive: true });
+      draw(0);
+      if (calm) return;
+      new IntersectionObserver(([en]) => {
+        visible = en.isIntersecting && !document.hidden;
+        cancelAnimationFrame(raf);
+        if (visible) raf = requestAnimationFrame(loop);
+      }).observe(cv);
+    });
+  };
   const idle = (cb: () => void) => ("requestIdleCallback" in window ? (window as unknown as { requestIdleCallback: (f: () => void, o?: object) => void }).requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300));
-  if (document.readyState === "complete") idle(startWaves);
-  else addEventListener("load", () => idle(startWaves), { once: true });
+  const startCanvases = () => { startWaves(); startGlobes(); };
+  if (document.readyState === "complete") idle(startCanvases);
+  else addEventListener("load", () => idle(startCanvases), { once: true });
 
   if (!calm && finePointer) {
     document.querySelectorAll<HTMLElement>("[data-tilt3d]").forEach((card) => {
