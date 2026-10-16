@@ -363,7 +363,7 @@ export function enhance(cfg: EnhanceConfig) {
     });
   };
   const idle = (cb: () => void) => ("requestIdleCallback" in window ? (window as unknown as { requestIdleCallback: (f: () => void, o?: object) => void }).requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300));
-  const startCanvases = () => { startWaves(); startGlobes(); };
+  const startCanvases = () => { startWaves(); startGlobes(); document.querySelector("[data-hero]")?.classList.add("st-on"); };
   if (document.readyState === "complete") idle(startCanvases);
   else addEventListener("load", () => idle(startCanvases), { once: true });
 

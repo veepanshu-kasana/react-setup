@@ -1,7 +1,7 @@
 import { SITE, TRACKING, WA_DEFAULT } from "../site";
 import { enhance } from "../lib/enhance";
 import {
-  COMPARE, FAQS, FEATURES, HERO_POINTS, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, SERVICES, STORE_TYPES, WHY,
+  COMPARE, FAQS, FEATURES, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, SERVICES, STORE_TYPES, WHY,
 } from "../content";
 import { LeadForm } from "./LeadForm";
 import * as I from "./icons";
@@ -141,74 +141,163 @@ function Header() {
  * Product photos: Unsplash License (free for commercial use, no attribution required).
  * "Kalaa Ghar" style products are made-up examples of what a client's store sells.
  */
-const RING = [
-  { img: "/showcase/kurta.webp", name: "Chanderi Silk Kurta", was: "₹3,499", now: "₹2,449", tag: "Sale", tone: "#e2581c" },
-  { img: "/showcase/bangles.webp", name: "Hand-painted Lac Bangles", was: "₹899", now: "₹699", tag: "Bestseller", tone: "#0b6e6a" },
-  { img: "/showcase/earrings.webp", name: "Carved Wooden Jhumkas", was: "", now: "₹449", tag: "New", tone: "#7c3aed" },
-  { img: "/showcase/cat-spices-240.webp", name: "Organic Masala Box", was: "", now: "₹549", tag: "Organic", tone: "#4d7c0f" },
-  { img: "/showcase/cat-decor-240.webp", name: "Painted Terracotta Vase", was: "₹1,599", now: "₹1,299", tag: "Sale", tone: "#e2581c" },
-  { img: "/showcase/necklace.webp", name: "Tribal Bead Necklace", was: "", now: "₹1,199", tag: "Handmade", tone: "#be123c" },
-  { img: "/showcase/cat-beauty-240.webp", name: "Glow Skincare Kit", was: "", now: "₹899", tag: "Bundle", tone: "#0369a1" },
-  { img: "/showcase/cat-handicrafts-240.webp", name: "Festive Gift Hamper", was: "₹1,499", now: "₹999", tag: "Diwali", tone: "#b45309" },
+
+const ST_CHIP = (Icon: (p: { className?: string }) => React.JSX.Element, label: string, bg: string, delay?: string) => (
+  <span className={`st-chip ${delay ? "st-pop" : ""}`} style={delay ? { animationDelay: delay } : undefined}>
+    <span className="st-chip-ic" style={{ background: bg }}><Icon className="size-2.5" /></span>{label}
+  </span>
+);
+const StoreLogo = () => (
+  <span className="inline-flex items-center gap-1.5">
+    <span className="st-logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" aria-hidden="true" className="size-3"><path d="M6 3h12l4 6-10 12L2 9z" /><path d="M2 9h20M12 21 8 9l4-6 4 6z" /></svg></span>
+    <b className="font-display text-[13px] text-ink">Priya<span className="text-[#db2777]">Jewels</span></b>
+  </span>
+);
+const ST_PRODUCTS = [
+  { img: "/showcase/earrings.webp", name: "Jhumka earrings", price: "₹1,299" },
+  { img: "/showcase/bangles.webp", name: "Lac bangles", price: "₹699" },
+  { img: "/showcase/necklace.webp", name: "Kundan necklace", price: "₹2,149" },
+  { img: "/showcase/kurta.webp", name: "Silk kurta", price: "₹2,449" },
 ];
 
-function ProductRing() {
-  const step = 360 / RING.length;
+/** Hero story (decorative): a quote form is filled → RannLab builds the store → it goes live → orders arrive. CSS only, 16 s loop. */
+function HeroStory() {
   return (
-    <div className="ring-stage relative mx-auto w-full max-w-[36rem]" aria-hidden="true" data-ring>
-      <div className="ring-tilt">
-        <div className="ring-spin">
-          {RING.map((p, i) => (
-            <div key={p.name} className="ring-card" style={{ "--a": `${i * step}deg` } as React.CSSProperties}>
-              <div className="ring-face">
-                <div className="relative">
-                  <img src={p.img} alt="" width={240} height={240} decoding="async" className="aspect-square w-full rounded-lg object-cover" />
-                  <span className="absolute left-1.5 top-1.5 rounded-full px-2 py-0.5 text-[9px] font-bold text-white" style={{ background: p.tone }}>{p.tag}</span>
+    <div className="st-wrap" aria-hidden="true">
+      <div className="st">
+        <div className="st-shadow" />
+
+        <div className="st-laptop st-float">
+          <div className="st-laptop-tilt">
+            <div className="st-bezel">
+              <div className="st-screen">
+                <div className="st-bar"><i /><i /><i /><span>priyajewels.in</span></div>
+
+                <div className="st-build">
+                  <div className="flex items-center justify-between">
+                    <span className="st-pop" style={{ animationDelay: "4.2s" }}><StoreLogo /></span>
+                    <span className="text-[10px] font-extrabold text-violet-700">BUILDING…</span>
+                  </div>
+                  <span className="st-wait">Waiting for your requirement…</span>
+                  <img className="st-grow h-[86px] w-full rounded-[10px] object-cover" style={{ animationDelay: "4.6s" }} src="/showcase/cat-jewellery-240.webp" alt="" width={240} height={300} decoding="async" loading="lazy" />
+                  <div className="grid grid-cols-4 gap-2">
+                    {ST_PRODUCTS.map((p, i) => (
+                      <img key={p.name} className="st-pop h-[78px] w-full rounded-lg object-cover" style={{ animationDelay: `${5.1 + i * 0.2}s` }} src={p.img} alt="" width={240} height={240} decoding="async" loading="lazy" />
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ST_CHIP(I.Card, "UPI Pay", "#7c3aed", "6s")}
+                    {ST_CHIP(I.Wallet, "COD", "#0f766e", "6.3s")}
+                    {ST_CHIP(I.Receipt, "GST Invoice", "#0284c7", "6.6s")}
+                    {ST_CHIP(I.Truck, "ShipFast", "#ea580c", "6.9s")}
+                    {ST_CHIP(I.Chat, "Chat Alerts", "#16a34a", "7.2s")}
+                    {ST_CHIP(I.Bolt, "Speed 100", "#db2777", "7.5s")}
+                  </div>
                 </div>
-                <p className="mt-2 truncate text-[11px] font-bold text-ink">{p.name}</p>
-                <p className="text-[11px]">
-                  {p.was && <del className="mr-1 text-[#9aa5a8]">{p.was}</del>}
-                  <b className="text-[#c2410c]">{p.now}</b>
-                </p>
-                <span className="mt-1.5 block rounded-md bg-ink py-1 text-center text-[10px] font-bold text-white">Add to cart</span>
+
+                <div className="st-live">
+                  <div className="flex items-center justify-between gap-2">
+                    <StoreLogo />
+                    <span className="hidden items-center gap-3 text-[10px] font-bold text-ink-2 sm:inline-flex"><span className="text-[#db2777]">Shop</span><span>New in</span><span>Bestsellers</span><span>Gifts</span></span>
+                    <span className="inline-flex items-center gap-2.5 text-ink">
+                      <I.Search className="size-3.5" />
+                      <I.Users className="size-3.5" />
+                      <span className="relative inline-grid"><I.Cart className="size-4" /><span className="st-badge">1</span></span>
+                    </span>
+                  </div>
+                  <div className="relative h-[82px] overflow-hidden rounded-[10px] text-white">
+                    <img className="absolute inset-0 h-full w-full object-cover" src="/showcase/cat-jewellery.webp" alt="" width={400} height={500} decoding="async" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a1416]/85 to-transparent p-3.5">
+                      <b className="block font-display text-base">Handmade with love</b>
+                      <span className="text-[10px]">Free shipping · COD available</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {ST_PRODUCTS.map((p) => (
+                      <div key={p.name} className="grid gap-0.5">
+                        <img className="h-[74px] w-full rounded-lg object-cover" src={p.img} alt="" width={240} height={240} decoding="async" loading="lazy" />
+                        <b className="truncate text-[10px] text-ink">{p.name}</b>
+                        <span className="text-[10px] font-extrabold text-teal-700">{p.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ST_CHIP(I.Card, "UPI", "#7c3aed")}
+                    {ST_CHIP(I.Wallet, "COD", "#0f766e")}
+                    {ST_CHIP(I.Truck, "Free shipping", "#ea580c")}
+                    {ST_CHIP(I.Receipt, "GST bill", "#0284c7")}
+                  </div>
+                  <span className="st-pop st-livebadge" style={{ animationDelay: "8.5s" }}><I.Check className="size-4" /> Store is live</span>
+                </div>
               </div>
-              <div className="ring-back"><img src={p.img} alt="" width={240} height={240} decoding="async" className="h-full w-full rounded-xl object-cover" /></div>
+            </div>
+            <div className="st-base" />
+          </div>
+        </div>
+
+        <div className="st-phone st-float2 st-dim">
+          <div className="st-phone-screen">
+            <div className="flex items-center justify-between border-b border-[#eef2f3] px-3 pb-2 pt-[22px]">
+              <img src="/brand/rannlab-logo-200.webp" alt="" width={200} height={40} className="h-[13px] w-auto" decoding="async" loading="lazy" />
+              <span className="text-[8px] font-extrabold text-teal-700">FREE QUOTE</span>
+            </div>
+            <div className="flex flex-col gap-[7px] px-3 py-2.5">
+              <b className="font-display text-[12.5px] leading-tight text-ink">Get a free quote in 24 hours</b>
+              <span className="st-lbl">Your name</span>
+              <span className="st-field"><span className="st-type st-type1">Priya Sharma</span></span>
+              <span className="st-lbl">Mobile / WhatsApp</span>
+              <span className="st-field"><span className="st-cc">+91</span><span className="st-type st-type2" style={{ left: 34 }}>98XXX XXX21</span></span>
+              <span className="st-lbl">What do you need?</span>
+              <span className="st-pop st-field st-field-on" style={{ animationDelay: "1.5s" }}>New WooCommerce store <span className="text-teal-700">▾</span></span>
+              <span className="st-lbl">What do you sell?</span>
+              <span className="st-pop st-field st-field-txt" style={{ animationDelay: "1.9s" }}>Jewellery · 80 products</span>
+              <span className="st-press">Get my free quote →</span>
+            </div>
+            <span className="st-pop st-done" style={{ animationDelay: "2.9s" }}><span className="st-done-ic"><I.Check className="size-3" /></span>Request received</span>
+          </div>
+        </div>
+
+        <div className="st-link st-link1"><span className="st-run st-run1" /></div>
+        <div className="st-link st-link2"><span className="st-run st-run2" /></div>
+
+        <div className="st-orders">
+          {[
+            { img: "/showcase/earrings.webp", t: "New order · ₹1,299", d: "Paid via UPI", delay: "12.2s" },
+            { img: "/showcase/necklace.webp", t: "New order · ₹2,149", d: "Cash on delivery", delay: "12.9s" },
+            { img: "/showcase/bangles.webp", t: "Shipped · ₹699", d: "Courier pickup booked", delay: "13.6s" },
+          ].map((o) => (
+            <div key={o.t} className="st-pop st-order" style={{ animationDelay: o.delay }}>
+              <img src={o.img} alt="" width={240} height={240} className="size-9 rounded-[10px] object-cover" decoding="async" loading="lazy" />
+              <span className="grid text-[11.5px] leading-snug"><b className="text-ink">{o.t}</b><span className="text-muted">{o.d}</span></span>
             </div>
           ))}
+          <div className="st-pop st-sales" style={{ animationDelay: "14.2s" }}>
+            <span className="text-[11px] text-white/75">Sales this week</span>
+            <div className="flex h-[54px] items-end gap-1.5">
+              {[["30%", "#2dd4bf"], ["45%", "#2dd4bf"], ["40%", "#2dd4bf"], ["65%", "#fbbf24"], ["92%", "#f472b6"]].map(([h, c], i) => (
+                <span key={i} className="st-rise flex-1 rounded-t" style={{ height: h, background: c, animationDelay: `${14.3 + i * 0.1}s` }} />
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="ring-floor" />
-      </div>
-
-      {/* Floating proof chips at different depths */}
-      <div className="chip chip-a">
-        <span className="grid size-8 place-items-center rounded-full bg-[#c6e1c6] text-[#2c4a1f]"><I.Cart className="size-4" /></span>
-        <span className="text-[11px] leading-tight">
-          <b className="block text-[12px] text-ink">New order #4821 · ₹3,148</b>
-          <span className="text-muted">Priya S., Pune · </span><span className="rounded bg-[#c6e1c6] px-1 font-semibold text-[#2c4a1f]">Processing</span>
-        </span>
-      </div>
-      <div className="chip chip-b">
-        <span className="grid size-8 place-items-center rounded-full bg-teal-50 text-teal-700"><I.Check className="size-4" /></span>
-        <span className="text-[11px] leading-tight"><b className="block text-[12px] text-ink">Paid ₹2,449 via UPI</b><span className="text-muted">GST invoice sent</span></span>
-      </div>
-      <div className="chip chip-c">
-        <span className="text-[13px] font-bold text-teal-700">⚡ 100</span>
-        <span className="text-[11px] leading-tight text-muted">Google PageSpeed<br />mobile score</span>
       </div>
     </div>
   );
 }
 
+const STORY_STEPS = [
+  { n: "01", t: "Requirement", c: "#2dd4bf" },
+  { n: "02", t: "We build", c: "#a78bfa" },
+  { n: "03", t: "Store live", c: "#fbbf24" },
+  { n: "04", t: "Orders", c: "#f472b6" },
+];
+
 function Hero() {
   return (
-    <section id="top" aria-labelledby="hero-title" className="band-dark hero" data-hero>
+    <section id="top" aria-labelledby="hero-title" className="band-dark hero hero-story" data-hero>
+      <div className="hero-aurora" aria-hidden="true"><i /><i /><i /></div>
       <canvas className="dot-wave" data-wave aria-hidden="true" />
-      <div className="ghost-word" aria-hidden="true">ONLINE</div>
-      <div className="orb orb-teal" aria-hidden="true" />
-      <div className="orb orb-amber" aria-hidden="true" />
-      <div className="orb orb-violet" aria-hidden="true" />
-      <Circuit className="-left-40 bottom-0 w-[30rem] opacity-60" />
-      <div className="container-x grid gap-6 pb-10 pt-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:pb-16 lg:pt-12">
+      <div className="container-x grid gap-8 pb-10 pt-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:pb-14 lg:pt-12">
         <div>
           <p className="inline-flex items-center gap-2 rounded-full bg-teal-500/15 px-3 py-1 text-sm font-semibold text-teal-100 ring-1 ring-teal-300/30">
             <span className="size-2 rounded-full bg-teal-300" aria-hidden="true" /> 10+ years · 100+ projects delivered
@@ -217,27 +306,25 @@ function Hero() {
             WooCommerce Website Development Company in <span className="tricolour">India</span>
           </h1>
           <p className="mt-4 max-w-xl text-base text-white/85 sm:text-lg">
-            RannLab builds fast, mobile-first online stores that turn visitors into paying customers, with Indian payments, shipping and GST ready from day one.
+            Fill a 30-second form or message us on WhatsApp. We design, build and launch your store with UPI, Razorpay, COD, GST invoices and Shiprocket ready, so you can focus on the orders.
           </p>
-          <ul className="mt-5 grid gap-2 sm:grid-cols-2 sm:gap-3">
-            {HERO_POINTS.map((p) => (
-              <li key={p} className="flex gap-2.5 text-[0.92rem] text-white/90">
-                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-teal-500/20 text-teal-300"><I.Check className="size-3.5" /></span>
-                {p}
-              </li>
-            ))}
-          </ul>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <a href="#quote" data-track="cta_click" data-loc="hero" className="btn btn-primary">Get a free quote <I.Arrow /></a>
+            <a href="#quote" data-track="cta_click" data-loc="hero" className="btn cta-primary">Share your requirement <I.Arrow /></a>
             <WaButton location="hero" className="" />
           </div>
-          <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/70">
-            <span className="inline-flex items-center gap-1.5"><I.Shield className="size-4 text-teal-300" /> ISO 27001 certified</span>
-            <span>Fixed price</span>
-            <span>You own your store</span>
+          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/70">
+            <span>Fixed price</span><span aria-hidden="true">·</span><span>Quote in 24 hours</span><span aria-hidden="true">·</span><span>You own your store</span>
           </p>
+          <ol className="st-steps mt-7" aria-label="How it works">
+            {STORY_STEPS.map((st, i) => (
+              <li key={st.n}>
+                <span className="st-seg"><span style={{ background: st.c, animationDelay: `${i * 4}s` }} /></span>
+                <span className="st-segt" style={{ animationDelay: `${i * 4}s` }}>{st.n} {st.t}</span>
+              </li>
+            ))}
+          </ol>
         </div>
-        <ProductRing />
+        <HeroStory />
       </div>
     </section>
   );
