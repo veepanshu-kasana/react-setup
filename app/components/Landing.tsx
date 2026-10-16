@@ -888,17 +888,24 @@ function Faq() {
           <p className="eyebrow">FAQ</p>
           <h2 id="faq-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">WooCommerce development: common questions</h2>
           <p className="mt-4 text-lg text-muted">Straight answers on cost, timelines, payments and what happens after launch.</p>
-          <div className="faq-q" aria-hidden="true">
-            <div className="faq-q-spin">
-              {Array.from({ length: 14 }, (_, k) => <span key={k} style={{ "--k": k } as React.CSSProperties}>?</span>)}
+          <div className="faq-chat reveal">
+            <div className="faq-chat-head">
+              <span className="faq-chat-av" aria-hidden="true">R</span>
+              <span className="min-w-0 flex-1 leading-tight">
+                <b className="block text-sm text-white">RannLab WooCommerce team</b>
+                <span className="text-xs text-white/80">Usually replies within a few hours</span>
+              </span>
+              <I.WhatsApp className="size-5 text-white" />
             </div>
-            <div className="faq-q-floor" />
-          </div>
-          <div className="faq-help">
-            <p className="font-display text-lg font-bold text-ink">Still have a question?</p>
-            <p className="mt-1 text-muted">Talk to a WooCommerce expert. We usually reply within a few hours.</p>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-              <WaButton location="faq" className="flex-1" label="WhatsApp us" />
+            <div className="faq-chat-body" aria-hidden="true">
+              <p className="chat-msg chat-out" style={{ "--d": 0 } as React.CSSProperties}>Hi! How much will a WooCommerce store cost for my brand?</p>
+              <p className="chat-msg chat-in" style={{ "--d": 1 } as React.CSSProperties}>Depends on products and features. Share a few details and we'll send a fixed, itemised quote within 24 hours.</p>
+              <p className="chat-msg chat-out" style={{ "--d": 2 } as React.CSSProperties}>Can you set up UPI and COD too?</p>
+              <p className="chat-msg chat-in" style={{ "--d": 3 } as React.CSSProperties}>Yes. Razorpay or PhonePe, COD rules, GST invoices and Shiprocket, all ready at launch.</p>
+              <span className="chat-typing" style={{ "--d": 4 } as React.CSSProperties}><i /><i /><i /></span>
+            </div>
+            <div className="faq-chat-foot">
+              <WaButton location="faq" className="flex-1" label="Ask on WhatsApp" />
               <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="faq" className="btn btn-ghost flex-1">
                 <I.Phone /> Call now
               </a>
@@ -924,47 +931,63 @@ function Faq() {
   );
 }
 
-const CTA_CHIPS = [
-  { t: "Order #4821 · ₹3,148", Icon: I.Cart },
-  { t: "Paid via UPI", Icon: I.Wallet },
-  { t: "Shipped with Shiprocket", Icon: I.Truck },
-  { t: "GST invoice sent", Icon: I.Receipt },
-  { t: "WhatsApp alert sent", Icon: I.Chat },
-  { t: "New customer · Pune", Icon: I.Users },
-  { t: "COD confirmed", Icon: I.Check },
-  { t: "Cart recovered", Icon: I.Refresh },
+const CTA_NOTES = [
+  { t: "New order #4821", d: "₹3,148 · Priya S., Pune", Icon: I.Cart, c: "#0f9d94" },
+  { t: "Payment received", d: "₹2,449 via UPI", Icon: I.Wallet, c: "#7c3aed" },
+  { t: "Order shipped", d: "Shiprocket AWB generated", Icon: I.Truck, c: "#ea580c" },
+  { t: "GST invoice sent", d: "Invoice INV-1027 emailed", Icon: I.Receipt, c: "#0284c7" },
+  { t: "Cart recovered", d: "WhatsApp reminder worked", Icon: I.Chat, c: "#16a34a" },
 ];
 
 function FinalCta() {
   return (
     <section aria-labelledby="final-title" className="band-dark cta-band py-16 sm:py-24" data-cta3d>
       <div className="cta-floor" aria-hidden="true" />
-      <div className="container-x relative text-center">
+      <div className="container-x grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="reveal text-center lg:text-left">
+          <p className="eyebrow eyebrow-dark">Let's build it</p>
+          <h2 id="final-title" className="mt-3 text-3xl font-bold leading-tight sm:text-5xl sm:leading-[1.08]">
+            Ready to start selling online? <span className="why-grad">Let's build your WooCommerce store.</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-lg text-white/80 lg:mx-0">Talk to a RannLab WooCommerce expert today. Free consultation, fixed quote within 24 hours.</p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+            <a href="#quote" data-track="cta_click" data-loc="final" className="btn cta-primary text-lg">Get my free quote <I.Arrow /></a>
+            <WaButton location="final" className="text-lg" />
+          </div>
+          <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/75 lg:justify-start">
+            {["Free consultation", "Fixed quote in 24 hrs", "You own your store"].map((t) => (
+              <li key={t} className="flex items-center gap-2"><I.Check className="size-4 text-teal-300" /> {t}</li>
+            ))}
+          </ul>
+        </div>
         <div className="cta-stage" aria-hidden="true">
+          <div className="cta-glow" />
           <div className="cta-tilt">
-            <div className="cta-ring">
-              {CTA_CHIPS.map((c, i) => (
-                <span key={c.t} className="cta-chip" style={{ "--i": i } as React.CSSProperties}>
-                  <c.Icon className="size-3.5" /> {c.t}
-                </span>
-              ))}
+            <div className="cta-phone">
+              <div className="cta-screen">
+                <span className="cta-notch" />
+                <p className="cta-time">9:41</p>
+                <p className="cta-date">Your store · today</p>
+                <div className="cta-notes">
+                  <div className="cta-notes-col">
+                    {[...CTA_NOTES].reverse().map((n) => (
+                      <div key={n.t} className="cta-note">
+                        <span className="cta-note-ic" style={{ background: n.c }}><n.Icon className="size-4" /></span>
+                        <span className="min-w-0 flex-1">
+                          <b>{n.t}</b>
+                          <span>{n.d}</span>
+                        </span>
+                        <small>now</small>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="cta-dock"><i><I.Bolt className="size-4" /></i><i><I.Search className="size-4" /></i></div>
+                <span className="cta-home" />
+              </div>
             </div>
-            <div className="cta-core"><I.Cart className="size-9" /></div>
           </div>
         </div>
-        <h2 id="final-title" className="mx-auto max-w-3xl text-3xl font-bold leading-tight sm:text-5xl sm:leading-[1.08]">
-          Ready to start selling online? <span className="why-grad">Let's build your WooCommerce store.</span>
-        </h2>
-        <p className="mx-auto mt-5 max-w-xl text-lg text-white/80">Talk to a RannLab WooCommerce expert today. Free consultation, fixed quote within 24 hours.</p>
-        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <a href="#quote" data-track="cta_click" data-loc="final" className="btn cta-primary text-lg">Get my free quote <I.Arrow /></a>
-          <WaButton location="final" className="text-lg" />
-        </div>
-        <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/75">
-          {["Free consultation", "Fixed quote in 24 hrs", "You own your store"].map((t) => (
-            <li key={t} className="flex items-center gap-2"><I.Check className="size-4 text-teal-300" /> {t}</li>
-          ))}
-        </ul>
       </div>
     </section>
   );
