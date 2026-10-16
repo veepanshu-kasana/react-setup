@@ -572,6 +572,9 @@
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 65% 60% at 50% 35%, #000 20%, transparent 75%);
   }
+  .dk-cta::after {
+    display: none;
+  }
   .dk-dots::after {
     background-image: radial-gradient(rgb(255 255 255 / 0.12) 1px, transparent 1.2px);
     background-size: 22px 22px;
@@ -1426,6 +1429,36 @@
     filter: blur(70px);
     opacity: 0.6;
     animation: spin-border 12s linear infinite;
+  }
+  .cta-ripples {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+  }
+  .cta-ripples i {
+    position: absolute;
+    left: -12rem;
+    top: -12rem;
+    width: 24rem;
+    height: 24rem;
+    border-radius: 50%;
+    border: 2px solid rgb(94 234 212 / 0.6);
+    box-shadow: 0 0 24px rgb(45 212 191 / 0.25), inset 0 0 24px rgb(45 212 191 / 0.15);
+    opacity: 0;
+    scale: calc(0.6 + var(--k) * 0.45);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .cta-ripples i {
+      animation: cta-ripple 6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+      animation-delay: calc(var(--k) * 1.5s);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-ripples i {
+      opacity: 0.35;
+    }
   }
   .cta-tilt {
     transform-style: preserve-3d;
@@ -3178,4 +3211,10 @@
 @keyframes dk-drift {
   from { transform: translate(0, 0) scale(1); }
   to { transform: translate(3%, -3%) scale(1.08); }
+}
+
+@keyframes cta-ripple {
+  0% { scale: 0.7; opacity: 0; }
+  12% { opacity: 1; }
+  100% { scale: 1.9; opacity: 0; }
 }

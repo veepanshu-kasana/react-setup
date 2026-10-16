@@ -1052,6 +1052,7 @@ function FinalCta() {
         </div>
         <div className="cta-stage" aria-hidden="true">
           <div className="cta-glow" />
+          <div className="cta-ripples">{[0, 1, 2, 3].map((k) => <i key={k} style={{ "--k": k } as React.CSSProperties} />)}</div>
           <div className="cta-tilt">
             <div className="cta-phone">
               <div className="cta-screen">
