@@ -401,9 +401,32 @@ function IconCards({ items, offset = 0 }: { items: readonly { icon: string; titl
   );
 }
 
+/** Short labels for the faces of the rotating prism, in FEATURES order. */
+const FEATURE_FACES = ["UPI, cards & COD", "Shipping", "GST invoices", "WhatsApp alerts", "Fast on 4G", "SEO & tracking"];
+const FACE_GRADS = [
+  "linear-gradient(150deg, #2dd4bf, #0b6e6a)",
+  "linear-gradient(150deg, #fbbf24, #ea580c)",
+  "linear-gradient(150deg, #a78bfa, #7c3aed)",
+  "linear-gradient(150deg, #4ade80, #15803d)",
+  "linear-gradient(150deg, #fb7185, #be123c)",
+  "linear-gradient(150deg, #38bdf8, #1d4ed8)",
+];
+
 function Features() {
+  const card = (f: (typeof FEATURES)[number], i: number) => {
+    const Icon = ICONS[f.icon];
+    return (
+      <li key={f.title} className="feat-card" style={{ "--i": i, "--fc": FACE_GRADS[i] } as React.CSSProperties}>
+        <span className="feat-ic"><Icon className="size-5" /></span>
+        <div className="min-w-0">
+          <h3 className="font-bold text-ink">{f.title}</h3>
+          <p className="mt-1 text-[0.93rem] leading-relaxed text-muted">{f.body}</p>
+        </div>
+      </li>
+    );
+  };
   return (
-    <section id="features" aria-labelledby="features-title" className="mesh-warm scroll-mt-20 py-16 sm:py-24">
+    <section id="features" aria-labelledby="features-title" className="feat-band mesh-warm scroll-mt-20 py-16 sm:py-24">
       <div className="container-x">
         <SectionHead
           id="features-title"
@@ -412,7 +435,30 @@ function Features() {
           title="Everything your store needs to sell from day one"
           sub="Every store we launch comes with the payments, shipping, tax and tracking Indian e-commerce businesses rely on."
         />
-        <IconCards items={FEATURES} />
+        <div className="feat mt-12 grid items-center gap-8 lg:mt-16 lg:grid-cols-[1fr_20rem_1fr] lg:gap-10">
+          <ul className="reveal grid gap-4 lg:order-1">{FEATURES.slice(0, 3).map((f, i) => card(f, i))}</ul>
+          <div className="feat-stage order-first lg:order-2" aria-hidden="true">
+            <div className="feat-orbit"><i /><i /><i /></div>
+            <div className="feat-tilt">
+              <div className="feat-prism">
+                {FEATURES.map((f, i) => {
+                  const Icon = ICONS[f.icon];
+                  return (
+                    <div key={f.title} className="feat-face" style={{ "--i": i, background: FACE_GRADS[i] } as React.CSSProperties}>
+                      <span className="feat-face-ic"><Icon className="size-7" /></span>
+                      <b>{FEATURE_FACES[i]}</b>
+                      <small>{`0${i + 1} / 06`}</small>
+                    </div>
+                  );
+                })}
+                <div className="feat-cap feat-cap-top" />
+                <div className="feat-cap feat-cap-bottom" />
+              </div>
+            </div>
+            <div className="feat-floor" />
+          </div>
+          <ul className="reveal grid gap-4 lg:order-3">{FEATURES.slice(3).map((f, i) => card(f, i + 3))}</ul>
+        </div>
       </div>
     </section>
   );
@@ -836,13 +882,19 @@ function WhyRannlab() {
 
 function Faq() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 bg-surface py-16 sm:py-24">
+    <section id="faq" aria-labelledby="faq-title" className="faq-band scroll-mt-20 py-16 sm:py-24">
       <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">FAQ</p>
           <h2 id="faq-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">WooCommerce development: common questions</h2>
           <p className="mt-4 text-lg text-muted">Straight answers on cost, timelines, payments and what happens after launch.</p>
-          <div className="mt-8 rounded-2xl bg-white p-6 ring-1 ring-line">
+          <div className="faq-q" aria-hidden="true">
+            <div className="faq-q-spin">
+              {Array.from({ length: 14 }, (_, k) => <span key={k} style={{ "--k": k } as React.CSSProperties}>?</span>)}
+            </div>
+            <div className="faq-q-floor" />
+          </div>
+          <div className="faq-help">
             <p className="font-display text-lg font-bold text-ink">Still have a question?</p>
             <p className="mt-1 text-muted">Talk to a WooCommerce expert. We usually reply within a few hours.</p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
@@ -855,14 +907,15 @@ function Faq() {
         </div>
         <div className="min-w-0 space-y-3 lg:mt-4">
           {FAQS.map((f, i) => (
-            <details key={f.q} className="group rounded-2xl bg-white p-5 ring-1 ring-line open:ring-teal-300 sm:p-6" open={i === 0}>
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
-                <h3 className="font-sans text-lg font-bold tracking-normal text-ink">{f.q}</h3>
-                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-teal-50 text-teal-700 transition-transform group-open:rotate-45" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+            <details key={f.q} className="faq-item group" open={i === 0}>
+              <summary className="flex cursor-pointer list-none items-center gap-4">
+                <span className="faq-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="flex-1 font-sans text-[1.05rem] font-bold tracking-normal text-ink sm:text-lg">{f.q}</h3>
+                <span className="faq-chev" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                 </span>
               </summary>
-              <p className="faq-answer mt-3 text-muted">{f.a}</p>
+              <p className="faq-answer mt-3 text-muted sm:pl-[3.25rem]">{f.a}</p>
             </details>
           ))}
         </div>
@@ -871,20 +924,47 @@ function Faq() {
   );
 }
 
+const CTA_CHIPS = [
+  { t: "Order #4821 · ₹3,148", Icon: I.Cart },
+  { t: "Paid via UPI", Icon: I.Wallet },
+  { t: "Shipped with Shiprocket", Icon: I.Truck },
+  { t: "GST invoice sent", Icon: I.Receipt },
+  { t: "WhatsApp alert sent", Icon: I.Chat },
+  { t: "New customer · Pune", Icon: I.Users },
+  { t: "COD confirmed", Icon: I.Check },
+  { t: "Cart recovered", Icon: I.Refresh },
+];
+
 function FinalCta() {
   return (
-    <section aria-labelledby="final-title" className="band-dark py-16 sm:py-24" data-cta3d>
-      <canvas className="dot-wave dot-wave-cta" data-wave aria-hidden="true" />
-      <div className="container-x text-center">
-        <p className="extrude" aria-hidden="true">LAUNCH</p>
-        <h2 id="final-title" className="mx-auto max-w-3xl text-3xl font-bold sm:text-4xl">
-          Ready to start selling online? Let's build your WooCommerce store.
+    <section aria-labelledby="final-title" className="band-dark cta-band py-16 sm:py-24" data-cta3d>
+      <div className="cta-floor" aria-hidden="true" />
+      <div className="container-x relative text-center">
+        <div className="cta-stage" aria-hidden="true">
+          <div className="cta-tilt">
+            <div className="cta-ring">
+              {CTA_CHIPS.map((c, i) => (
+                <span key={c.t} className="cta-chip" style={{ "--i": i } as React.CSSProperties}>
+                  <c.Icon className="size-3.5" /> {c.t}
+                </span>
+              ))}
+            </div>
+            <div className="cta-core"><I.Cart className="size-9" /></div>
+          </div>
+        </div>
+        <h2 id="final-title" className="mx-auto max-w-3xl text-3xl font-bold leading-tight sm:text-5xl sm:leading-[1.08]">
+          Ready to start selling online? <span className="why-grad">Let's build your WooCommerce store.</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-white/80">Talk to a RannLab WooCommerce expert today. Free consultation, fixed quote within 24 hours.</p>
+        <p className="mx-auto mt-5 max-w-xl text-lg text-white/80">Talk to a RannLab WooCommerce expert today. Free consultation, fixed quote within 24 hours.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <a href="#quote" data-track="cta_click" data-loc="final" className="btn btn-primary text-lg">Get my free quote <I.Arrow /></a>
+          <a href="#quote" data-track="cta_click" data-loc="final" className="btn cta-primary text-lg">Get my free quote <I.Arrow /></a>
           <WaButton location="final" className="text-lg" />
         </div>
+        <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/75">
+          {["Free consultation", "Fixed quote in 24 hrs", "You own your store"].map((t) => (
+            <li key={t} className="flex items-center gap-2"><I.Check className="size-4 text-teal-300" /> {t}</li>
+          ))}
+        </ul>
       </div>
     </section>
   );

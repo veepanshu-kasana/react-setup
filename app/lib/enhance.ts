@@ -69,7 +69,7 @@ export function enhance(cfg: EnhanceConfig) {
       ringTilt!.style.removeProperty("--tilt");
     },
   );
-  const extrude = document.querySelector<HTMLElement>(".extrude");
+  const extrude = document.querySelector<HTMLElement>(".cta-tilt");
   lean(
     document.querySelector<HTMLElement>("[data-cta3d]"),
     extrude,
@@ -324,6 +324,29 @@ export function enhance(cfg: EnhanceConfig) {
       track.scrollBy({ left: step * Number(btn.dataset.scrollBtn || 1), behavior: calm ? "auto" : "smooth" });
     });
   });
+
+  // Auto-slide horizontal card rows while visible; pauses on hover, focus or touch.
+  if (!calm) {
+    document.querySelectorAll<HTMLElement>("[data-scroller]").forEach((track) => {
+      let paused = false, visible = false, timer = 0;
+      const step = () => {
+        if (paused || !visible || document.hidden) return;
+        const card = track.querySelector("li");
+        const w = card ? card.getBoundingClientRect().width + 20 : 320;
+        const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+        track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + w, behavior: "smooth" });
+      };
+      const pause = () => { paused = true; };
+      const resume = () => { paused = false; };
+      track.addEventListener("pointerenter", pause);
+      track.addEventListener("pointerleave", resume);
+      track.addEventListener("focusin", pause);
+      track.addEventListener("focusout", resume);
+      track.addEventListener("touchstart", () => { paused = true; clearTimeout(timer); timer = window.setTimeout(resume, 6000); }, { passive: true });
+      new IntersectionObserver(([en]) => { visible = en.isIntersecting; }, { threshold: 0.4 }).observe(track);
+      setInterval(step, 3200);
+    });
+  }
 
   if (!calm && finePointer) {
     document.querySelectorAll<HTMLElement>("[data-tilt3d]").forEach((card) => {

@@ -486,6 +486,410 @@
     z-index: 2;
     transform: rotateX(var(--fx)) rotateY(var(--fy));
   }
+  /* ---------- Built for India: rotating 3D hexagonal prism synced with feature cards ---------- */
+  .feat {
+    --cycle: 18s;
+  }
+  .feat-card {
+    position: relative;
+    display: flex;
+    gap: 0.9rem;
+    padding: 1.1rem 1.2rem;
+    border-radius: 1.2rem;
+    background: rgb(255 255 255 / 0.8);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+  .feat-ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.85rem;
+    color: #fff;
+    background: var(--fc);
+    box-shadow: 0 8px 16px -8px rgb(15 23 42 / 0.5);
+  }
+  .feat-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 20rem;
+    perspective: 1100px;
+  }
+  .feat-tilt {
+    transform-style: preserve-3d;
+    transform: rotateX(-14deg);
+  }
+  .feat-prism {
+    --w: 9rem;
+    --h: 12rem;
+    --r: calc(var(--w) * 0.866);
+    position: relative;
+    width: var(--w);
+    height: var(--h);
+    transform-style: preserve-3d;
+  }
+  .feat-face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 0.6rem;
+    padding: 1rem 0.75rem;
+    border-radius: 0.6rem;
+    color: #fff;
+    text-align: center;
+    transform: rotateY(calc(var(--i) * 60deg)) translateZ(var(--r));
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35), inset 0 -30px 40px -20px rgb(0 0 0 / 0.25);
+  }
+  .feat-face b {
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+  .feat-face small {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    opacity: 0.8;
+  }
+  .feat-face-ic {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    background: rgb(255 255 255 / 0.2);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.4);
+  }
+  .feat-cap {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(var(--w) * 2);
+    height: calc(var(--w) * 2);
+    margin: calc(var(--w) * -1) 0 0 calc(var(--w) * -1);
+    clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+    background: linear-gradient(135deg, #fff7ed, #ccfbf1);
+  }
+  .feat-cap-top {
+    transform: rotateY(30deg) translateY(calc(var(--h) / -2)) rotateX(90deg);
+  }
+  .feat-cap-bottom {
+    background: #134e4a;
+    opacity: 0;
+    transform: rotateY(30deg) translateY(calc(var(--h) / 2)) rotateX(90deg);
+  }
+  .feat-floor {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    width: 15rem;
+    height: 2.5rem;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(15 23 42 / 0.28), transparent);
+  }
+  .feat-orbit {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 19rem;
+    height: 19rem;
+    margin: -9.5rem 0 0 -9.5rem;
+    border-radius: 50%;
+    border: 1.5px dashed rgb(234 88 12 / 0.35);
+    transform: rotateX(72deg);
+  }
+  .feat-orbit i {
+    position: absolute;
+    left: 50%;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    border-radius: 50%;
+    transform-origin: 6px calc(9.5rem + 6px);
+  }
+  .feat-orbit i:nth-child(1) { background: #f97316; box-shadow: 0 0 12px #f97316; }
+  .feat-orbit i:nth-child(2) { background: #fff; box-shadow: 0 0 0 2px #cbd5e1; rotate: 120deg; }
+  .feat-orbit i:nth-child(3) { background: #16a34a; box-shadow: 0 0 12px #16a34a; rotate: 240deg; }
+  @media (min-width: 1024px) {
+    .feat-stage {
+      height: 26rem;
+    }
+    .feat-prism {
+      --w: 10.5rem;
+      --h: 14rem;
+    }
+    .feat-orbit {
+      width: 22rem;
+      height: 22rem;
+      margin: -11rem 0 0 -11rem;
+    }
+    .feat-orbit i {
+      transform-origin: 6px calc(11rem + 6px);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .feat-prism {
+      animation: feat-turn var(--cycle) cubic-bezier(0.7, 0, 0.3, 1) infinite;
+    }
+    .feat-orbit {
+      animation: feat-orbit 14s linear infinite;
+    }
+    .feat-card {
+      animation: feat-on var(--cycle) ease infinite;
+      animation-delay: calc(var(--i) * 3s - var(--cycle));
+    }
+    .feat:hover .feat-prism,
+    .feat:hover .feat-card {
+      animation-play-state: paused;
+    }
+  }
+
+  /* ---------- FAQ: swinging 3D question mark + numbered accordion ---------- */
+  .faq-band {
+    background:
+      radial-gradient(30rem 22rem at 0% 30%, rgb(204 251 241 / 0.8), transparent 62%),
+      radial-gradient(30rem 22rem at 100% 90%, rgb(254 243 199 / 0.7), transparent 62%),
+      var(--color-surface);
+  }
+  .faq-q {
+    position: relative;
+    display: none;
+    height: 12rem;
+    margin-top: 1.5rem;
+    perspective: 700px;
+  }
+  @media (min-width: 1024px) {
+    .faq-q {
+      display: grid;
+      place-items: center;
+    }
+  }
+  .faq-q-spin {
+    position: relative;
+    width: 7rem;
+    height: 10rem;
+    transform-style: preserve-3d;
+    animation: faq-swing 6s ease-in-out infinite;
+  }
+  .faq-q-spin span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 10rem;
+    font-weight: 800;
+    line-height: 1;
+    color: hsl(174 62% calc(30% - var(--k) * 1%));
+    transform: translateZ(calc(var(--k) * -2.5px));
+  }
+  .faq-q-spin span:first-child {
+    background: linear-gradient(160deg, #5eead4, #0f9d94 45%, #f59e0b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .faq-q-floor {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 9rem;
+    height: 1.5rem;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(15 23 42 / 0.25), transparent);
+  }
+  .faq-help {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: rgb(255 255 255 / 0.85);
+    box-shadow: inset 0 0 0 1px var(--color-line), 0 18px 36px -28px rgb(15 23 42 / 0.4);
+  }
+  .faq-item {
+    position: relative;
+    overflow: hidden;
+    padding: 1.1rem 1.25rem;
+    border-radius: 1.1rem;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: box-shadow 0.3s, background 0.3s;
+  }
+  .faq-item:hover {
+    box-shadow: inset 0 0 0 1px rgb(31 165 156 / 0.45);
+  }
+  .faq-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(#2dd4bf, #f59e0b, #a855f7);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .faq-item[open] {
+    background: linear-gradient(120deg, #f0fdfa, #fff 55%);
+    box-shadow: inset 0 0 0 1px rgb(31 165 156 / 0.35), 0 20px 40px -30px rgb(11 110 106 / 0.55);
+  }
+  .faq-item[open]::before {
+    opacity: 1;
+  }
+  .faq-num {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.7rem;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--color-ink-2);
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: background 0.3s, color 0.3s;
+  }
+  .faq-item[open] .faq-num {
+    color: #fff;
+    background: linear-gradient(135deg, #1fa59c, #0b6e6a);
+    box-shadow: 0 8px 16px -8px rgb(11 110 106 / 0.7);
+  }
+  .faq-chev {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: var(--color-teal-700);
+    background: var(--color-teal-50);
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .faq-item[open] .faq-chev {
+    transform: rotate(180deg);
+  }
+
+  /* ---------- Final CTA: live orders orbiting a glowing cart over a moving grid floor ---------- */
+  .cta-band::before {
+    background:
+      radial-gradient(40rem 20rem at 50% 30%, rgb(31 165 156 / 0.35), transparent 65%),
+      radial-gradient(26rem 18rem at 0% 100%, rgb(139 92 246 / 0.3), transparent 62%),
+      radial-gradient(26rem 18rem at 100% 100%, rgb(245 158 11 / 0.22), transparent 62%);
+  }
+  .cta-floor {
+    position: absolute;
+    left: -30%;
+    right: -30%;
+    bottom: -4rem;
+    height: 26rem;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgb(94 234 212 / 0.28) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(94 234 212 / 0.2) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(500px) rotateX(68deg);
+    transform-origin: bottom;
+    mask-image: linear-gradient(to top, black 15%, transparent 90%);
+  }
+  .cta-stage {
+    position: relative;
+    height: 11rem;
+    margin-bottom: 1rem;
+    perspective: 1000px;
+  }
+  .cta-tilt {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--ex, 16deg)) rotateY(var(--ey, 0deg));
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .cta-ring {
+    --R: 8rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform-style: preserve-3d;
+    transform: rotateY(var(--spin));
+  }
+  .cta-chip {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 99px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--color-ink);
+    background: #fff;
+    box-shadow: 0 10px 22px -10px rgb(0 0 0 / 0.6);
+    translate: -50% -50%;
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(var(--R)) rotateY(calc(var(--i) * -45deg - var(--spin)));
+  }
+  .cta-chip svg {
+    color: var(--color-teal-700);
+  }
+  .cta-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 5.5rem;
+    height: 5.5rem;
+    translate: -50% -50%;
+    border-radius: 50%;
+    color: #fff;
+    background: radial-gradient(circle at 35% 30%, #5eead4, #0f9d94 55%, #0b4f4c);
+    box-shadow: 0 0 0 10px rgb(45 212 191 / 0.12), 0 0 0 22px rgb(45 212 191 / 0.06), 0 0 60px rgb(45 212 191 / 0.55);
+  }
+  .cta-primary {
+    color: #0b1f24;
+    background: linear-gradient(90deg, #5eead4, #2dd4bf);
+    box-shadow: 0 12px 30px -10px rgb(45 212 191 / 0.7);
+  }
+  .cta-primary:hover {
+    background: linear-gradient(90deg, #99f6e4, #5eead4);
+  }
+  @media (max-width: 639px) {
+    .cta-chip:nth-child(even) {
+      display: none;
+    }
+    .cta-ring {
+      --R: 7.5rem;
+    }
+  }
+  @media (min-width: 640px) {
+    .cta-stage {
+      height: 12rem;
+    }
+    .cta-ring {
+      --R: 15rem;
+    }
+    .cta-chip {
+      font-size: 0.82rem;
+      padding: 0.45rem 0.85rem;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .cta-ring {
+      animation: cta-spin 26s linear infinite;
+    }
+    .cta-floor {
+      animation: cta-floor 3s linear infinite;
+    }
+  }
+
   /* ---------- Free quote: dark band, step timeline, glowing form ---------- */
   .quote-band::before {
     background:
@@ -1906,4 +2310,45 @@
 @keyframes glow-soft {
   0%, 100% { filter: brightness(1); }
   50% { filter: brightness(1.18); }
+}
+
+@keyframes feat-turn {
+  0%, 13.3% { transform: rotateY(0deg); }
+  16.7%, 30% { transform: rotateY(-60deg); }
+  33.3%, 46.7% { transform: rotateY(-120deg); }
+  50%, 63.3% { transform: rotateY(-180deg); }
+  66.7%, 80% { transform: rotateY(-240deg); }
+  83.3%, 96.7% { transform: rotateY(-300deg); }
+  100% { transform: rotateY(-360deg); }
+}
+@keyframes feat-on {
+  0%, 15% {
+    background: #fff;
+    translate: 0 -3px;
+    box-shadow: inset 0 0 0 2px #f59e0b, 0 18px 34px -18px rgb(234 88 12 / 0.55);
+  }
+  19%, 100% {
+    background: rgb(255 255 255 / 0.8);
+    translate: 0 0;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+}
+@keyframes feat-orbit {
+  to { transform: rotateX(72deg) rotateZ(360deg); }
+}
+
+@property --spin {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: true;
+}
+@keyframes cta-spin {
+  to { --spin: -360deg; }
+}
+@keyframes cta-floor {
+  to { background-position: 0 60px; }
+}
+@keyframes faq-swing {
+  0%, 100% { transform: rotateY(-38deg) rotateX(6deg); }
+  50% { transform: rotateY(38deg) rotateX(-4deg); }
 }
