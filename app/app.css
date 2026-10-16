@@ -819,22 +819,181 @@
     animation: unfold 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
-  /* ---------- 3D podium (packages) ---------- */
+  /* ---------- Packages: level picker + 3D panel on a perspective floor ---------- */
+  .pk-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(36rem 24rem at 90% 10%, rgb(224 242 254 / 0.95), transparent 62%),
+      radial-gradient(30rem 22rem at 4% 40%, rgb(237 233 254 / 0.9), transparent 62%),
+      radial-gradient(28rem 20rem at 60% 100%, rgb(255 237 213 / 0.8), transparent 62%),
+      #fff;
+  }
+  .pk-band::after {
+    content: "";
+    position: absolute;
+    left: -25%;
+    right: -25%;
+    bottom: -2rem;
+    height: 22rem;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgb(14 165 233 / 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(139 92 246 / 0.16) 1px, transparent 1px);
+    background-size: 56px 56px;
+    transform: perspective(600px) rotateX(64deg);
+    transform-origin: bottom;
+    mask-image: linear-gradient(to top, black 10%, transparent 85%);
+  }
+  .pk-tiers {
+    display: grid;
+    gap: 0.85rem;
+  }
+  .pk-tier {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    border-radius: 1.1rem;
+    cursor: pointer;
+    background: rgb(255 255 255 / 0.75);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s, background 0.35s;
+  }
+  .pk-tier:hover {
+    background: #fff;
+  }
+  .pk-tier:has(input:checked) {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 2px var(--c),
+      -10px 14px 30px -14px var(--c);
+  }
+  .pk-tier:has(input:focus-visible) {
+    outline: 3px solid var(--c);
+    outline-offset: 3px;
+  }
+  .pk-tier-ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.9rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 8px 16px -8px var(--c);
+  }
+  .pk-tier-arrow {
+    color: var(--color-muted);
+    transition: transform 0.3s, color 0.3s;
+  }
+  .pk-tier:has(input:checked) .pk-tier-arrow {
+    color: var(--c);
+    transform: translateX(4px);
+  }
+  .pk-meter {
+    display: flex;
+    gap: 4px;
+    margin-top: 0.5rem;
+  }
+  .pk-meter i {
+    width: 1.6rem;
+    height: 0.3rem;
+    border-radius: 99px;
+    background: rgb(15 23 42 / 0.1);
+  }
+  .pk-meter i.on {
+    background: var(--c);
+  }
+  .pk-stage {
+    perspective: 1600px;
+  }
+  .pk-panel {
+    position: relative;
+    border-radius: 1.6rem;
+    padding: 1.6rem;
+    background:
+      radial-gradient(22rem 14rem at 100% 0%, color-mix(in srgb, var(--c) 16%, transparent), transparent 70%),
+      rgb(255 255 255 / 0.92);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent),
+      0 40px 70px -35px color-mix(in srgb, var(--c) 70%, transparent);
+    transform-origin: left center;
+  }
   @media (min-width: 1024px) {
-    .podium {
-      perspective: 1400px;
+    .pk-tier:has(input:checked) {
+      transform: translateX(10px);
     }
-    .podium-0 {
-      --by: 7deg;
-      transform-origin: right center;
+    .pk-panel {
+      padding: 2.25rem;
+      transform: rotateY(-7deg) rotateX(3deg);
+      transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
-    .podium-2 {
-      --by: -7deg;
-      transform-origin: left center;
+    .pk-panel:hover {
+      transform: rotateY(-2deg) rotateX(1deg) translateZ(20px);
     }
-    .podium-1 {
-      --bz: 50px;
+  }
+  /* One panel at a time when :has() is supported; otherwise every package stays visible. */
+  @supports selector(:has(*)) {
+    .pk-panel {
+      display: none;
+      animation: pk-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
+    .pk:has(#pkg-0:checked) .pk-panel-0,
+    .pk:has(#pkg-1:checked) .pk-panel-1,
+    .pk:has(#pkg-2:checked) .pk-panel-2 {
+      display: block;
+    }
+  }
+  @supports not selector(:has(*)) {
+    .pk-panel + .pk-panel {
+      margin-top: 1.5rem;
+    }
+  }
+  .pk-iso {
+    position: relative;
+    flex: none;
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+  .pk-iso-in {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: translateY(14px) rotateX(58deg) rotateZ(-45deg);
+  }
+  .pk-slab {
+    position: absolute;
+    inset: 16%;
+    display: grid;
+    place-items: center;
+    border-radius: 0.8rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    transform: translateZ(calc(var(--n) * 22px));
+    animation: pk-drop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1.2) backwards;
+    animation-delay: calc(var(--n) * 130ms + 120ms);
+  }
+  .pk-slab-0 {
+    background: linear-gradient(135deg, #2dd4bf, #0b6e6a);
+    box-shadow: 1px 1px 0 #0a5c58, 2px 2px 0 #0a5c58, 3px 3px 0 #0a5c58, 4px 4px 0 #0a5c58, 5px 5px 0 #0a5c58, 6px 6px 0 #0a5c58, 14px 14px 22px rgb(0 0 0 / 0.25);
+  }
+  .pk-slab-1 {
+    background: linear-gradient(135deg, #fbbf24, #f43f5e);
+    box-shadow: 1px 1px 0 #be123c, 2px 2px 0 #be123c, 3px 3px 0 #be123c, 4px 4px 0 #be123c, 5px 5px 0 #be123c, 6px 6px 0 #be123c;
+  }
+  .pk-slab-2 {
+    background: linear-gradient(135deg, #a78bfa, #0ea5e9);
+    box-shadow: 1px 1px 0 #5b21b6, 2px 2px 0 #5b21b6, 3px 3px 0 #5b21b6, 4px 4px 0 #5b21b6, 5px 5px 0 #5b21b6, 6px 6px 0 #5b21b6;
   }
 
   /* ---------- Extruded 3D lettering (final CTA) ---------- */
@@ -1082,5 +1241,18 @@
   from {
     opacity: 0;
     transform: perspective(600px) rotateX(-70deg);
+  }
+}
+
+@keyframes pk-in {
+  from {
+    opacity: 0;
+    transform: rotateY(-22deg) translateX(30px);
+  }
+}
+@keyframes pk-drop {
+  from {
+    opacity: 0;
+    transform: translateZ(calc(var(--n) * 22px + 90px));
   }
 }
