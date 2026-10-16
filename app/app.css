@@ -229,7 +229,7 @@
     @apply mb-1.5 block text-sm font-semibold text-ink;
   }
   .field {
-    @apply block min-h-12 w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-[#62727a] focus:border-teal-700 focus:ring-2 focus:ring-teal-500/30 focus:outl[...] 
+    @apply block min-h-12 w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-[#62727a] focus:border-teal-700 focus:ring-2 focus:ring-teal-500/30 focus[...]
   }
   .field[aria-invalid="true"] {
     @apply border-danger;
@@ -297,4 +297,11 @@
     .lg\:text-\[3rem\] {
         font-size: 2.6rem;
     }
+}
+
+/* Set hero-title font-size at large breakpoint */
+@media (width >= 64rem) {
+  .hero-title {
+    font-size: 2.6rem;
+  }
 }
