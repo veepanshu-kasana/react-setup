@@ -83,6 +83,20 @@ export function enhance(cfg: EnhanceConfig) {
     },
   );
 
+  const stack = document.querySelector<HTMLElement>("[data-formstack]");
+  lean(
+    stack,
+    stack,
+    (x, y) => {
+      stack!.style.setProperty("--fy", `${x * 10}deg`);
+      stack!.style.setProperty("--fx", `${-y * 8}deg`);
+    },
+    () => {
+      stack!.style.removeProperty("--fy");
+      stack!.style.removeProperty("--fx");
+    },
+  );
+
   // Stats count up when they come into view.
   if (!calm && "IntersectionObserver" in window) {
     const cio = new IntersectionObserver((entries) => {

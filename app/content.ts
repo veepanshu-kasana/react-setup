@@ -22,14 +22,17 @@ export const PAINS = [
   {
     title: "Visitors come, but don't buy",
     body: "Slow pages, confusing product pages and a long checkout quietly kill most sales before the customer reaches “Place order”.",
+    fix: "Fast pages, clear product photos and prices, and a short checkout with COD, trust badges and WhatsApp help, built around how Indians shop.",
   },
   {
     title: "Payments and COD are a headache",
     body: "Failed UPI payments, no COD rules, fake orders and manual GST invoices eat hours every week.",
+    fix: "UPI, cards and COD set up properly, with pincode and order-value rules, fake-order checks and GST invoices sent automatically.",
   },
   {
     title: "Stuck with a freelancer who vanished",
     body: "Half-built sites, no backups and no one to call when the store breaks during a sale.",
+    fix: "A full RannLab team with one project manager, a written timeline, daily backups and real support after launch.",
   },
 ];
 

@@ -310,12 +310,23 @@ function Pains() {
           title="A good-looking website is not the same as a store that sells"
           sub="These are the problems we hear most from Indian business owners, and exactly what our WooCommerce builds are designed to fix."
         />
-        <ul className="mt-12 grid gap-6 md:grid-cols-3">
+        <p className="reveal mt-4 text-center text-sm font-semibold text-muted">Hover or tap a card to see how we fix it</p>
+        <ul className="mt-8 grid gap-6 md:grid-cols-3">
           {PAINS.map((p, i) => (
-            <li key={p.title} className={`tilt reveal rounded-2xl p-6 ring-1 ${["bg-rose-50 ring-rose-100", "bg-amber-50 ring-amber-100", "bg-violet-50 ring-violet-100"][i]}`} data-tilt3d style={{ "--glow": [acc(3), acc(1), acc(2)][i].glow } as React.CSSProperties}>
-              <span className={`pop grid size-10 place-items-center rounded-full bg-white ring-1 ${["text-rose-600 ring-rose-200", "text-amber-700 ring-amber-200", "text-violet-600 ring-violet-200"][i]}`}><I.Cross /></span>
-              <h3 className="mt-4 text-lg font-bold text-ink">{p.title}</h3>
-              <p className="mt-2 text-muted">{p.body}</p>
+            <li key={p.title} className="flip reveal" tabIndex={0} style={{ animationDelay: `${i * 90}ms` }}>
+              <div className="flip-inner">
+                <div className={`flip-face rounded-2xl p-6 ring-1 ${["bg-rose-50 ring-rose-100", "bg-amber-50 ring-amber-100", "bg-violet-50 ring-violet-100"][i]}`}>
+                  <span className={`grid size-10 place-items-center rounded-full bg-white ring-1 ${["text-rose-600 ring-rose-200", "text-amber-700 ring-amber-200", "text-violet-600 ring-violet-200"][i]}`}><I.Cross /></span>
+                  <h3 className="mt-4 text-lg font-bold text-ink">{p.title}</h3>
+                  <p className="mt-2 text-muted">{p.body}</p>
+                  <p className={`mt-4 inline-flex items-center gap-1.5 text-sm font-bold ${["text-rose-700", "text-amber-800", "text-violet-700"][i]}`}>See the fix <I.Refresh className="size-4" /></p>
+                </div>
+                <div className="flip-face flip-back rounded-2xl bg-gradient-to-br from-teal-700 to-night p-6 text-white ring-1 ring-teal-500/40">
+                  <span className="grid size-10 place-items-center rounded-full bg-white/15 text-teal-200 ring-1 ring-white/25"><I.Check /></span>
+                  <p className="mt-4 text-sm font-semibold uppercase tracking-[0.14em] text-teal-200">How RannLab fixes it</p>
+                  <p className="mt-2 text-[1.02rem] leading-relaxed text-white/95">{p.fix}</p>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
@@ -380,7 +391,7 @@ function IconCards({ items, offset = 0 }: { items: readonly { icon: string; titl
         return (
           <li key={f.title} className="card tilt reveal" data-tilt3d style={{ animationDelay: `${(i % 3) * 90}ms`, "--glow": acc(i + offset).glow } as React.CSSProperties}>
             <span className={`absolute inset-x-6 top-0 h-1 rounded-b-full bg-gradient-to-r ${acc(i + offset).bar}`} aria-hidden="true" />
-            <span className={`pop grid size-12 place-items-center rounded-xl ring-1 ${acc(i + offset).tile}`}><Icon /></span>
+            <span className={`pop cube grid size-12 place-items-center rounded-xl ring-1 ${acc(i + offset).tile}`} style={{ "--cube": acc(i + offset).glow } as React.CSSProperties}><Icon /></span>
             <h3 className="mt-5 text-lg font-bold text-ink">{f.title}</h3>
             <p className="mt-2 text-muted">{f.body}</p>
           </li>
@@ -437,7 +448,11 @@ function QuoteBlock() {
             </a>
           </div>
         </div>
-        <LeadForm id="quote-form" />
+        <div className="form-stack" data-formstack>
+          <div className="form-layer form-layer-1" aria-hidden="true" />
+          <div className="form-layer form-layer-2" aria-hidden="true" />
+          <div className="form-card"><LeadForm id="quote-form" /></div>
+        </div>
       </div>
     </section>
   );
@@ -463,10 +478,10 @@ function Process() {
       <Circuit className="-right-32 -top-10 w-[34rem] opacity-70" />
       <div className="container-x">
         <SectionHead dark id="process-title" eyebrow="How it works" title="Your store live in about 4 weeks" sub="A simple, transparent process with your approval at every step." />
-        <ol className="relative mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="stairs relative mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <span className="absolute left-0 right-0 top-6 hidden h-0.5 bg-gradient-to-r from-teal-400/0 via-amber-400/70 to-rose-400/0 lg:block" aria-hidden="true" />
           {PROCESS.map((p, i) => (
-            <li key={p.step} className="tilt reveal relative rounded-2xl bg-night-2 p-6 ring-1 ring-white/10" data-tilt3d style={{ "--glow": [acc(0), acc(1), acc(2), acc(3)][i].glow } as React.CSSProperties}>
+            <li key={p.step} className={`stair stair-${i} tilt reveal relative rounded-2xl bg-night-2 p-6 ring-1 ring-white/10`} data-tilt3d style={{ "--glow": [acc(0), acc(1), acc(2), acc(3)][i].glow } as React.CSSProperties}>
               <span className={`absolute inset-x-6 top-0 h-1 rounded-b-full bg-gradient-to-r ${[acc(0), acc(1), acc(2), acc(3)][i].bar}`} aria-hidden="true" />
               <div className="flex items-center justify-between">
                 <span className={`pop step-num grid size-12 place-items-center rounded-xl bg-gradient-to-br font-display text-lg font-bold text-white ring-4 ring-night ${[acc(0), acc(1), acc(2), acc(3)][i].bar}`}>{p.step}</span>
@@ -544,14 +559,14 @@ function Compare() {
     <section aria-labelledby="compare-title" className="bg-surface py-16 sm:py-24">
       <div className="container-x">
         <SectionHead id="compare-title" eyebrow="Why choose us" title="Agency quality without agency headaches" />
-        <div className="relative mt-12 overflow-x-auto rounded-2xl bg-white ring-1 ring-line" role="region" aria-labelledby="compare-title" tabIndex={0}>
+        <div className="slab-wrap relative mt-12 overflow-x-auto rounded-2xl bg-white ring-1 ring-line" role="region" aria-labelledby="compare-title" tabIndex={0}>
           <table className="w-full min-w-[640px] border-collapse text-left">
             <caption className="sr-only">Comparison of {SITE.shortBrand} with a typical freelancer and a DIY website builder</caption>
             <thead>
               <tr>
                 <th scope="col" className="p-4 font-semibold text-ink">What you get</th>
                 {COMPARE.cols.map((c, i) => (
-                  <th key={c} scope="col" className={`p-4 text-center font-bold ${i === 0 ? "bg-teal-700 text-white" : "text-ink"}`}>{c}</th>
+                  <th key={c} scope="col" className={`p-4 text-center font-bold ${i === 0 ? "slab-top bg-teal-700 text-white" : "text-ink"}`}>{c}</th>
                 ))}
               </tr>
             </thead>
@@ -560,7 +575,7 @@ function Compare() {
                 <tr key={r.label} className="border-t border-line">
                   <th scope="row" className="p-4 font-medium text-ink-2">{r.label}</th>
                   {r.v.map((v, i) => (
-                    <td key={i} className={`p-4 text-center ${i === 0 ? "bg-teal-50" : ""}`}>{cell(v)}</td>
+                    <td key={i} className={`p-4 text-center ${i === 0 ? "slab bg-teal-50" : ""}`}>{cell(v)}</td>
                   ))}
                 </tr>
               ))}
@@ -569,6 +584,36 @@ function Compare() {
         </div>
       </div>
     </section>
+  );
+}
+
+/** Wireframe 3D globe (CSS only) with glowing client regions. Decorative. */
+const GLOBE_PINS = [
+  { label: "India", lat: 21, lon: 78, c: "#f59e0b" },
+  { label: "USA", lat: 39, lon: -98, c: "#1fa59c" },
+  { label: "UK", lat: 54, lon: -2, c: "#8b5cf6" },
+  { label: "Canada", lat: 57, lon: -106, c: "#f43f5e" },
+  { label: "Australia", lat: -25, lon: 134, c: "#0ea5e9" },
+];
+function Globe3D() {
+  return (
+    <div className="globe-wrap mt-10" aria-hidden="true">
+      <div className="globe">
+        <div className="globe-spin">
+          {[0, 30, 60, 90, 120, 150].map((d) => <span key={`m${d}`} className="globe-ring" style={{ transform: `rotateY(${d}deg)` }} />)}
+          {[-60, -30, 0, 30, 60].map((lat) => (
+            <span key={`p${lat}`} className="globe-lat" style={{ "--lat": `${lat}deg`, "--s": Math.cos((lat * Math.PI) / 180) } as React.CSSProperties} />
+          ))}
+          {GLOBE_PINS.map((p) => (
+            <span key={p.label} className="globe-pin" style={{ "--lon": `${p.lon}deg`, "--lat": `${p.lat}deg`, "--c": p.c } as React.CSSProperties}>
+              <i />
+              <b>{p.label}</b>
+            </span>
+          ))}
+        </div>
+        <div className="globe-glow" />
+      </div>
+    </div>
   );
 }
 
@@ -593,6 +638,7 @@ function WhyRannlab() {
           <a href={SITE.links.about} className="mt-8 inline-flex items-center gap-2 font-bold text-teal-700 underline-offset-4 hover:underline">
             About {SITE.brand} <I.Arrow className="size-4" />
           </a>
+          <Globe3D />
         </div>
         <ul className="grid gap-5 sm:grid-cols-2">
           {WHY.map((w, i) => {
@@ -639,7 +685,7 @@ function Faq() {
                   <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
                 </span>
               </summary>
-              <p className="mt-3 text-muted">{f.a}</p>
+              <p className="faq-answer mt-3 text-muted">{f.a}</p>
             </details>
           ))}
         </div>

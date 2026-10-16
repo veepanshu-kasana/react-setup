@@ -418,6 +418,218 @@
     }
   }
 
+
+  /* ---------- Flip cards (problems -> fixes) ---------- */
+  .flip {
+    perspective: 1200px;
+    outline: none;
+    border-radius: 1rem;
+  }
+  .flip:focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 4px;
+  }
+  .flip-inner {
+    display: grid;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .flip-face {
+    grid-area: 1 / 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+    box-shadow: 0 30px 50px -25px rgb(11 110 106 / 0.6);
+  }
+  @media (hover: hover) {
+    .flip:hover .flip-inner {
+      transform: rotateY(180deg);
+    }
+  }
+  .flip:focus .flip-inner,
+  .flip:focus-within .flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  /* ---------- Extruded 3D icon blocks ---------- */
+  .cube {
+    box-shadow:
+      1px 1px 0 rgb(0 0 0 / 0.04), 2px 2px 0 rgb(0 0 0 / 0.04), 3px 3px 0 rgb(0 0 0 / 0.04),
+      4px 4px 0 rgb(0 0 0 / 0.04), 8px 10px 16px -6px var(--cube, rgb(31 165 156 / 0.35));
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s;
+  }
+  .card:hover .cube {
+    transform: translateZ(40px) translate(-3px, -5px) rotateX(10deg) rotateY(-12deg);
+    box-shadow:
+      1px 1px 0 rgb(0 0 0 / 0.05), 2px 2px 0 rgb(0 0 0 / 0.05), 3px 3px 0 rgb(0 0 0 / 0.05),
+      4px 4px 0 rgb(0 0 0 / 0.05), 5px 5px 0 rgb(0 0 0 / 0.05), 6px 6px 0 rgb(0 0 0 / 0.05),
+      14px 18px 24px -8px var(--cube, rgb(31 165 156 / 0.45));
+  }
+
+  /* ---------- Floating 3D form stack ---------- */
+  .form-stack {
+    --fx: 0deg;
+    --fy: 0deg;
+    position: relative;
+    perspective: 1400px;
+  }
+  .form-card,
+  .form-layer {
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .form-card {
+    position: relative;
+    z-index: 2;
+    transform: rotateX(var(--fx)) rotateY(var(--fy));
+  }
+  .form-layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 1.1rem;
+    z-index: 1;
+  }
+  .form-layer-1 {
+    background: linear-gradient(135deg, #1fa59c, #0b6e6a);
+    transform: rotateX(var(--fx)) rotateY(var(--fy)) translate3d(18px, 18px, -40px) rotate(2.5deg);
+    opacity: 0.9;
+  }
+  .form-layer-2 {
+    background: linear-gradient(135deg, #f59e0b, #f43f5e 60%, #8b5cf6);
+    transform: rotateX(var(--fx)) rotateY(var(--fy)) translate3d(34px, 34px, -80px) rotate(5deg);
+    opacity: 0.55;
+    filter: blur(1px);
+  }
+  @media (max-width: 639px) {
+    .form-layer-1 {
+      transform: translateY(10px) scale(0.97);
+    }
+    .form-layer-2 {
+      transform: translateY(20px) scale(0.93);
+    }
+  }
+
+  /* ---------- 3D staircase (process) ---------- */
+  @media (min-width: 1024px) {
+    .stairs {
+      perspective: 1600px;
+      transform-style: preserve-3d;
+      align-items: end;
+      padding-top: 6rem;
+    }
+    .stair-0 { --bz: 0px; translate: 0 0; }
+    .stair-1 { --bz: 20px; translate: 0 -2rem; }
+    .stair-2 { --bz: 40px; translate: 0 -4rem; }
+    .stair-3 { --bz: 60px; translate: 0 -6rem; }
+    .stair::before {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: -1.4rem;
+      height: 1.4rem;
+      border-radius: 0 0 1rem 1rem;
+      background: linear-gradient(180deg, rgb(31 165 156 / 0.35), transparent);
+      transform: perspective(400px) rotateX(-55deg);
+      transform-origin: top;
+      pointer-events: none;
+    }
+  }
+
+  /* ---------- Raised RannLab column (compare) ---------- */
+  .slab-wrap {
+    overflow-y: visible;
+  }
+  .slab,
+  .slab-top {
+    position: relative;
+    box-shadow: -10px 0 18px -14px rgb(11 110 106 / 0.6), 10px 0 18px -14px rgb(11 110 106 / 0.6);
+  }
+  .slab-top {
+    border-radius: 0.6rem 0.6rem 0 0;
+  }
+
+  /* ---------- Spinning 3D globe ---------- */
+  .globe-wrap {
+    display: grid;
+    place-items: center;
+    perspective: 1000px;
+  }
+  .globe {
+    position: relative;
+    width: 15rem;
+    height: 15rem;
+    transform-style: preserve-3d;
+    transform: rotateX(-16deg) rotateZ(10deg);
+  }
+  .globe-spin {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    animation: globe-spin 24s linear infinite;
+  }
+  .globe-ring,
+  .globe-lat {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgb(11 110 106 / 0.35);
+  }
+  .globe-lat {
+    transform: translateY(calc(sin(var(--lat)) * -7.5rem)) rotateX(90deg) scale(var(--s));
+    border-color: rgb(11 110 106 / 0.22);
+  }
+  .globe-pin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform-style: preserve-3d;
+    transform: rotateY(var(--lon)) rotateX(var(--lat)) translateZ(7.5rem);
+  }
+  .globe-pin i {
+    position: absolute;
+    left: -6px;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 30%, transparent), 0 0 18px var(--c);
+  }
+  .globe-pin b {
+    position: absolute;
+    left: 10px;
+    top: -9px;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-ink);
+    background: rgb(255 255 255 / 0.9);
+    padding: 1px 6px;
+    border-radius: 99px;
+    box-shadow: 0 4px 10px -4px rgb(0 0 0 / 0.25);
+    backface-visibility: hidden;
+  }
+  .globe-glow {
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.9), rgb(204 251 241 / 0.6) 40%, rgb(31 165 156 / 0.15) 75%, transparent 76%);
+    transform: translateZ(-1px);
+    pointer-events: none;
+  }
+
+  /* ---------- FAQ answers unfold in 3D ---------- */
+  details[open] .faq-answer {
+    transform-origin: top;
+    animation: unfold 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
   /* ---------- 3D podium (packages) ---------- */
   @media (min-width: 1024px) {
     .podium {
@@ -670,5 +882,16 @@
   }
   50% {
     box-shadow: 0 0 0 4px var(--color-night), 0 0 26px 4px rgb(31 165 156 / 0.55);
+  }
+}
+@keyframes globe-spin {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: perspective(600px) rotateX(-70deg);
   }
 }
