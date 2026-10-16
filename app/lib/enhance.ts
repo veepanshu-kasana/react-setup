@@ -6,15 +6,68 @@
  *
  * It is serialised with Function.prototype.toString(), so it must be fully self-contained.
  */
-export type EnhanceConfig = { brand: string; wa: string; endpoint: string };
+export type EnhanceConfig = {
+  brand: string; wa: string; endpoint: string;
+  gtmId?: string; ga4Id?: string; adsId?: string; adsLeadLabel?: string; adsContactLabel?: string; metaPixelId?: string;
+};
 
 export function enhance(cfg: EnhanceConfig) {
   const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
   const dl = (w.dataLayer = w.dataLayer || []);
 
+  // ---- Ads & analytics tags (GTM, GA4, Google Ads, Meta Pixel). Loaded when the page is idle. ----
+  type Fn = ((...a: unknown[]) => void) & { q?: unknown[][]; queue?: unknown[]; loaded?: boolean; version?: string; push?: unknown; callMethod?: (...a: unknown[]) => void };
+  const W = window as unknown as { gtag?: Fn; fbq?: Fn; _fbq?: Fn };
+  const addScript = (src: string) => { const sc = document.createElement("script"); sc.async = true; sc.src = src; document.head.appendChild(sc); };
+  // Keep ad click IDs for the session so leads can be attributed even after in-page navigation.
+  try {
+    const qs = new URLSearchParams(location.search);
+    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "gbraid", "wbraid", "fbclid"].forEach((k) => {
+      const v = qs.get(k);
+      if (v) sessionStorage.setItem("rl_" + k, v.slice(0, 200));
+    });
+  } catch { /* storage blocked */ }
+  if (cfg.ga4Id || cfg.adsId) {
+    W.gtag = function () { dl.push(arguments as unknown as Record<string, unknown>); } as Fn;
+    W.gtag("js", new Date());
+    if (cfg.ga4Id) W.gtag("config", cfg.ga4Id);
+    if (cfg.adsId) W.gtag("config", cfg.adsId);
+  }
+  if (cfg.metaPixelId) {
+    const f = function (...a: unknown[]) { f.callMethod ? f.callMethod(...a) : f.queue!.push(a); } as Fn;
+    f.push = f; f.loaded = true; f.version = "2.0"; f.queue = [];
+    W.fbq = f; W._fbq = f;
+    W.fbq("init", cfg.metaPixelId);
+    W.fbq("track", "PageView");
+  }
+  const loadTags = () => {
+    if (cfg.gtmId) {
+      dl.push({ "gtm.start": Date.now(), event: "gtm.js" });
+      addScript(`https://www.googletagmanager.com/gtm.js?id=${cfg.gtmId}`);
+    }
+    if (cfg.ga4Id || cfg.adsId) addScript(`https://www.googletagmanager.com/gtag/js?id=${cfg.ga4Id || cfg.adsId}`);
+    if (cfg.metaPixelId) addScript("https://connect.facebook.net/en_US/fbevents.js");
+  };
+  if (cfg.gtmId || cfg.ga4Id || cfg.adsId || cfg.metaPixelId) {
+    const go = () => ("requestIdleCallback" in window ? (window as unknown as { requestIdleCallback: (f: () => void, o?: object) => void }).requestIdleCallback(loadTags, { timeout: 3000 }) : setTimeout(loadTags, 1500));
+    if (document.readyState === "complete") go(); else addEventListener("load", go, { once: true });
+  }
+  const conv = (label: string | undefined, extra: Record<string, unknown> = {}) => {
+    if (W.gtag && cfg.adsId && label) W.gtag("event", "conversion", { send_to: `${cfg.adsId}/${label}`, ...extra });
+  };
+
   document.addEventListener("click", (e) => {
     const el = (e.target as HTMLElement).closest<HTMLElement>("[data-track]");
-    if (el) dl.push({ event: el.dataset.track, location: el.dataset.loc, package: el.dataset.pkg });
+    if (!el) return;
+    const ev = el.dataset.track || "";
+    dl.push({ event: ev, location: el.dataset.loc, package: el.dataset.pkg });
+    if (ev === "whatsapp_click" || ev === "call_click") {
+      W.gtag?.("event", ev, { location: el.dataset.loc });
+      conv(cfg.adsContactLabel);
+      W.fbq?.("track", "Contact", { content_name: ev });
+    } else if (ev === "cta_click") {
+      W.gtag?.("event", "cta_click", { location: el.dataset.loc, package: el.dataset.pkg });
+    }
   });
 
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -450,16 +503,16 @@ export function enhance(cfg: EnhanceConfig) {
         return;
       }
 
+      const idempotencyKey =
+        form.dataset.key || (form.dataset.key = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12));
       if (cfg.endpoint) {
         // Captured in the CRM even if the visitor never presses Send in WhatsApp.
-        const q = new URLSearchParams(location.search);
         const utm: Record<string, string> = {};
-        ["utm_source", "utm_medium", "utm_campaign", "gclid"].forEach((k) => {
-          const v = q.get(k);
-          if (v) utm[k] = v;
+        ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "gbraid", "wbraid", "fbclid"].forEach((k) => {
+          let v = "";
+          try { v = new URLSearchParams(location.search).get(k) || sessionStorage.getItem("rl_" + k) || ""; } catch { /* storage blocked */ }
+          if (v) utm[k] = v.slice(0, 200);
         });
-        const idempotencyKey =
-          form.dataset.key || (form.dataset.key = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12));
         try {
           fetch(cfg.endpoint, {
             method: "POST",
@@ -484,6 +537,9 @@ export function enhance(cfg: EnhanceConfig) {
         (details ? `\nAbout my business: ${details}` : "");
       const link = `https://wa.me/${cfg.wa}?text=${encodeURIComponent(msg)}`;
       dl.push({ event: "generate_lead", form_location: form.dataset.lead, requirement: need });
+      W.gtag?.("event", "generate_lead", { form_location: form.dataset.lead, requirement: need });
+      conv(cfg.adsLeadLabel, { transaction_id: idempotencyKey });
+      W.fbq?.("track", "Lead", { content_name: need }, { eventID: idempotencyKey });
 
       doneLink.href = link;
       form.hidden = true;

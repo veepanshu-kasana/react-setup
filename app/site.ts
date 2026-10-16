@@ -63,3 +63,22 @@ export function waLink(text: string) {
 export const WA_DEFAULT = waLink(
   "Hi RannLab, I want a WooCommerce website for my business. Please share details."
 );
+
+/**
+ * Ads & analytics IDs. Leave a value empty to switch that tag off — nothing loads until an ID is set.
+ * Tags load after the page is idle, so they never slow the first paint.
+ *  - gtmId:            Google Tag Manager container, e.g. "GTM-ABC1234" (use this OR the direct tags below)
+ *  - ga4Id:            Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX"
+ *  - adsId:            Google Ads account tag, e.g. "AW-123456789"
+ *  - adsLeadLabel:     Google Ads conversion label for "Lead form submit", e.g. "AbCdEfGh123"
+ *  - adsContactLabel:  optional Google Ads conversion label for WhatsApp / call clicks
+ *  - metaPixelId:      Meta (Facebook/Instagram) Pixel ID, e.g. "123456789012345"
+ */
+export const TRACKING = {
+  gtmId: "",
+  ga4Id: "",
+  adsId: "",
+  adsLeadLabel: "",
+  adsContactLabel: "",
+  metaPixelId: "",
+} as const;

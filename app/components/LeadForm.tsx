@@ -85,7 +85,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
           Get my free quote <Arrow />
         </button>
         <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-muted">
-          <Shield className="size-4 shrink-0" /> Your details are only used to contact you about your project.
+          <Shield className="size-4 shrink-0" /> <span>Your details are only used to contact you about your project. <a href={SITE.legal.privacy} className="underline underline-offset-2 hover:text-teal-700">Privacy policy</a></span>
         </p>
       </form>
 

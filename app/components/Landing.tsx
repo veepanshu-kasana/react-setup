@@ -1,4 +1,4 @@
-import { SITE, WA_DEFAULT } from "../site";
+import { SITE, TRACKING, WA_DEFAULT } from "../site";
 import { enhance } from "../lib/enhance";
 import {
   COMPARE, FAQS, FEATURES, HERO_POINTS, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, SERVICES, STORE_TYPES, WHY,
@@ -192,8 +192,8 @@ function ProductRing() {
         <span className="text-[11px] leading-tight"><b className="block text-[12px] text-ink">Paid ₹2,449 via UPI</b><span className="text-muted">GST invoice sent</span></span>
       </div>
       <div className="chip chip-c">
-        <span className="text-[13px] font-bold text-[#d4a017]">★ 4.9</span>
-        <span className="text-[11px] leading-tight text-muted">from 380+<br />customer reviews</span>
+        <span className="text-[13px] font-bold text-teal-700">⚡ 100</span>
+        <span className="text-[11px] leading-tight text-muted">Google PageSpeed<br />mobile score</span>
       </div>
     </div>
   );
@@ -1188,7 +1188,7 @@ export function Landing() {
       <MobileBar />
       <script
         dangerouslySetInnerHTML={{
-          __html: `(${enhance.toString()})(${JSON.stringify({ brand: SITE.shortBrand, wa: SITE.whatsappNumber, endpoint: SITE.leadEndpoint })})`,
+          __html: `(${enhance.toString()})(${JSON.stringify({ brand: SITE.shortBrand, wa: SITE.whatsappNumber, endpoint: SITE.leadEndpoint, ...TRACKING })})`,
         }}
       />
     </>
