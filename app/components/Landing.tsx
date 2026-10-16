@@ -708,8 +708,10 @@ function FeatureHub() {
     return (
       <li key={f.title} className="fh-card tilt reveal" data-tilt3d style={{ "--fc": FACE_GRADS[i], "--glow": acc(i).glow, animationDelay: `${(i % 3) * 90}ms` } as React.CSSProperties}>
         <span className="feat-ic"><Icon className="size-5" /></span>
-        <h3 className="mt-4 text-lg font-bold text-white">{f.title}</h3>
-        <p className="mt-1.5 text-[0.93rem] leading-relaxed text-white/70">{f.body}</p>
+        <div className="min-w-0">
+          <h3 className="font-bold text-white">{f.title}</h3>
+          <p className="mt-1 text-[0.88rem] leading-snug text-white/70">{f.body}</p>
+        </div>
       </li>
     );
   };
@@ -720,8 +722,20 @@ function FeatureHub() {
         <div className="fh mt-8 lg:mt-10">
           <ul className="fh-col reveal">{FEATURES.slice(0, 3).map((f, i) => card(f, i))}</ul>
           <div className="fh-core" aria-hidden="true">
-            <i className="fh-r1" /><i className="fh-r2" /><i className="fh-r3" />
-            <span className="fh-orb"><I.Cart className="size-9" /><b>Your store</b></span>
+            <i className="fh-r1" /><i className="fh-r2" />
+            <div className="fh-phone">
+              <div className="fh-screen">
+                <p className="fh-h">Checkout</p>
+                <div className="fh-item"><img src={P.story.products[0].img} alt="" width={240} height={240} loading="lazy" decoding="async" /><span><b>{P.story.products[0].name}</b><em>{P.story.products[0].price}</em></span></div>
+                <p className="fh-lbl">Pay with</p>
+                <span className="fh-opt fh-on"><I.Card className="size-3.5" />UPI · PhonePe · GPay</span>
+                <span className="fh-opt"><I.Wallet className="size-3.5" />Cash on delivery</span>
+                <span className="fh-row"><I.Truck className="size-3.5" />Delivery by Fri · Free</span>
+                <span className="fh-row"><I.Receipt className="size-3.5" />GST invoice included</span>
+                <span className="fh-pay">Place order</span>
+                <span className="fh-toast"><I.Chat className="size-3.5" />Order confirmed on WhatsApp</span>
+              </div>
+            </div>
           </div>
           <ul className="fh-col reveal">{FEATURES.slice(3).map((f, i) => card(f, i + 3))}</ul>
         </div>
