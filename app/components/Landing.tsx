@@ -418,40 +418,60 @@ function Features() {
   );
 }
 
+const QUOTE_STEPS = [
+  { t: "Share your details", d: "30 seconds", Icon: I.Chat, c: "from-teal-300 to-teal-600" },
+  { t: "Free expert call", d: "20 minutes", Icon: I.Phone, c: "from-amber-300 to-orange-500" },
+  { t: "Fixed, itemised quote", d: "Within 24 hours", Icon: I.Receipt, c: "from-fuchsia-400 to-violet-600" },
+];
+
 function QuoteBlock() {
   return (
-    <section id="quote" aria-labelledby="quote-title" className="scroll-mt-20 bg-white py-16 sm:py-24">
-      <div className="container-x grid gap-10 lg:grid-cols-[1fr_minmax(0,30rem)] lg:items-center lg:gap-16">
-        <div>
-          <p className="eyebrow">Free quote</p>
-          <h2 id="quote-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">
-            Tell us about your store. Get a fixed quote in 24 hours.
+    <section id="quote" aria-labelledby="quote-title" className="band-dark quote-band scroll-mt-20 py-16 sm:py-24">
+      <div className="container-x grid gap-12 lg:grid-cols-[1fr_minmax(0,31rem)] lg:items-center lg:gap-14">
+        <div className="reveal">
+          <p className="eyebrow eyebrow-dark">Free quote</p>
+          <h2 id="quote-title" className="mt-3 text-3xl font-bold leading-tight text-white sm:text-5xl sm:leading-[1.08]">
+            Tell us about your store. <span className="why-grad">Get a fixed quote in 24 hours.</span>
           </h2>
-          <p className="mt-4 text-lg text-muted">
+          <p className="mt-5 max-w-xl text-lg text-white/75">
             No sales pressure. A RannLab WooCommerce expert reviews your needs and sends a clear, itemised plan with price and timeline.
           </p>
-          <ul className="mt-6 space-y-3 text-ink-2">
-            {["Free 20-minute strategy call", "Itemised quote with no hidden charges", "Design approval before development starts", "Support continues after launch"].map((t) => (
-              <li key={t} className="flex gap-3">
-                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-teal-50 text-teal-700"><I.Check className="size-3.5" /></span> {t}
+
+          <ol className="quote-steps mt-9" aria-label="What happens next">
+            {QUOTE_STEPS.map((st, i) => (
+              <li key={st.t} className="quote-step" style={{ "--d": i } as React.CSSProperties}>
+                <span className={`quote-step-ic bg-gradient-to-br ${st.c}`}><st.Icon className="size-5" /></span>
+                <span className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/55">Step {i + 1}</span>
+                <b className="block text-base text-white">{st.t}</b>
+                <span className="text-sm text-teal-200">{st.d}</span>
               </li>
             ))}
+          </ol>
+
+          <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/80">
+            {["Design approval before development", "No hidden charges", "Support after launch"].map((t) => (
+              <li key={t} className="flex items-center gap-2"><I.Check className="size-4 text-teal-300" /> {t}</li>
+            ))}
           </ul>
+
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="quote-section" className="flex items-center gap-3 rounded-xl bg-surface p-4 ring-1 ring-line transition hover:ring-teal-300">
-              <span className="grid size-10 place-items-center rounded-lg bg-white text-teal-700 ring-1 ring-line"><I.Phone /></span>
-              <span className="text-sm leading-tight"><span className="block text-muted">Call us</span><b className="text-base text-ink">{SITE.phoneDisplay}</b></span>
+            <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="quote-section" className="quote-contact">
+              <span className="quote-contact-ic"><I.Phone className="size-5" /></span>
+              <span className="text-sm leading-tight"><span className="block text-white/60">Call us</span><b className="text-base text-white">{SITE.phoneDisplay}</b></span>
             </a>
-            <a href={`mailto:${SITE.email}`} data-track="email_click" data-loc="quote-section" className="flex items-center gap-3 rounded-xl bg-surface p-4 ring-1 ring-line transition hover:ring-teal-300">
-              <span className="grid size-10 place-items-center rounded-lg bg-white text-teal-700 ring-1 ring-line"><I.Mail /></span>
-              <span className="text-sm leading-tight"><span className="block text-muted">Email us</span><b className="text-base text-ink">{SITE.email}</b></span>
+            <a href={`mailto:${SITE.email}`} data-track="email_click" data-loc="quote-section" className="quote-contact">
+              <span className="quote-contact-ic"><I.Mail className="size-5" /></span>
+              <span className="text-sm leading-tight"><span className="block text-white/60">Email us</span><b className="text-base text-white">{SITE.email}</b></span>
             </a>
           </div>
         </div>
-        <div className="form-stack" data-formstack>
-          <div className="form-layer form-layer-1" aria-hidden="true" />
-          <div className="form-layer form-layer-2" aria-hidden="true" />
-          <div className="form-card"><LeadForm id="quote-form" /></div>
+
+        <div className="form-stack reveal" data-formstack>
+          <div className="quote-halo" aria-hidden="true" />
+          <span className="quote-float quote-float-1" aria-hidden="true"><I.Wallet className="size-4" /> Fixed price</span>
+          <span className="quote-float quote-float-2" aria-hidden="true"><I.Calendar className="size-4" /> Quote in 24 hrs</span>
+          <span className="quote-float quote-float-3" aria-hidden="true"><I.Shield className="size-4" /> No spam</span>
+          <div className="form-card quote-card"><LeadForm id="quote-form" /></div>
         </div>
       </div>
     </section>
@@ -906,7 +926,7 @@ function Footer() {
         <address className="not-italic">
           <p className="font-display font-bold text-white">Contact</p>
           <ul className="mt-4 space-y-3">
-            <li className="flex gap-2.5"><I.Phone className="mt-1 size-4 shrink-0 text-teal-300" /><span><a className={a} href={`tel:${SITE.phoneE164}`}>{SITE.phoneDisplay}</a>, <a className={a} href={`tel:+${SITE.whatsappNumber}`}>{SITE.phoneAltDisplay}</a></span></li>
+            <li className="flex gap-2.5"><I.Phone className="mt-1 size-4 shrink-0 text-teal-300" /><span><a className={a} href={`tel:${SITE.phoneE164}`}>{SITE.phoneDisplay}</a></span></li>
             <li className="flex gap-2.5"><I.Mail className="mt-1 size-4 shrink-0 text-teal-300" /><a className={a} href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
             <li className="flex gap-2.5"><I.Pin className="mt-1 size-4 shrink-0 text-teal-300" /><a className={a} href={SITE.mapUrl} rel="noopener" target="_blank">{SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.postalCode}</a></li>
           </ul>

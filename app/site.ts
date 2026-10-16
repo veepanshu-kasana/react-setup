@@ -11,8 +11,7 @@ export const SITE = {
   mainSite: "https://rannlab.com",
   phoneDisplay: "+91 99906 13366",
   phoneE164: "+919990613366",
-  phoneAltDisplay: "+91 88000 25033",
-  whatsappNumber: "918800025033",
+  whatsappNumber: "919990613366",
   email: "info@rannlab.com",
   address: {
     street: "805, Om Tower, Alpha-I Commercial Belt, Block E, Alpha I",

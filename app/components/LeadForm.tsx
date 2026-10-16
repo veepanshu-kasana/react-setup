@@ -25,12 +25,15 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
         target="_blank"
         noValidate
         aria-labelledby={f("h")}
-        className="relative rounded-2xl border-t-4 border-teal-500 bg-white p-6 text-ink shadow-[0_30px_60px_-30px_rgb(18_26_28/0.45)] ring-1 ring-line sm:p-8"
+        className="relative rounded-[1.4rem] bg-white p-6 text-ink sm:p-8"
       >
+        <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-teal-800">
+          <span className="size-2 rounded-full bg-teal-500" aria-hidden="true" /> 100% free · No obligation
+        </p>
         <h2 id={f("h")} className="text-xl font-bold sm:text-2xl">{heading}</h2>
         <p className="mt-1 text-sm text-muted">Takes 30 seconds. No spam, no obligation.</p>
 
-        <div className="mt-5 space-y-4">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor={f("name")} className="label">Your name</label>
             <input id={f("name")} name="name" autoComplete="name" required minLength={2} maxLength={60} className="field" />
@@ -56,7 +59,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
             </div>
             <p id={f("phone-err")} data-err="phone" className="err" hidden />
           </div>
-          <div>
+          <div className="sm:col-span-2">
             <label htmlFor={f("need")} className="label">What do you need?</label>
             <select id={f("need")} name="need" className="field" defaultValue={NEEDS[0]}>
               {NEEDS.map((n) => (
@@ -64,7 +67,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
               ))}
             </select>
           </div>
-          <div>
+          <div className="sm:col-span-2">
             <label htmlFor={f("details")} className="label">
               What do you sell? <span className="font-normal text-muted">(optional)</span>
             </label>
@@ -92,7 +95,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
         tabIndex={-1}
         role="status"
         aria-live="polite"
-        className="rounded-2xl border-t-4 border-teal-500 bg-white p-6 text-ink shadow-[0_30px_60px_-30px_rgb(18_26_28/0.45)] ring-1 ring-line sm:p-8"
+        className="rounded-[1.4rem] bg-white p-6 text-ink sm:p-8"
       >
         <div className="mx-auto grid size-12 place-items-center rounded-full bg-success-50 text-success">
           <Check className="size-6" />
