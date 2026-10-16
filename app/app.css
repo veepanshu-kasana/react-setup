@@ -544,80 +544,243 @@
     z-index: 2;
     transform: rotateX(var(--fx)) rotateY(var(--fy));
   }
-  /* ---------- Floating 3D background shapes ---------- */
+  /* ---------- Per-section 3D backgrounds ---------- */
   .b3-host {
     position: relative;
     isolation: isolate;
   }
-  .b3 {
+  .bgx {
     position: absolute;
     inset: 0;
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
-    perspective: 900px;
-    opacity: 0.6;
   }
-  .b3-dark {
-    opacity: 0.45;
-  }
-  .b3-cube,
-  .b3-ring,
-  .b3-sphere {
+  /* Pains: problems fall, fixes rise */
+  .fx-tok {
     position: absolute;
-    width: var(--s);
-    height: var(--s);
+    top: -3rem;
+    display: grid;
+    place-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    opacity: 0.55;
   }
-  .b3-cube {
-    transform-style: preserve-3d;
-    transform: rotateX(-24deg) rotateY(36deg);
+  .fx-bad {
+    color: #e11d48;
+    background: #ffe4e6;
+    box-shadow: 0 8px 18px -8px rgb(225 29 72 / 0.5);
   }
-  .b3-cube i {
+  .fx-good {
+    top: auto;
+    bottom: -3rem;
+    color: #fff;
+    background: linear-gradient(135deg, #2dd4bf, #0b6e6a);
+    box-shadow: 0 8px 18px -8px rgb(11 110 106 / 0.6);
+  }
+  /* Built for India: tricolour gyroscope */
+  .fx-gyro {
+    position: absolute;
+    width: 15rem;
+    height: 15rem;
+    perspective: 700px;
+    opacity: 0.55;
+  }
+  .fx-gyro-a {
+    right: -3rem;
+    top: 3rem;
+  }
+  .fx-gyro-b {
+    left: -4rem;
+    bottom: 2rem;
+    scale: 0.7;
+  }
+  .fx-gyro i {
     position: absolute;
     inset: 0;
-    border-radius: 0.5rem;
-    border: 1.5px solid color-mix(in srgb, var(--c) 65%, transparent);
-    background: linear-gradient(135deg, color-mix(in srgb, var(--c) 18%, transparent), color-mix(in srgb, var(--c) 4%, transparent));
-  }
-  .b3-cube i:nth-child(1) { transform: translateZ(calc(var(--s) / 2)); }
-  .b3-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
-  .b3-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
-  .b3-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
-  .b3-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
-  .b3-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
-  .b3-ring {
     border-radius: 50%;
-    border: calc(var(--s) * 0.075) solid color-mix(in srgb, var(--c) 45%, transparent);
-    box-shadow: 0 0 30px -6px color-mix(in srgb, var(--c) 50%, transparent), inset 0 0 20px -6px color-mix(in srgb, var(--c) 50%, transparent);
-    transform: rotateX(66deg) rotateZ(0deg);
+    border: 3px solid;
   }
-  .b3-sphere {
+  .fx-gyro i:nth-child(1) { border-color: #fb923c; transform: rotateX(70deg); }
+  .fx-gyro i:nth-child(2) { inset: 8%; border-color: #cbd5e1; transform: rotateY(70deg); }
+  .fx-gyro i:nth-child(3) { inset: 16%; border-color: #22c55e; transform: rotateX(70deg) rotateY(40deg); }
+  .fx-gyro b {
+    position: absolute;
+    inset: 44%;
     border-radius: 50%;
-    background: radial-gradient(circle at 32% 28%, #fff, color-mix(in srgb, var(--c) 55%, white) 30%, var(--c) 68%, color-mix(in srgb, var(--c) 60%, black));
-    box-shadow: 0 20px 30px -14px color-mix(in srgb, var(--c) 70%, transparent);
-    opacity: 0.75;
+    background: radial-gradient(circle at 35% 30%, #93c5fd, #1e3a8a);
+  }
+  /* Free quote: paper plane on a dotted trail */
+  .fx-plane-wrap {
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    width: 1440px;
+    height: 300px;
+    translate: -50% 0;
+  }
+  .fx-trail {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .fx-trail path {
+    stroke: rgb(94 234 212 / 0.35);
+    stroke-width: 2;
+    stroke-dasharray: 2 10;
+    stroke-linecap: round;
+  }
+  .fx-plane {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.4rem;
+    height: 2.4rem;
+    offset-rotate: auto 45deg;
+    offset-distance: 30%;
+    filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.5)) drop-shadow(0 0 10px rgb(45 212 191 / 0.6));
+  }
+  .fx-plane svg {
+    width: 100%;
+    height: 100%;
+  }
+  /* Services: isometric tile wave */
+  .fx-iso {
+    position: absolute;
+    right: -6rem;
+    bottom: -7rem;
+    width: 26rem;
+    height: 26rem;
+    perspective: 1200px;
+    opacity: 0.5;
+  }
+  .fx-iso-in {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.45rem;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(58deg) rotateZ(-45deg);
+  }
+  .fx-iso-in i {
+    border-radius: 0.4rem;
+    background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
+    box-shadow: 3px 3px 0 #6d28d9;
+  }
+  .fx-iso-in i:nth-child(3n) {
+    background: linear-gradient(135deg, #99f6e4, #14b8a6);
+    box-shadow: 3px 3px 0 #0f766e;
+  }
+  /* Why choose us: growing 3D bars */
+  .fx-bars {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.1rem;
+    height: 12rem;
+    opacity: 0.32;
+  }
+  .fx-bars-l { left: 2%; }
+  .fx-bars-r { right: 3%; }
+  .fx-bars i {
+    position: relative;
+    width: 1.8rem;
+    height: var(--h);
+    background: linear-gradient(#2dd4bf, #0b6e6a);
+    transform-origin: bottom;
+  }
+  .fx-bars-r i {
+    background: linear-gradient(#fda4af, #e11d48);
+  }
+  .fx-bars i::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    width: 100%;
+    height: 0.7rem;
+    background: inherit;
+    filter: brightness(1.35);
+    transform: skewX(-45deg);
+    transform-origin: left bottom;
+  }
+  .fx-bars i::after {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 0.7rem;
+    height: 100%;
+    background: inherit;
+    filter: brightness(0.7);
+    transform: skewY(-45deg);
+    transform-origin: left top;
+  }
+  /* Why RannLab: shooting stars */
+  .fx-meteor {
+    position: absolute;
+    top: -2%;
+    width: 9rem;
+    height: 2px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #fff, rgb(94 234 212 / 0.6) 30%, transparent);
+    rotate: -35deg;
+    opacity: 0;
+  }
+  /* FAQ: rising chat bubbles */
+  .fx-bub {
+    position: absolute;
+    bottom: -4rem;
+    display: grid;
+    gap: 0.35rem;
+    align-content: center;
+    height: 2.6rem;
+    padding: 0 0.8rem;
+    border-radius: 1rem 1rem 1rem 0.25rem;
+    background: var(--bc);
+    box-shadow: 0 10px 20px -12px rgb(15 23 42 / 0.4);
+    opacity: 0.7;
+  }
+  .fx-bub-r {
+    border-radius: 1rem 1rem 0.25rem 1rem;
+  }
+  .fx-bub i {
+    height: 0.3rem;
+    border-radius: 99px;
+    background: rgb(15 23 42 / 0.14);
+  }
+  .fx-bub i + i {
+    width: 60%;
   }
   @media (max-width: 639px) {
-    .b3 > :nth-child(n + 3) {
+    .fx-gyro-b,
+    .fx-bars-l,
+    .fx-tok:nth-child(n + 4):nth-child(-n + 5),
+    .fx-tok:nth-child(n + 9) {
       display: none;
     }
-    .b3-cube,
-    .b3-ring,
-    .b3-sphere {
-      scale: 0.7;
+    .fx-iso {
+      scale: 0.65;
+      transform-origin: right bottom;
     }
   }
   @media (prefers-reduced-motion: no-preference) {
-    .b3-cube {
-      animation: b3-tumble 30s linear infinite;
-    }
-    .b3-ring {
-      animation: b3-ring 22s linear infinite;
-    }
-    .b3-sphere {
-      animation: b3-float 9s ease-in-out infinite;
-    }
+    .fx-bad { animation: fx-fall 14s linear infinite; }
+    .fx-good { animation: fx-rise 14s linear infinite; }
+    .fx-gyro i:nth-child(1) { animation: gyro-1 9s linear infinite; }
+    .fx-gyro i:nth-child(2) { animation: gyro-2 12s linear infinite; }
+    .fx-gyro i:nth-child(3) { animation: gyro-3 15s linear infinite; }
+    .fx-plane { animation: fx-fly 9s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+    .fx-iso-in i { animation: fx-iso 3.6s ease-in-out infinite; animation-delay: calc(var(--d) * 0.18s); }
+    .fx-bars i { animation: fx-bar 4s ease-in-out infinite alternate; animation-delay: calc(var(--d) * -0.6s); }
+    .fx-meteor { animation: fx-meteor 7s linear infinite; }
+    .fx-bub { animation: fx-bub 18s linear infinite; }
   }
+
   /* Stores we build: dark band with a glowing floor under the 3D wall */
   .types-band::before {
     background:
@@ -2813,16 +2976,38 @@
   to { left: calc(100% - 10px); }
 }
 
-@keyframes b3-tumble {
-  from { transform: rotateX(-24deg) rotateY(36deg) translateY(0); }
-  50% { transform: rotateX(156deg) rotateY(216deg) translateY(-14px); }
-  to { transform: rotateX(336deg) rotateY(396deg) translateY(0); }
+
+@keyframes fx-fall {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(calc(100vh + 60rem)) rotate(360deg); }
 }
-@keyframes b3-ring {
-  from { transform: rotateX(66deg) rotateZ(0deg); }
-  to { transform: rotateX(66deg) rotateZ(360deg); }
+@keyframes fx-rise {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(calc(-100vh - 60rem)) rotate(-360deg); }
 }
-@keyframes b3-float {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -18px; }
+@keyframes gyro-1 { to { transform: rotateX(70deg) rotateZ(360deg); } }
+@keyframes gyro-2 { to { transform: rotateY(70deg) rotateX(360deg); } }
+@keyframes gyro-3 { to { transform: rotateX(70deg) rotateY(400deg); } }
+@keyframes fx-fly {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+@keyframes fx-iso {
+  0%, 100% { transform: translateZ(0); }
+  50% { transform: translateZ(26px); }
+}
+@keyframes fx-bar {
+  from { transform: scaleY(0.35); }
+  to { transform: scaleY(1); }
+}
+@keyframes fx-meteor {
+  0% { opacity: 0; translate: 0 0; }
+  5% { opacity: 1; }
+  22% { opacity: 0; translate: -38rem 27rem; }
+  100% { opacity: 0; translate: -38rem 27rem; }
+}
+@keyframes fx-bub {
+  from { transform: translateY(0) rotateY(0deg); }
+  50% { transform: translateY(-50vh) rotateY(25deg); }
+  to { transform: translateY(calc(-100vh - 40rem)) rotateY(0deg); }
 }
