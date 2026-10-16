@@ -458,15 +458,107 @@ function QuoteBlock() {
   );
 }
 
+/** Small animated scenes for each service tile (decorative, CSS only). Keyed by the service icon. */
+const SVC_SCENES: Record<string, () => React.JSX.Element> = {
+  cart: () => (
+    <div className="sc sc-store">
+      <div className="sc-browser">
+        <div className="sc-bar"><i /><i /><i /><span>yourstore.in</span></div>
+        <div className="sc-grid">
+          {["from-rose-300 to-orange-300", "from-teal-300 to-sky-300", "from-violet-300 to-fuchsia-300", "from-amber-200 to-lime-300"].map((g, n) => (
+            <div key={g} className="sc-prod" style={{ "--d": n } as React.CSSProperties}>
+              <b className={`bg-gradient-to-br ${g}`} /><s /><s className="w-1/2" />
+              <em>{["₹1,299", "₹849", "₹2,199", "₹599"][n]}</em>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="sc-toast"><I.Check className="size-3.5" /> New order · ₹1,299</div>
+    </div>
+  ),
+  refresh: () => (
+    <div className="sc sc-migrate">
+      <ul>{["Shopify", "Wix", "Magento", "OpenCart"].map((n, k) => <li key={n} style={{ "--d": k } as React.CSSProperties}>{n}</li>)}</ul>
+      <div className="sc-pipe">{[0, 1, 2].map((k) => <i key={k} style={{ "--d": k } as React.CSSProperties} />)}</div>
+      <div className="sc-woo"><I.Cart className="size-5" /><b>WooCommerce</b><span><I.Check className="size-3" /> Data intact</span></div>
+    </div>
+  ),
+  layers: () => (
+    <div className="sc sc-redesign">
+      <div className="sc-page sc-old"><b /><s /><s /><s className="w-2/3" /></div>
+      <div className="sc-page sc-new"><b /><s /><s className="w-2/3" /><em>Buy now</em></div>
+      <span className="sc-handle" />
+      <span className="sc-tag left-3">Before</span>
+      <span className="sc-tag right-3 sc-tag-new">After</span>
+    </div>
+  ),
+  bolt: () => (
+    <div className="sc sc-speed">
+      <div className="sc-gauge"><i className="sc-needle" /><span className="sc-hub" /></div>
+      <span className="sc-pill"><I.Bolt className="size-3.5" /> Core Web Vitals · Good</span>
+    </div>
+  ),
+  wrench: () => (
+    <div className="sc sc-plugins">
+      {["B2B pricing", "Subscriptions", "ERP sync"].map((n, k) => (
+        <div key={n} className="sc-tog" style={{ "--d": k } as React.CSSProperties}><span>{n}</span><i /></div>
+      ))}
+    </div>
+  ),
+  shield: () => (
+    <div className="sc sc-care">
+      <svg viewBox="0 0 320 64" fill="none" aria-hidden="true" focusable="false">
+        <polyline className="base" points="0,34 70,34 84,12 98,54 112,34 186,34 200,16 214,50 228,34 320,34" />
+        <polyline points="0,34 70,34 84,12 98,54 112,34 186,34 200,16 214,50 228,34 320,34" />
+      </svg>
+      <div className="sc-chips">
+        {["Daily backup", "SSL active", "Plugins updated"].map((c) => <span key={c}><I.Check className="size-3" /> {c}</span>)}
+      </div>
+    </div>
+  ),
+};
+const SVC_TINTS = [
+  "from-teal-50 via-cyan-50 to-sky-100",
+  "from-amber-50 via-orange-50 to-rose-100",
+  "from-violet-50 via-fuchsia-50 to-pink-100",
+  "from-lime-50 via-emerald-50 to-teal-100",
+  "from-sky-50 via-indigo-50 to-violet-100",
+  "from-rose-50 via-pink-50 to-orange-100",
+];
+const SVC_SPAN = ["md:col-span-2", "", "", "", "", "md:col-span-2"];
+
 function Services() {
   return (
-    <section id="services" aria-labelledby="services-title" className="mesh-cool scroll-mt-20 py-16 sm:py-24">
+    <section id="services" aria-labelledby="services-title" className="svc-band scroll-mt-20 py-16 sm:py-24">
       <div className="container-x">
-        <SectionHead id="services-title" tone="violet" eyebrow="Our WooCommerce services" title="From a brand-new store to a complete rebuild" />
-        <IconCards items={SERVICES} offset={3} />
-        <div className="mt-10 text-center">
-          <a href="#quote" data-track="cta_click" data-loc="services" className="btn btn-primary">Discuss my project <I.Arrow /></a>
-        </div>
+        <SectionHead id="services-title" tone="violet" eyebrow="Our WooCommerce services" title="From a brand-new store to a complete rebuild" sub="Whatever stage your store is at, one team handles it end to end." />
+        <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {SERVICES.map((sv, i) => {
+            const Icon = ICONS[sv.icon];
+            const Scene = SVC_SCENES[sv.icon];
+            return (
+              <li key={sv.title} className={`svc tilt reveal ${SVC_SPAN[i]}`} data-tilt3d style={{ "--glow": acc(i).glow, animationDelay: `${(i % 3) * 90}ms` } as React.CSSProperties}>
+                <div className={`svc-vis bg-gradient-to-br ${SVC_TINTS[i]}`} aria-hidden="true">{Scene && <Scene />}</div>
+                <div className="p-6">
+                  <div className="flex items-center gap-3">
+                    <span className={`grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br text-white ${acc(i).bar}`}><Icon className="size-5" /></span>
+                    <h3 className="text-lg font-bold text-ink">{sv.title}</h3>
+                  </div>
+                  <p className="mt-3 text-muted">{sv.body}</p>
+                </div>
+              </li>
+            );
+          })}
+          <li className="svc-cta reveal md:col-span-2 lg:col-span-1">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-300">Not sure where to start?</p>
+            <h3 className="mt-3 font-display text-2xl font-bold text-white">Tell us about your store. We'll suggest the right fix.</h3>
+            <p className="mt-3 text-white/75">A free 20-minute call, then a fixed, itemised quote within 24 hours.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="#quote" data-track="cta_click" data-loc="services" className="btn bg-white text-night hover:bg-teal-50">Discuss my project <I.Arrow className="size-4" /></a>
+              <a href={WA_DEFAULT} data-track="whatsapp_click" data-loc="services" className="btn bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/15" rel="noopener" target="_blank"><I.WhatsApp className="size-5" /> WhatsApp</a>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
   );
