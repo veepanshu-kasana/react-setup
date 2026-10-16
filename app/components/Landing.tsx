@@ -268,24 +268,31 @@ function Proof() {
             );
           })}
         </ul>
-        <div className="mt-9 flex flex-col items-center gap-4 border-t border-line pt-7 lg:flex-row lg:justify-between">
+        <div className="mt-9 flex flex-col items-center gap-4 border-t border-line pt-7 lg:flex-row lg:gap-8">
           <p className="shrink-0 text-sm font-semibold uppercase tracking-[0.14em] text-muted lg:whitespace-nowrap">Platforms & tools we set up</p>
-          <ul className="flex flex-wrap justify-center gap-2.5">
-            {PLATFORMS.map((p, i) => {
-              const Icon = PLATFORM_ICONS[p] ?? I.Layers;
-              const logo = logoFor(p);
-              return (
-                <li key={p} className="flex items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 text-sm font-semibold text-ink-2 shadow-sm ring-1 ring-line transition hover:-translate-y-0.5 hover:shadow-md">
-                  {logo ? (
-                    <span className="grid size-7 place-items-center rounded-full bg-white ring-1 ring-line"><img src={logo} alt="" width={20} height={20} loading="lazy" decoding="async" className="size-5 object-contain" /></span>
-                  ) : (
-                    <span className={`grid size-7 place-items-center rounded-full ring-1 ${acc(i).tile}`}><Icon className="size-4" /></span>
-                  )}
-                  {p}
-                </li>
-              );
-            })}
-          </ul>
+          {/* One-line slider: the first list is read by screen readers, the copy only fills the loop */}
+          <div className="logo-slider w-full min-w-0 flex-1">
+            <div className="logo-track">
+              {[0, 1].map((copy) => (
+                <ul key={copy} className="flex shrink-0 items-center gap-3 pr-3" aria-hidden={copy === 1 ? true : undefined}>
+                  {PLATFORMS.map((p, i) => {
+                    const Icon = PLATFORM_ICONS[p] ?? I.Layers;
+                    const logo = logoFor(p);
+                    return (
+                      <li key={p} className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-white py-1.5 pl-1.5 pr-4 text-sm font-semibold text-ink-2 shadow-sm ring-1 ring-line">
+                        {logo ? (
+                          <span className="grid size-7 place-items-center rounded-full bg-white ring-1 ring-line"><img src={logo} alt="" width={20} height={20} loading="lazy" decoding="async" className="size-5 object-contain" /></span>
+                        ) : (
+                          <span className={`grid size-7 place-items-center rounded-full ring-1 ${acc(i).tile}`}><Icon className="size-4" /></span>
+                        )}
+                        {p}
+                      </li>
+                    );
+                  })}
+                </ul>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
