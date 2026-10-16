@@ -759,66 +759,63 @@ const TIERS = [
 
 function Packages() {
   return (
-    <section id="packages" aria-labelledby="packages-title" className="b3-host pk-band scroll-mt-20 py-10 sm:py-14">
+    <section id="packages" aria-labelledby="packages-title" className="pk-band scroll-mt-20 py-10 sm:py-14">
       <div className="container-x">
         <SectionHead
           id="packages-title"
           tone="sky"
           eyebrow="Packages"
           title="Choose a starting point. We tailor the rest."
-          sub="Every package is a fixed-price project. Pick a level to see what's inside, then get an exact quote within 24 hours."
+          sub="Every package is a fixed-price project. Pick a level, see what's inside, and get an exact quote within 24 hours."
         />
-        <div className="pk mt-8 grid gap-6 lg:mt-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-10">
-          <fieldset className="pk-tiers reveal">
+        <div className="pkx mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+          <fieldset className="pkx-scene reveal">
             <legend className="sr-only">Choose a package</legend>
-            {PACKAGES.map((p, i) => (
-              <label key={p.name} className="pk-tier" style={{ "--c": TIERS[i].c } as React.CSSProperties}>
-                <input type="radio" name="pkg" id={`pkg-${i}`} value={p.name} defaultChecked={p.featured} className="sr-only" />
-                <span className={`pk-tier-ic bg-gradient-to-br ${TIERS[i].grad}`} aria-hidden="true">{`0${i + 1}`}</span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-center gap-2 font-display text-lg font-bold text-ink">
-                    {p.name}
-                    {p.featured && <span className="rounded-full bg-amber-100 px-2 py-0.5 font-sans text-[0.7rem] font-bold uppercase tracking-wide text-amber-800">Most popular</span>}
+            <div className="pkx-floor" aria-hidden="true" />
+            <div className="pkx-row">
+              {PACKAGES.map((p, i) => (
+                <label key={p.name} className={`pkx-tower pkx-t${i}`} style={{ "--c": TIERS[i].c } as React.CSSProperties}>
+                  <input type="radio" name="pkg" id={`pkg-${i}`} value={p.name} defaultChecked={p.featured} className="sr-only" />
+                  <span className="pkx-stack" aria-hidden="true">
+                    <span className="pkx-iso">{Array.from({ length: i + 1 }, (_, n) => (
+                      <span key={n} className="pkx-cube" style={{ "--n": n } as React.CSSProperties}>
+                        <i className="pkx-f pkx-front" /><i className="pkx-f pkx-back" /><i className="pkx-f pkx-left" /><i className="pkx-f pkx-right" /><i className="pkx-f pkx-top">{n === i ? TIERS[i].slabs[n] : ""}</i>
+                      </span>
+                    ))}</span>
+                    <span className="pkx-beam" />
                   </span>
-                  <span className="block text-sm text-muted">{p.forWho}</span>
-                  <span className="pk-meter" aria-hidden="true">
-                    {[0, 1, 2].map((m) => <i key={m} className={m <= i ? "on" : ""} />)}
+                  <span className="pkx-label">
+                    <b>{p.name}</b>
+                    <small>{p.forWho}</small>
+                    {p.featured && <em>Most popular</em>}
                   </span>
-                </span>
-                <I.Arrow className="pk-tier-arrow size-5 shrink-0" />
-              </label>
-            ))}
+                </label>
+              ))}
+            </div>
           </fieldset>
 
-          <div className="pk-stage">
+          <div className="pkx-cards">
             {PACKAGES.map((p, i) => (
-              <article key={p.name} className={`pk-panel pk-panel-${i}`} style={{ "--c": TIERS[i].c } as React.CSSProperties} aria-label={`${p.name} package`}>
-                <div className="flex items-center gap-5">
-                  <div className="pk-iso" aria-hidden="true">
-                    <div className="pk-iso-in">
-                      {TIERS[i].slabs.map((label, n) => (
-                        <span key={label} className={`pk-slab pk-slab-${n}`} style={{ "--n": n } as React.CSSProperties}>{n === TIERS[i].slabs.length - 1 ? label : ""}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="min-w-0">
+              <article key={p.name} className={`pkx-card pkx-card-${i}`} style={{ "--c": TIERS[i].c } as React.CSSProperties} aria-label={`${p.name} package`}>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
                     <p className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: TIERS[i].c }}>{TIERS[i].level}</p>
-                    <h3 className="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">{p.name}</h3>
-                    <p className="mt-1 text-muted">{p.forWho}</p>
-                    <p className={`mt-3 inline-block bg-gradient-to-r bg-clip-text font-display text-xl font-bold text-transparent ${TIERS[i].grad}`}>
-                      {p.price ? <>From {p.price}</> : "Fixed quote in 24 hrs"}
-                    </p>
+                    <h3 className="mt-1 font-display text-2xl font-bold text-white">{p.name}</h3>
+                    <p className="mt-0.5 text-sm text-white/70">{p.forWho}</p>
                   </div>
+                  <span className={`pkx-badge bg-gradient-to-br ${TIERS[i].grad}`}>{`0${i + 1}`}</span>
                 </div>
-                <ul className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
-                  {p.items.map((it) => (
-                    <li key={it} className="flex gap-2.5 text-ink-2">
-                      <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-gradient-to-br text-white ${TIERS[i].grad}`}><I.Check className="size-3" /></span>
+                <p className="pkx-price">{p.price ? <>From {p.price}</> : <>Fixed quote <span>in 24 hrs</span></>}</p>
+                {i > 0 && <p className="mt-4 text-sm font-semibold text-white/80">Everything in {PACKAGES[i - 1].name}, plus:</p>}
+                <ul className={`${i > 0 ? "mt-2" : "mt-4"} grid gap-2.5 sm:grid-cols-2`}>
+                  {p.items.map((it, k) => (
+                    <li key={it} className="pkx-item" style={{ "--k": k } as React.CSSProperties}>
+                      <span className={`grid size-5 shrink-0 place-items-center rounded-full bg-gradient-to-br text-white ${TIERS[i].grad}`}><I.Check className="size-3" /></span>
                       {it}
                     </li>
                   ))}
                 </ul>
-                <a href="#quote" data-track="cta_click" data-loc="packages" data-pkg={p.name} className={`btn mt-7 w-full bg-gradient-to-r text-white shadow-lg sm:w-auto ${TIERS[i].btn}`}>
+                <a href="#quote" data-track="cta_click" data-loc="packages" data-pkg={p.name} className={`btn mt-6 w-full bg-gradient-to-r text-white ${TIERS[i].btn}`}>
                   Get {p.name} quote <I.Arrow className="size-4" />
                 </a>
               </article>
