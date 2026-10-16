@@ -301,7 +301,7 @@ function Proof() {
 
 function Pains() {
   return (
-    <section aria-labelledby="pains-title" className="bg-white py-16 sm:py-24">
+    <section aria-labelledby="pains-title" className="pain-band py-16 sm:py-24">
       <div className="container-x">
         <SectionHead
           id="pains-title"
@@ -310,26 +310,39 @@ function Pains() {
           title="A good-looking website is not the same as a store that sells"
           sub="These are the problems we hear most from Indian business owners, and exactly what our WooCommerce builds are designed to fix."
         />
-        <p className="reveal mt-4 text-center text-sm font-semibold text-muted">Hover or tap a card to see how we fix it</p>
-        <ul className="mt-8 grid gap-6 md:grid-cols-3">
+        <div className="mt-6 hidden grid-cols-[1fr_5rem_1fr] text-center text-xs font-bold uppercase tracking-[0.16em] lg:grid">
+          <span className="text-rose-700">The problem</span>
+          <span />
+          <span className="text-teal-700">The RannLab fix</span>
+        </div>
+        <ol className="mt-6 grid gap-6 lg:mt-4 lg:gap-5">
           {PAINS.map((p, i) => (
-            <li key={p.title} className="flip reveal" tabIndex={0} style={{ animationDelay: `${i * 90}ms` }}>
-              <div className="flip-inner">
-                <div className={`flip-face rounded-2xl p-6 ring-1 ${["bg-rose-50 ring-rose-100", "bg-amber-50 ring-amber-100", "bg-violet-50 ring-violet-100"][i]}`}>
-                  <span className={`grid size-10 place-items-center rounded-full bg-white ring-1 ${["text-rose-600 ring-rose-200", "text-amber-700 ring-amber-200", "text-violet-600 ring-violet-200"][i]}`}><I.Cross /></span>
-                  <h3 className="mt-4 text-lg font-bold text-ink">{p.title}</h3>
-                  <p className="mt-2 text-muted">{p.body}</p>
-                  <p className={`mt-4 inline-flex items-center gap-1.5 text-sm font-bold ${["text-rose-700", "text-amber-800", "text-violet-700"][i]}`}>See the fix <I.Refresh className="size-4" /></p>
+            <li key={p.title} className="pain-row reveal" style={{ "--i": i, animationDelay: `${i * 110}ms` } as React.CSSProperties}>
+              <div className="pain-bad">
+                <span className="pain-ic pain-ic-bad"><I.Cross className="size-4" /></span>
+                <div className="min-w-0">
+                  <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-rose-700 lg:hidden">The problem</p>
+                  <h3 className="text-lg font-bold text-ink">{p.title}</h3>
+                  <p className="mt-1.5 text-muted">{p.body}</p>
                 </div>
-                <div className="flip-face flip-back rounded-2xl bg-gradient-to-br from-teal-700 to-night p-6 text-white ring-1 ring-teal-500/40">
-                  <span className="grid size-10 place-items-center rounded-full bg-white/15 text-teal-200 ring-1 ring-white/25"><I.Check /></span>
-                  <p className="mt-4 text-sm font-semibold uppercase tracking-[0.14em] text-teal-200">How RannLab fixes it</p>
-                  <p className="mt-2 text-[1.02rem] leading-relaxed text-white/95">{p.fix}</p>
+              </div>
+              <div className="pain-link" aria-hidden="true">
+                <span className="pain-pipe"><i /></span>
+                <span className="pain-coin">
+                  <b className="pain-coin-face">R</b>
+                  <b className="pain-coin-face pain-coin-back"><I.Check className="size-5" /></b>
+                </span>
+              </div>
+              <div className="pain-good">
+                <span className="pain-ic pain-ic-good"><I.Check className="size-4" /></span>
+                <div className="min-w-0">
+                  <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-teal-700 lg:hidden">The RannLab fix</p>
+                  <p className="font-semibold leading-relaxed text-ink">{p.fix}</p>
                 </div>
               </div>
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </section>
   );

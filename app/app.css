@@ -486,6 +486,161 @@
     z-index: 2;
     transform: rotateX(var(--fx)) rotateY(var(--fy));
   }
+  /* ---------- Pains: problem -> spinning coin -> fix rows ---------- */
+  .pain-band {
+    background:
+      radial-gradient(34rem 26rem at 0% 60%, rgb(255 228 230 / 0.75), transparent 62%),
+      radial-gradient(34rem 26rem at 100% 40%, rgb(204 251 241 / 0.8), transparent 62%),
+      #fff;
+  }
+  .pain-row {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.4rem;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line), 0 20px 40px -30px rgb(15 23 42 / 0.4);
+  }
+  .pain-bad,
+  .pain-good {
+    display: flex;
+    gap: 0.9rem;
+    padding: 1.25rem 1.3rem;
+  }
+  .pain-bad {
+    background: linear-gradient(120deg, #fff1f2, #fff);
+  }
+  .pain-good {
+    padding-top: 1.9rem;
+    background: linear-gradient(120deg, #f0fdfa, #ecfeff);
+  }
+  .pain-ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+  }
+  .pain-ic-bad {
+    color: #e11d48;
+    background: #ffe4e6;
+    box-shadow: inset 0 0 0 1px #fecdd3;
+  }
+  .pain-ic-good {
+    color: #fff;
+    background: linear-gradient(135deg, #1fa59c, #0b6e6a);
+    box-shadow: 0 6px 14px -6px rgb(11 110 106 / 0.7);
+  }
+  .pain-link {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 0;
+    perspective: 400px;
+  }
+  .pain-pipe {
+    display: none;
+  }
+  .pain-coin {
+    position: absolute;
+    z-index: 2;
+    width: 2.6rem;
+    height: 2.6rem;
+    transform-style: preserve-3d;
+  }
+  .pain-coin-face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: #fff;
+    background: radial-gradient(circle at 35% 30%, #fbbf24, #ea580c);
+    box-shadow: 0 0 0 3px #fff, 0 8px 18px -6px rgb(234 88 12 / 0.6);
+    backface-visibility: hidden;
+  }
+  .pain-coin-back {
+    transform: rotateY(180deg);
+    background: radial-gradient(circle at 35% 30%, #5eead4, #0b6e6a);
+    box-shadow: 0 0 0 3px #fff, 0 8px 18px -6px rgb(11 110 106 / 0.6);
+  }
+  @media (min-width: 1024px) {
+    .pain-row {
+      display: grid;
+      grid-template-columns: 1fr 5rem 1fr;
+      align-items: stretch;
+      overflow: visible;
+      background: none;
+      box-shadow: none;
+      perspective: 1400px;
+    }
+    .pain-bad,
+    .pain-good {
+      padding: 1.5rem;
+      border-radius: 1.3rem;
+      transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.4s;
+    }
+    .pain-bad {
+      box-shadow: inset 0 0 0 1px #fecdd3, 0 16px 30px -24px rgb(225 29 72 / 0.5);
+      transform: rotateY(10deg) translateZ(-30px);
+      transform-origin: right center;
+    }
+    .pain-good {
+      box-shadow: inset 0 0 0 1.5px rgb(31 165 156 / 0.45), 0 28px 50px -28px rgb(11 110 106 / 0.6);
+      transform: rotateY(-6deg) translateZ(20px);
+      transform-origin: left center;
+    }
+    .pain-row:hover .pain-bad {
+      transform: rotateY(4deg) translateZ(-10px);
+    }
+    .pain-row:hover .pain-good {
+      transform: rotateY(0) translateZ(40px) translateY(-4px);
+    }
+    .pain-link {
+      height: auto;
+    }
+    .pain-pipe {
+      position: absolute;
+      left: -0.5rem;
+      right: -0.5rem;
+      top: 50%;
+      display: block;
+      height: 3px;
+      margin-top: -1.5px;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #fda4af, #fbbf24, #2dd4bf);
+    }
+    .pain-pipe i {
+      position: absolute;
+      top: -3.5px;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 2px #f59e0b, 0 0 12px #f59e0b;
+    }
+    .pain-coin {
+      width: 3.4rem;
+      height: 3.4rem;
+    }
+    .pain-coin-face {
+      font-size: 1.35rem;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pain-coin {
+      animation: coin-spin 4s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+      animation-delay: calc(var(--i) * -1.3s);
+    }
+    .pain-pipe i {
+      animation: pipe-run 2.4s linear infinite;
+      animation-delay: calc(var(--i) * -0.8s);
+    }
+  }
+
   /* ---------- Built for India: rotating 3D hexagonal prism synced with feature cards ---------- */
   .feat {
     --cycle: 18s;
@@ -2490,4 +2645,14 @@
 @keyframes typing {
   0%, 60%, 100% { translate: 0 0; }
   30% { translate: 0 -4px; }
+}
+
+@keyframes coin-spin {
+  0%, 35% { transform: rotateY(0deg); }
+  50%, 85% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
+}
+@keyframes pipe-run {
+  from { left: 0; }
+  to { left: calc(100% - 10px); }
 }
