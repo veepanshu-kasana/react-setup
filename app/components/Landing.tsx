@@ -525,41 +525,47 @@ const SVC_TINTS = [
   "from-sky-50 via-indigo-50 to-violet-100",
   "from-rose-50 via-pink-50 to-orange-100",
 ];
-const SVC_SPAN = ["md:col-span-2", "", "", "", "", "md:col-span-2"];
-
 function Services() {
   return (
-    <section id="services" aria-labelledby="services-title" className="svc-band scroll-mt-20 py-16 sm:py-24">
-      <div className="container-x">
-        <SectionHead id="services-title" tone="violet" eyebrow="Our WooCommerce services" title="From a brand-new store to a complete rebuild" sub="Whatever stage your store is at, one team handles it end to end." />
-        <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((sv, i) => {
-            const Icon = ICONS[sv.icon];
-            const Scene = SVC_SCENES[sv.icon];
-            return (
-              <li key={sv.title} className={`svc tilt reveal ${SVC_SPAN[i]}`} data-tilt3d style={{ "--glow": acc(i).glow, animationDelay: `${(i % 3) * 90}ms` } as React.CSSProperties}>
-                <div className={`svc-vis bg-gradient-to-br ${SVC_TINTS[i]}`} aria-hidden="true">{Scene && <Scene />}</div>
-                <div className="p-6">
-                  <div className="flex items-center gap-3">
-                    <span className={`grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br text-white ${acc(i).bar}`}><Icon className="size-5" /></span>
-                    <h3 className="text-lg font-bold text-ink">{sv.title}</h3>
-                  </div>
-                  <p className="mt-3 text-muted">{sv.body}</p>
-                </div>
-              </li>
-            );
-          })}
-          <li className="svc-cta reveal md:col-span-2 lg:col-span-1">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-300">Not sure where to start?</p>
-            <h3 className="mt-3 font-display text-2xl font-bold text-white">Tell us about your store. We'll suggest the right fix.</h3>
-            <p className="mt-3 text-white/75">A free 20-minute call, then a fixed, itemised quote within 24 hours.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#quote" data-track="cta_click" data-loc="services" className="btn bg-white text-night hover:bg-teal-50">Discuss my project <I.Arrow className="size-4" /></a>
-              <a href={WA_DEFAULT} data-track="whatsapp_click" data-loc="services" className="btn bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/15" rel="noopener" target="_blank"><I.WhatsApp className="size-5" /> WhatsApp</a>
-            </div>
-          </li>
-        </ul>
+    <section id="services" aria-labelledby="services-title" className="svc-band scroll-mt-20 py-14 sm:py-20">
+      <div className="container-x flex flex-wrap items-end justify-between gap-6">
+        <div className="reveal max-w-2xl">
+          <p className="eyebrow text-violet-700">Our WooCommerce services</p>
+          <h2 id="services-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">From a brand-new store to a complete rebuild</h2>
+          <p className="mt-3 text-lg text-muted">Whatever stage your store is at, one team handles it end to end.</p>
+        </div>
+        <div className="hidden gap-2 sm:flex">
+          <button type="button" className="svc-nav" data-scroll-btn="-1" aria-label="Previous services" aria-controls="svc-track"><I.Arrow className="size-5 rotate-180" /></button>
+          <button type="button" className="svc-nav" data-scroll-btn="1" aria-label="Next services" aria-controls="svc-track"><I.Arrow className="size-5" /></button>
+        </div>
       </div>
+      <ul id="svc-track" className="svc-track mt-10" data-scroller tabIndex={0} aria-label="WooCommerce services">
+        {SERVICES.map((sv, i) => {
+          const Icon = ICONS[sv.icon];
+          const Scene = SVC_SCENES[sv.icon];
+          return (
+            <li key={sv.title} className="svc" style={{ "--glow": acc(i).glow } as React.CSSProperties}>
+              <div className={`svc-vis bg-gradient-to-br ${SVC_TINTS[i]}`} aria-hidden="true">{Scene && <Scene />}</div>
+              <div className="p-5">
+                <div className="flex items-center gap-3">
+                  <span className={`grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br text-white ${acc(i).bar}`}><Icon className="size-5" /></span>
+                  <h3 className="text-lg font-bold leading-snug text-ink">{sv.title}</h3>
+                </div>
+                <p className="mt-3 text-[0.95rem] text-muted">{sv.body}</p>
+              </div>
+            </li>
+          );
+        })}
+        <li className="svc svc-cta">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-300">Not sure where to start?</p>
+          <h3 className="mt-3 font-display text-2xl font-bold text-white">Tell us about your store. We'll suggest the right fix.</h3>
+          <p className="mt-3 text-white/75">A free 20-minute call, then a fixed, itemised quote within 24 hours.</p>
+          <div className="mt-6 grid gap-3">
+            <a href="#quote" data-track="cta_click" data-loc="services" className="btn bg-white text-night hover:bg-teal-50">Discuss my project <I.Arrow className="size-4" /></a>
+            <a href={WA_DEFAULT} data-track="whatsapp_click" data-loc="services" className="btn bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/15" rel="noopener" target="_blank"><I.WhatsApp className="size-5" /> WhatsApp us</a>
+          </div>
+        </li>
+      </ul>
     </section>
   );
 }

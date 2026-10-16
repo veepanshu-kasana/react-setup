@@ -314,6 +314,17 @@ export function enhance(cfg: EnhanceConfig) {
   if (document.readyState === "complete") idle(startCanvases);
   else addEventListener("load", () => idle(startCanvases), { once: true });
 
+  // Arrow buttons for horizontal card rows.
+  document.querySelectorAll<HTMLButtonElement>("[data-scroll-btn]").forEach((btn) => {
+    const track = document.getElementById(btn.getAttribute("aria-controls") || "");
+    if (!track) return;
+    btn.addEventListener("click", () => {
+      const card = track.querySelector("li");
+      const step = card ? card.getBoundingClientRect().width + 20 : 320;
+      track.scrollBy({ left: step * Number(btn.dataset.scrollBtn || 1), behavior: calm ? "auto" : "smooth" });
+    });
+  });
+
   if (!calm && finePointer) {
     document.querySelectorAll<HTMLElement>("[data-tilt3d]").forEach((card) => {
       let raf = 0;
