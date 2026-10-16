@@ -204,18 +204,61 @@ export function enhance(cfg: EnhanceConfig) {
       return !msg;
     };
 
+
+    // Same rules as the server (app/routes/api.lead.ts and the lead connector).
+    const phoneError = (p: string) => {
+      if (!p) return "Please enter your mobile number.";
+      if (!/^\d{10}$/.test(p)) return "Mobile number must be exactly 10 digits.";
+      if (!/^[6-9]/.test(p)) return "Indian mobile numbers start with 6, 7, 8 or 9.";
+      const distinct = new Set(p.split("")).size;
+      // Longest run of consecutive digits going up or down (e.g. 3456789 or 9876543).
+      let run = 1, maxRun = 1, prev = 0;
+      for (let i = 1; i < 10; i++) {
+        const d = +p[i] - +p[i - 1];
+        const seq = d === 1 || d === -1;
+        run = seq && d === prev ? run + 1 : seq ? 2 : 1;
+        prev = d;
+        maxRun = Math.max(maxRun, run);
+      }
+      const fake = ["9876543210", "9123456789", "9012345678", "8765432109", "7894561230", "9638527410", "9988776655", "9876598765", "9999988888"];
+      if (distinct < 4 || /(\d)\1{5,}/.test(p) || /^(\d{2})\1{4}$/.test(p) || /^(\d{5})\1$/.test(p) || maxRun >= 8 || fake.includes(p))
+        return "This doesn't look like a real mobile number. Please check it.";
+      return "";
+    };
+    const nameError = (n: string) => {
+      if (n.length < 2) return "Please enter your name.";
+      if (!/^[\p{L} .'-]+$/u.test(n) || !/\p{L}.*\p{L}/u.test(n)) return "Please enter your name using letters only.";
+      if (/^(.)\1+$/u.test(n.replace(/\s/g, "").toLowerCase())) return "Please enter your real name.";
+      return "";
+    };
+    const cleanPhone = (v: string) => {
+      let d = v.replace(/\D/g, "");
+      if (d.length > 10 && /^(91|0)/.test(d)) d = d.replace(/^(91|0)/, "");
+      return d.slice(0, 10);
+    };
+
+    // Live checks: digits only while typing, a clear message as soon as the field is left.
+    const phoneInput = form.elements.namedItem("phone") as HTMLInputElement;
+    const nameInput = form.elements.namedItem("name") as HTMLInputElement;
+    phoneInput.addEventListener("input", () => {
+      const c = cleanPhone(phoneInput.value);
+      if (c !== phoneInput.value) phoneInput.value = c;
+      if (phoneInput.hasAttribute("aria-invalid") && !phoneError(c)) setErr("phone", "");
+    });
+    phoneInput.addEventListener("blur", () => { if (phoneInput.value) setErr("phone", phoneError(cleanPhone(phoneInput.value))); });
+    nameInput.addEventListener("blur", () => { if (nameInput.value.trim()) setErr("name", nameError(nameInput.value.trim())); });
+    nameInput.addEventListener("input", () => { if (nameInput.hasAttribute("aria-invalid") && !nameError(nameInput.value.trim())) setErr("name", ""); });
+
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const fd = new FormData(form);
-      const name = String(fd.get("name") || "").trim();
-      const phone = String(fd.get("phone") || "")
-        .replace(/[\s()-]/g, "")
-        .replace(/^(\+91|91|0)(?=\d{10}$)/, "");
+      const name = String(fd.get("name") || "").trim().replace(/\s+/g, " ");
+      const phone = cleanPhone(String(fd.get("phone") || ""));
       const need = String(fd.get("need") || "");
       const details = String(fd.get("details") || "").trim();
 
-      const okName = setErr("name", name.length < 2 ? "Please enter your name." : "");
-      const okPhone = setErr("phone", /^[6-9]\d{9}$/.test(phone) ? "" : "Please enter a valid 10-digit mobile number.");
+      const okName = setErr("name", nameError(name));
+      const okPhone = setErr("phone", phoneError(phone));
       if (!okName || !okPhone) {
         (form.elements.namedItem(okName ? "phone" : "name") as HTMLInputElement).focus();
         return;

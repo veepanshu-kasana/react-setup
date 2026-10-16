@@ -91,7 +91,16 @@ export const Mail = ({ className = "size-5" }: P) => (
 export const Pin = ({ className = "size-5" }: P) => (
   <svg {...base} className={className}><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
 );
-export const Cart =({ className = "size-6" }: P) => (
+export const Target = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.5" fill="currentColor" /></svg>
+);
+export const Wallet = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><path d="M3 7a2 2 0 0 1 2-2h13v4" /><path d="M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2Z" /><circle cx="16.5" cy="14.5" r="1.2" fill="currentColor" /></svg>
+);
+export const Layout = ({ className = "size-6" }: P) => (
+  <svg {...base} className={className}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+);
+export const Cart = ({ className = "size-6" }: P) => (
   <svg {...base} className={className}><circle cx="9" cy="20" r="1.5" /><circle cx="18" cy="20" r="1.5" /><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L22 7H6" /></svg>
 );
 

@@ -24,6 +24,18 @@ const ACCENTS = [
 ];
 const acc = (i: number) => ACCENTS[i % ACCENTS.length];
 
+/** Icons that show what each platform does (not the companies' logos). */
+const PLATFORM_ICONS: Record<string, (p: { className?: string }) => React.JSX.Element> = {
+  WooCommerce: I.Cart,
+  WordPress: I.Layout,
+  Razorpay: I.Card,
+  PhonePe: I.Mobile,
+  Paytm: I.Wallet,
+  Shiprocket: I.Truck,
+  "Google Analytics 4": I.Chart,
+  "Meta Pixel": I.Target,
+};
+
 const NAV = [
   ["#features", "Features"],
   ["#services", "Services"],
@@ -245,11 +257,17 @@ function Proof() {
           })}
         </ul>
         <div className="mt-9 flex flex-col items-center gap-4 border-t border-line pt-7 lg:flex-row lg:justify-between">
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-muted">Platforms & tools we set up</p>
-          <ul className="flex flex-wrap justify-center gap-2">
-            {PLATFORMS.map((p) => (
-              <li key={p} className="rounded-full bg-surface px-3.5 py-1.5 text-sm font-semibold text-ink-2 ring-1 ring-line">{p}</li>
-            ))}
+          <p className="shrink-0 text-sm font-semibold uppercase tracking-[0.14em] text-muted lg:whitespace-nowrap">Platforms & tools we set up</p>
+          <ul className="flex flex-wrap justify-center gap-2.5">
+            {PLATFORMS.map((p, i) => {
+              const Icon = PLATFORM_ICONS[p] ?? I.Layers;
+              return (
+                <li key={p} className="flex items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 text-sm font-semibold text-ink-2 shadow-sm ring-1 ring-line transition hover:-translate-y-0.5 hover:shadow-md">
+                  <span className={`grid size-7 place-items-center rounded-full ring-1 ${acc(i).tile}`}><Icon className="size-4" /></span>
+                  {p}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

@@ -33,7 +33,7 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
         <div className="mt-5 space-y-4">
           <div>
             <label htmlFor={f("name")} className="label">Your name</label>
-            <input id={f("name")} name="name" autoComplete="name" required className="field" />
+            <input id={f("name")} name="name" autoComplete="name" required minLength={2} maxLength={60} className="field" />
             <p id={f("name-err")} data-err="name" className="err" hidden />
           </div>
           <div>
@@ -47,7 +47,10 @@ export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id:
                 inputMode="numeric"
                 autoComplete="tel-national"
                 required
-                maxLength={16}
+                maxLength={14}
+                pattern="[6-9][0-9]{9}"
+                placeholder="98765 43210"
+                title="10-digit Indian mobile number starting with 6, 7, 8 or 9"
                 className="field rounded-l-none"
               />
             </div>

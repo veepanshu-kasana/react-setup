@@ -24,6 +24,29 @@ const json = (data: unknown, status = 200) =>
 
 const clip = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
 
+/** Same rules as the browser form (app/lib/enhance.ts) and the lead connector. */
+function phoneError(p: string) {
+  if (!/^\d{10}$/.test(p) || !/^[6-9]/.test(p)) return "invalid";
+  const distinct = new Set(p.split("")).size;
+  let run = 1, maxRun = 1, prev = 0;
+  for (let i = 1; i < 10; i++) {
+    const d = +p[i] - +p[i - 1];
+    const seq = d === 1 || d === -1;
+    run = seq && d === prev ? run + 1 : seq ? 2 : 1;
+    prev = d;
+    maxRun = Math.max(maxRun, run);
+  }
+  const fake = ["9876543210", "9123456789", "9012345678", "8765432109", "7894561230", "9638527410", "9988776655", "9876598765", "9999988888"];
+  if (distinct < 4 || /(\d)\1{5,}/.test(p) || /^(\d{2})\1{4}$/.test(p) || /^(\d{5})\1$/.test(p) || maxRun >= 8 || fake.includes(p)) return "fake";
+  return "";
+}
+function nameError(n: string) {
+  if (n.length < 2 || !/^[\p{L} .'-]+$/u.test(n) || !/\p{L}.*\p{L}/u.test(n)) return "invalid";
+  if (/^(.)\1+$/u.test(n.replace(/\s/g, "").toLowerCase())) return "invalid";
+  return "";
+}
+
+
 export async function loader() {
   return json({ error: "Method not allowed" }, 405);
 }
@@ -49,9 +72,9 @@ export async function action({ request }: Route.ActionArgs) {
   // Honeypot: real visitors never fill this hidden field.
   if (clip(input.website, 200)) return json({ ok: true });
 
-  const name = clip(input.name, 120);
+  const name = clip(input.name, 120).replace(/\s+/g, " ");
   const phone = clip(input.phone, 20).replace(/[\s()-]/g, "").replace(/^(\+91|91|0)(?=\d{10}$)/, "");
-  if (name.length < 2 || !/^[6-9]\d{9}$/.test(phone)) {
+  if (nameError(name) || phoneError(phone)) {
     return json({ error: "Please enter a valid name and 10-digit mobile number." }, 422);
   }
 
