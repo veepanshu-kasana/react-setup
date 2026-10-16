@@ -78,7 +78,7 @@ function SectionHead({ eyebrow, title, sub, id, dark = false, tone = "teal" }: {
   return (
     <div className="reveal mx-auto max-w-2xl text-center">
       <p className={`eyebrow ${dark ? "eyebrow-dark" : TONES[tone]}`}>{eyebrow}</p>
-      <h2 id={id} className={`mt-3 text-3xl font-bold sm:text-4xl ${dark ? "text-white" : "text-ink"}`}>{title}</h2>
+      <h2 id={id} className={`mt-3 text-[1.7rem] leading-tight font-bold sm:text-[2.2rem] ${dark ? "text-white" : "text-ink"}`}>{title}</h2>
       {sub && <p className={`mt-4 text-lg ${dark ? "text-white/75" : "text-muted"}`}>{sub}</p>}
     </div>
   );
@@ -208,35 +208,28 @@ function Hero() {
       <div className="orb orb-amber" aria-hidden="true" />
       <div className="orb orb-violet" aria-hidden="true" />
       <Circuit className="-left-40 bottom-0 w-[30rem] opacity-60" />
-      <div className="container-x grid gap-10 pb-14 pt-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:pb-24 lg:pt-14">
+      <div className="container-x grid gap-6 pb-10 pt-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:pb-16 lg:pt-12">
         <div>
-          <nav aria-label="Breadcrumb" className="text-sm text-white/70">
-            <ol className="flex flex-wrap gap-1.5">
-              <li><a className="underline-offset-2 hover:text-white hover:underline" href={SITE.mainSite}>Home</a> <span aria-hidden="true">/</span></li>
-              <li><a className="underline-offset-2 hover:text-white hover:underline" href={SITE.links.services}>Services</a> <span aria-hidden="true">/</span></li>
-              <li aria-current="page" className="text-white/90">WooCommerce Development</li>
-            </ol>
-          </nav>
-          <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-teal-500/15 px-3 py-1 text-sm font-semibold text-teal-100 ring-1 ring-teal-300/30">
+          <p className="inline-flex items-center gap-2 rounded-full bg-teal-500/15 px-3 py-1 text-sm font-semibold text-teal-100 ring-1 ring-teal-300/30">
             <span className="size-2 rounded-full bg-teal-300" aria-hidden="true" /> 10+ years · 100+ projects delivered
           </p>
-          <h1 id="hero-title" className="mt-5 text-[2.35rem] font-bold leading-[1.12] sm:text-5xl lg:text-[3.35rem]">
+          <h1 id="hero-title" className="mt-4 text-[2rem] font-bold leading-[1.12] sm:text-[2.6rem] lg:text-[3rem]">
             WooCommerce Website Development Company in <span className="tricolour">India</span>
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-white/85 sm:text-xl">
+          <p className="mt-4 max-w-xl text-base text-white/85 sm:text-lg">
             RannLab builds fast, mobile-first online stores that turn visitors into paying customers, with Indian payments, shipping and GST ready from day one.
           </p>
-          <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+          <ul className="mt-5 grid gap-2 sm:grid-cols-2 sm:gap-3">
             {HERO_POINTS.map((p) => (
-              <li key={p} className="flex gap-2.5 text-[0.97rem] text-white/90">
+              <li key={p} className="flex gap-2.5 text-[0.92rem] text-white/90">
                 <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-teal-500/20 text-teal-300"><I.Check className="size-3.5" /></span>
                 {p}
               </li>
             ))}
           </ul>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="#quote" data-track="cta_click" data-loc="hero" className="btn btn-primary text-lg">Get a free quote <I.Arrow /></a>
-            <WaButton location="hero" className="text-lg" />
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <a href="#quote" data-track="cta_click" data-loc="hero" className="btn btn-primary">Get a free quote <I.Arrow /></a>
+            <WaButton location="hero" className="" />
           </div>
           <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/70">
             <span className="inline-flex items-center gap-1.5"><I.Shield className="size-4 text-teal-300" /> ISO 27001 certified</span>
@@ -383,7 +376,7 @@ function BgFx({ kind }: { kind: "pains" | "gyro" | "plane" | "iso" | "bars" | "m
 
 function Pains() {
   return (
-    <section aria-labelledby="pains-title" className="b3-host pain-band py-16 sm:py-24">
+    <section aria-labelledby="pains-title" className="b3-host pain-band py-10 sm:py-14">
       <BgFx kind="pains" />
       <div className="container-x">
         <SectionHead
@@ -446,17 +439,15 @@ function TypeCard({ t, i }: { t: (typeof STORE_TYPES)[number]; i: number }) {
 }
 
 function StoreTypes() {
-  const half = Math.ceil(STORE_TYPES.length / 2);
-  const rows = [STORE_TYPES.slice(0, half), STORE_TYPES.slice(half)];
+  const rows = [STORE_TYPES];
   return (
-    <section aria-labelledby="types-title" className="band-dark types-band py-16 sm:py-24">
-      <div className="types-floor" aria-hidden="true" />
+    <section aria-labelledby="types-title" className="band-dark dk dk-types dk-dots py-10 sm:py-14">
       <div className="container-x">
         <div className="reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <p className="eyebrow text-amber-300">Stores we build</p>
-            <h2 id="types-title" className="mt-3 text-3xl font-bold text-white sm:text-4xl">Set up for what you sell</h2>
-            <p className="mt-4 text-lg text-white/75">Every category sells differently. We set up the product pages, shipping rules and checkout your customers expect.</p>
+            <h2 id="types-title" className="mt-3 text-[1.7rem] leading-tight font-bold text-white sm:text-[2.2rem]">Set up for what you sell</h2>
+            <p className="mt-4 text-base text-white/75">Every category sells differently. We set up the product pages, shipping rules and checkout your customers expect.</p>
           </div>
           <a href="#quote" data-track="cta_click" data-loc="store-types" className="btn btn-ghost-dark">
             Tell us what you sell <I.Arrow className="size-4" />
@@ -482,7 +473,7 @@ function StoreTypes() {
 
 function IconCards({ items, offset = 0 }: { items: readonly { icon: string; title: string; body: string }[]; offset?: number }) {
   return (
-    <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((f, i) => {
         const Icon = ICONS[f.icon];
         return (
@@ -523,7 +514,7 @@ function Features() {
     );
   };
   return (
-    <section id="features" aria-labelledby="features-title" className="b3-host feat-band mesh-warm scroll-mt-20 py-16 sm:py-24">
+    <section id="features" aria-labelledby="features-title" className="b3-host feat-band mesh-warm scroll-mt-20 py-10 sm:py-14">
       <BgFx kind="gyro" />
       <div className="container-x">
         <SectionHead
@@ -533,7 +524,7 @@ function Features() {
           title="Everything your store needs to sell from day one"
           sub="Every store we launch comes with the payments, shipping, tax and tracking Indian e-commerce businesses rely on."
         />
-        <div className="feat mt-12 grid items-center gap-8 lg:mt-16 lg:grid-cols-[1fr_20rem_1fr] lg:gap-10">
+        <div className="feat mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[1fr_20rem_1fr] lg:gap-10">
           <ul className="reveal grid gap-4 lg:order-1">{FEATURES.slice(0, 3).map((f, i) => card(f, i))}</ul>
           <div className="feat-stage order-first lg:order-2" aria-hidden="true">
             <div className="feat-orbit"><i /><i /><i /></div>
@@ -570,15 +561,14 @@ const QUOTE_STEPS = [
 
 function QuoteBlock() {
   return (
-    <section id="quote" aria-labelledby="quote-title" className="band-dark quote-band scroll-mt-20 py-16 sm:py-24">
-      <BgFx kind="plane" />
+    <section id="quote" aria-labelledby="quote-title" className="band-dark dk dk-quote quote-band scroll-mt-20 py-10 sm:py-14">
       <div className="container-x grid gap-12 lg:grid-cols-[1fr_minmax(0,31rem)] lg:items-center lg:gap-14">
         <div className="reveal">
           <p className="eyebrow eyebrow-dark">Free quote</p>
-          <h2 id="quote-title" className="mt-3 text-3xl font-bold leading-tight text-white sm:text-5xl sm:leading-[1.08]">
+          <h2 id="quote-title" className="mt-3 text-[1.7rem] font-bold leading-tight text-white sm:text-[2.5rem] sm:leading-[1.1]">
             Tell us about your store. <span className="why-grad">Get a fixed quote in 24 hours.</span>
           </h2>
-          <p className="mt-5 max-w-xl text-lg text-white/75">
+          <p className="mt-5 max-w-xl text-base text-white/75">
             No sales pressure. A RannLab WooCommerce expert reviews your needs and sends a clear, itemised plan with price and timeline.
           </p>
 
@@ -593,13 +583,13 @@ function QuoteBlock() {
             ))}
           </ol>
 
-          <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/80">
+          <ul className="mt-8 hidden flex-wrap gap-x-5 gap-y-2 text-sm text-white/80 sm:flex">
             {["Design approval before development", "No hidden charges", "Support after launch"].map((t) => (
               <li key={t} className="flex items-center gap-2"><I.Check className="size-4 text-teal-300" /> {t}</li>
             ))}
           </ul>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <div className="mt-8 hidden gap-3 sm:grid sm:grid-cols-2">
             <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="quote-section" className="quote-contact">
               <span className="quote-contact-ic"><I.Phone className="size-5" /></span>
               <span className="text-sm leading-tight"><span className="block text-white/60">Call us</span><b className="text-base text-white">{SITE.phoneDisplay}</b></span>
@@ -692,13 +682,13 @@ const SVC_TINTS = [
 ];
 function Services() {
   return (
-    <section id="services" aria-labelledby="services-title" className="b3-host svc-band scroll-mt-20 py-14 sm:py-20">
+    <section id="services" aria-labelledby="services-title" className="b3-host svc-band scroll-mt-20 py-10 sm:py-14">
       <BgFx kind="iso" />
       <div className="container-x flex flex-wrap items-end justify-between gap-6">
         <div className="reveal max-w-2xl">
           <p className="eyebrow text-violet-700">Our WooCommerce services</p>
-          <h2 id="services-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">From a brand-new store to a complete rebuild</h2>
-          <p className="mt-3 text-lg text-muted">Whatever stage your store is at, one team handles it end to end.</p>
+          <h2 id="services-title" className="mt-3 text-[1.7rem] leading-tight font-bold text-ink sm:text-[2.2rem]">From a brand-new store to a complete rebuild</h2>
+          <p className="mt-3 text-base text-muted">Whatever stage your store is at, one team handles it end to end.</p>
         </div>
         <div className="hidden gap-2 sm:flex">
           <button type="button" className="svc-nav" data-scroll-btn="-1" aria-label="Previous services" aria-controls="svc-track"><I.Arrow className="size-5 rotate-180" /></button>
@@ -738,14 +728,13 @@ function Services() {
 
 function Process() {
   return (
-    <section id="process" aria-labelledby="process-title" className="band-dark scroll-mt-20 py-16 sm:py-24">
-      <Circuit className="-right-32 -top-10 w-[34rem] opacity-70" />
+    <section id="process" aria-labelledby="process-title" className="band-dark dk dk-process scroll-mt-20 py-10 sm:py-14">
       <div className="container-x">
         <SectionHead dark id="process-title" eyebrow="How it works" title="Your store live in about 4 weeks" sub="A simple, transparent process with your approval at every step." />
-        <ol className="stairs relative mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="stairs relative -mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
           <span className="absolute left-0 right-0 top-6 hidden h-0.5 bg-gradient-to-r from-teal-400/0 via-amber-400/70 to-rose-400/0 lg:block" aria-hidden="true" />
           {PROCESS.map((p, i) => (
-            <li key={p.step} className={`stair stair-${i} tilt reveal relative rounded-2xl bg-night-2 p-6 ring-1 ring-white/10`} data-tilt3d style={{ "--glow": [acc(0), acc(1), acc(2), acc(3)][i].glow } as React.CSSProperties}>
+            <li key={p.step} className={`stair stair-${i} tilt reveal relative w-[82%] shrink-0 snap-center rounded-2xl md:w-auto bg-night-2 p-6 ring-1 ring-white/10`} data-tilt3d style={{ "--glow": [acc(0), acc(1), acc(2), acc(3)][i].glow } as React.CSSProperties}>
               <span className={`absolute inset-x-6 top-0 h-1 rounded-b-full bg-gradient-to-r ${[acc(0), acc(1), acc(2), acc(3)][i].bar}`} aria-hidden="true" />
               <div className="flex items-center justify-between">
                 <span className={`pop step-num grid size-12 place-items-center rounded-xl bg-gradient-to-br font-display text-lg font-bold text-white ring-4 ring-night ${[acc(0), acc(1), acc(2), acc(3)][i].bar}`}>{p.step}</span>
@@ -770,7 +759,7 @@ const TIERS = [
 
 function Packages() {
   return (
-    <section id="packages" aria-labelledby="packages-title" className="b3-host pk-band scroll-mt-20 py-16 sm:py-24">
+    <section id="packages" aria-labelledby="packages-title" className="b3-host pk-band scroll-mt-20 py-10 sm:py-14">
       <div className="container-x">
         <SectionHead
           id="packages-title"
@@ -779,7 +768,7 @@ function Packages() {
           title="Choose a starting point. We tailor the rest."
           sub="Every package is a fixed-price project. Pick a level to see what's inside, then get an exact quote within 24 hours."
         />
-        <div className="pk mt-12 grid gap-6 lg:mt-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-10">
+        <div className="pk mt-8 grid gap-6 lg:mt-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-10">
           <fieldset className="pk-tiers reveal">
             <legend className="sr-only">Choose a package</legend>
             {PACKAGES.map((p, i) => (
@@ -852,11 +841,11 @@ function Compare() {
   // Show RannLab in the middle on desktop, first on mobile.
   const order = [1, 0, 2];
   return (
-    <section aria-labelledby="compare-title" className="b3-host vs-band relative overflow-hidden bg-surface py-16 sm:py-24">
+    <section aria-labelledby="compare-title" className="b3-host vs-band relative overflow-hidden bg-surface py-10 sm:py-14">
       <BgFx kind="bars" />
       <div className="container-x">
         <SectionHead id="compare-title" eyebrow="Why choose us" title="Agency quality without agency headaches" sub="The same checklist, three ways to build your store. See what you actually get." />
-        <ul className="vs-stage mt-14 grid gap-6 lg:grid-cols-[1fr_1.12fr_1fr] lg:items-center lg:gap-0">
+        <ul className="vs-stage mt-10 grid gap-6 lg:grid-cols-[1fr_1.12fr_1fr] lg:items-center lg:gap-0">
           {order.map((col) => {
             const name = COMPARE.cols[col];
             const meta = VS_META[col];
@@ -928,16 +917,15 @@ const WHY_STATS = [
 
 function WhyRannlab() {
   return (
-    <section aria-labelledby="why-title" className="band-dark why-band py-16 sm:py-24">
-      <BgFx kind="meteors" />
+    <section aria-labelledby="why-title" className="band-dark dk dk-why dk-dots why-band py-10 sm:py-14">
       <div className="container-x">
         <div className="grid items-center gap-6 lg:grid-cols-[1fr_1.1fr]">
           <div className="reveal">
             <p className="eyebrow eyebrow-dark">Why {SITE.shortBrand}</p>
-            <h2 id="why-title" className="mt-3 text-3xl font-bold leading-tight text-white sm:text-5xl sm:leading-[1.08]">
+            <h2 id="why-title" className="mt-3 text-[1.7rem] font-bold leading-tight text-white sm:text-[2.5rem] sm:leading-[1.1]">
               An AI-first software company that <span className="why-grad">builds stores to last</span>
             </h2>
-            <p className="mt-5 max-w-xl text-lg text-white/75">
+            <p className="mt-5 max-w-xl text-base text-white/75">
               {SITE.brand} has spent 10+ years building web, mobile and custom software for businesses worldwide. Your WooCommerce store gets the same engineering standards.
             </p>
             <dl className="mt-8 grid max-w-lg grid-cols-3 gap-3">
@@ -964,7 +952,7 @@ function WhyRannlab() {
             </ul>
           </div>
         </div>
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
+        <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-4">
           {WHY.map((w, i) => {
             const Icon = ICONS[w.icon];
             return (
@@ -984,13 +972,13 @@ function WhyRannlab() {
 
 function Faq() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="b3-host faq-band scroll-mt-20 py-16 sm:py-24">
+    <section id="faq" aria-labelledby="faq-title" className="b3-host faq-band scroll-mt-20 py-10 sm:py-14">
       <BgFx kind="bubbles" />
       <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">FAQ</p>
-          <h2 id="faq-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">WooCommerce development: common questions</h2>
-          <p className="mt-4 text-lg text-muted">Straight answers on cost, timelines, payments and what happens after launch.</p>
+          <h2 id="faq-title" className="mt-3 text-[1.7rem] leading-tight font-bold text-ink sm:text-[2.2rem]">WooCommerce development: common questions</h2>
+          <p className="mt-4 text-base text-muted">Straight answers on cost, timelines, payments and what happens after launch.</p>
           <div className="faq-chat reveal">
             <div className="faq-chat-head">
               <span className="faq-chat-av" aria-hidden="true">R</span>
@@ -1044,18 +1032,17 @@ const CTA_NOTES = [
 
 function FinalCta() {
   return (
-    <section aria-labelledby="final-title" className="band-dark cta-band py-16 sm:py-24" data-cta3d>
-      <div className="cta-floor" aria-hidden="true" />
+    <section aria-labelledby="final-title" className="band-dark dk dk-cta cta-band py-10 sm:py-14" data-cta3d>
       <div className="container-x grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="reveal text-center lg:text-left">
           <p className="eyebrow eyebrow-dark">Let's build it</p>
-          <h2 id="final-title" className="mt-3 text-3xl font-bold leading-tight sm:text-5xl sm:leading-[1.08]">
+          <h2 id="final-title" className="mt-3 text-[1.7rem] font-bold leading-tight sm:text-[2.5rem] sm:leading-[1.1]">
             Ready to start selling online? <span className="why-grad">Let's build your WooCommerce store.</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-white/80 lg:mx-0">Talk to a RannLab WooCommerce expert today. Free consultation, fixed quote within 24 hours.</p>
+          <p className="mx-auto mt-5 max-w-xl text-base text-white/80 lg:mx-0">Talk to a RannLab WooCommerce expert today. Free consultation, fixed quote within 24 hours.</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
-            <a href="#quote" data-track="cta_click" data-loc="final" className="btn cta-primary text-lg">Get my free quote <I.Arrow /></a>
-            <WaButton location="final" className="text-lg" />
+            <a href="#quote" data-track="cta_click" data-loc="final" className="btn cta-primary">Get my free quote <I.Arrow /></a>
+            <WaButton location="final" className="" />
           </div>
           <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/75 lg:justify-start">
             {["Free consultation", "Fixed quote in 24 hrs", "You own your store"].map((t) => (
@@ -1148,7 +1135,7 @@ function Footer() {
           </ul>
         </nav>
       </div>
-      <div className="container-x mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/65 md:flex-row md:items-center md:justify-between">
+      <div className="container-x mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/65 md:flex-row md:items-center md:justify-between">
         <p>© {year} {SITE.brand}. All rights reserved.</p>
         <ul className="flex flex-wrap gap-x-5 gap-y-1">
           <li><a className={a} href={SITE.legal.privacy}>Privacy policy</a></li>
