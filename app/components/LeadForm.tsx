@@ -1,14 +1,7 @@
 import { SITE } from "../site";
 import { Arrow, Check, Shield } from "./icons";
+import { usePage } from "../pages/types";
 
-const NEEDS = [
-  "New WooCommerce store",
-  "Migrate my store to WooCommerce",
-  "Redesign / improve conversions",
-  "Speed optimisation",
-  "Custom feature or plugin",
-  "Not sure yet",
-];
 
 /**
  * Static, pre-rendered lead form. Behaviour (validation + WhatsApp hand-off) is added by
@@ -16,6 +9,7 @@ const NEEDS = [
  */
 export function LeadForm({ id, heading = "Get a free quote in 24 hours" }: { id: string; heading?: string }) {
   const f = (s: string) => `${id}-${s}`;
+  const NEEDS = usePage().needs;
   return (
     <div>
       <form

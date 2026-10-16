@@ -4,5 +4,5 @@ export default {
   // Server-side render, and pre-render the landing page to static HTML at build time
   // for the fastest possible TTFB / LCP.
   ssr: true,
-  prerender: ["/"],
+  prerender: ["/", "/shopify-development", "/ecommerce-development"],
 } satisfies Config;

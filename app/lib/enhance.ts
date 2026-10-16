@@ -7,7 +7,7 @@
  * It is serialised with Function.prototype.toString(), so it must be fully self-contained.
  */
 export type EnhanceConfig = {
-  brand: string; wa: string; endpoint: string;
+  brand: string; wa: string; endpoint: string; platform?: string;
   gtmId?: string; ga4Id?: string; adsId?: string; adsLeadLabel?: string; adsContactLabel?: string; metaPixelId?: string;
 };
 
@@ -176,6 +176,8 @@ export function enhance(cfg: EnhanceConfig) {
     document.querySelectorAll<HTMLCanvasElement>("canvas[data-wave]").forEach((cv) => {
       const ctx = cv.getContext("2d");
       if (!ctx) return;
+      // Wave colour follows the page theme (teal, green or indigo) and fades to saffron.
+      const base = (getComputedStyle(cv).getPropertyValue("--kr5").trim() || "31 165 156").split(/\s+/).map(Number);
       const dpr = Math.min(1.5, devicePixelRatio || 1);
       let W = 0, H = 0, visible = false, raf = 0;
       const size = () => {
@@ -196,9 +198,9 @@ export function enhance(cfg: EnhanceConfig) {
             const x = W / 2 + u * W * 1.25 * persp;
             const y = H * (0.12 + z * 0.86) - wave * 26 * persp;
             const mix = (u + 0.5);               // teal → saffron across the width
-            const rC = Math.round(31 + (245 - 31) * mix * 0.7);
-            const gC = Math.round(165 + (158 - 165) * mix);
-            const bC = Math.round(156 + (11 - 156) * mix * 0.8);
+            const rC = Math.round(base[0] + (245 - base[0]) * mix * 0.7);
+            const gC = Math.round(base[1] + (158 - base[1]) * mix);
+            const bC = Math.round(base[2] + (11 - base[2]) * mix * 0.8);
             ctx.fillStyle = `rgba(${rC},${gC},${bC},${0.15 + z * 0.65})`;
             ctx.beginPath();
             ctx.arc(x, y, 0.6 + z * 1.9 + Math.max(0, wave) * 1.2, 0, 6.283);
@@ -532,7 +534,7 @@ export function enhance(cfg: EnhanceConfig) {
       }
 
       const msg =
-        `Hi ${cfg.brand}, I'd like a quote for a WooCommerce website.\n\n` +
+        `Hi ${cfg.brand}, I'd like a quote for a ${cfg.platform || "WooCommerce"} website.\n\n` +
         `Name: ${name}\nMobile: ${phone}\nRequirement: ${need}` +
         (details ? `\nAbout my business: ${details}` : "");
       const link = `https://wa.me/${cfg.wa}?text=${encodeURIComponent(msg)}`;

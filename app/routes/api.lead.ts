@@ -96,7 +96,7 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   const customFields: Record<string, string> = {
-    service_interest: clip(input.need, 120) || "WooCommerce Website Development",
+    service_interest: clip(input.need, 120) || "E-commerce Website Development",
   };
   const details = clip(input.details, 500);
   if (details) customFields.business_details = details;

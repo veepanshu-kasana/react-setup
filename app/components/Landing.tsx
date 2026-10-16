@@ -1,8 +1,7 @@
-import { SITE, TRACKING, WA_DEFAULT } from "../site";
+import { SITE, TRACKING, waLink } from "../site";
 import { enhance } from "../lib/enhance";
-import {
-  COMPARE, FAQS, FEATURES, PACKAGES, PAINS, PLATFORMS, PROCESS, PROOF, SERVICES, STORE_TYPES, WHY,
-} from "../content";
+import { PageCtx, usePage, type Page } from "../pages/types";
+import { PAGES } from "../pages";
 import { LeadForm } from "./LeadForm";
 import * as I from "./icons";
 
@@ -15,7 +14,7 @@ const PROOF_ICONS = [I.Calendar, I.Users, I.Code, I.Award];
 
 /** Accent colours that rotate across cards, steps and stats (brand teal + Indian festive hues). */
 const ACCENTS = [
-  { tile: "bg-teal-50 text-teal-700 ring-teal-200", bar: "from-teal-300 via-teal-500 to-teal-700", glow: "rgb(31 165 156 / 0.35)", solid: "bg-teal-600", text: "text-teal-300" },
+  { tile: "bg-teal-50 text-teal-700 ring-teal-200", bar: "from-teal-300 via-teal-500 to-teal-700", glow: "rgb(var(--kr5) / 0.35)", solid: "bg-teal-600", text: "text-teal-300" },
   { tile: "bg-amber-50 text-amber-700 ring-amber-200", bar: "from-amber-300 via-orange-400 to-orange-600", glow: "rgb(245 158 11 / 0.35)", solid: "bg-amber-500", text: "text-amber-300" },
   { tile: "bg-violet-50 text-violet-700 ring-violet-200", bar: "from-violet-300 via-violet-500 to-fuchsia-600", glow: "rgb(139 92 246 / 0.35)", solid: "bg-violet-600", text: "text-violet-300" },
   { tile: "bg-rose-50 text-rose-700 ring-rose-200", bar: "from-rose-300 via-rose-500 to-pink-600", glow: "rgb(244 63 94 / 0.32)", solid: "bg-rose-600", text: "text-rose-300" },
@@ -46,7 +45,17 @@ const PLATFORM_ICONS: Record<string, (p: { className?: string }) => React.JSX.El
   Shiprocket: I.Truck,
   "Google Analytics 4": I.Chart,
   "Meta Pixel": I.Target,
+  Shopify: I.Cart,
+  PayU: I.Card,
+  Cashfree: I.Wallet,
+  WhatsApp: I.Chat,
+  "Custom builds": I.Code,
+  Tally: I.Receipt,
+  "Android & iOS": I.Mobile,
 };
+
+/** WhatsApp link with a message that names this page's platform. */
+const waFor = (p: Page) => waLink(`Hi RannLab, I want a ${p.platform} website for my business. Please share details.`);
 
 const NAV = [
   ["#features", "Features"],
@@ -59,8 +68,9 @@ const NAV = [
 /* ---------- Shared bits ---------- */
 
 function WaButton({ location, className = "", label = "Chat on WhatsApp" }: { location: string; className?: string; label?: string }) {
+  const P = usePage();
   return (
-    <a href={WA_DEFAULT} target="_blank" rel="noopener" data-track="whatsapp_click" data-loc={location} className={`btn btn-wa ${className}`}>
+    <a href={waFor(P)} target="_blank" rel="noopener" data-track="whatsapp_click" data-loc={location} className={`btn btn-wa ${className}`}>
       <I.WhatsApp /> {label}
     </a>
   );
@@ -147,21 +157,20 @@ const ST_CHIP = (Icon: (p: { className?: string }) => React.JSX.Element, label: 
     <span className="st-chip-ic" style={{ background: bg }}><Icon className="size-2.5" /></span>{label}
   </span>
 );
-const StoreLogo = () => (
+const StoreLogo = () => {
+  const { story } = usePage();
+  return (
   <span className="inline-flex items-center gap-1.5">
     <span className="st-logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" aria-hidden="true" className="size-3"><path d="M6 3h12l4 6-10 12L2 9z" /><path d="M2 9h20M12 21 8 9l4-6 4 6z" /></svg></span>
-    <b className="font-display text-[13px] text-ink">Priya<span className="text-[#db2777]">Jewels</span></b>
+    <b className="font-display text-[13px] text-ink">{story.brandA}<span className="text-[#db2777]">{story.brandB}</span></b>
   </span>
-);
-const ST_PRODUCTS = [
-  { img: "/showcase/earrings.webp", name: "Jhumka earrings", price: "₹1,299" },
-  { img: "/showcase/bangles.webp", name: "Lac bangles", price: "₹699" },
-  { img: "/showcase/necklace.webp", name: "Kundan necklace", price: "₹2,149" },
-  { img: "/showcase/kurta.webp", name: "Silk kurta", price: "₹2,449" },
-];
+  );
+};
 
 /** Hero story (decorative): a quote form is filled → RannLab builds the store → it goes live → orders arrive. CSS only, 16 s loop. */
 function HeroStory() {
+  const P = usePage();
+  const ST_PRODUCTS = P.story.products;
   return (
     <div className="st-wrap" aria-hidden="true">
       <div className="st">
@@ -171,7 +180,7 @@ function HeroStory() {
           <div className="st-laptop-tilt">
             <div className="st-bezel">
               <div className="st-screen">
-                <div className="st-bar"><i /><i /><i /><span>priyajewels.in</span></div>
+                <div className="st-bar"><i /><i /><i /><span>{P.story.domain}</span></div>
 
                 <div className="st-build">
                   <div className="flex items-center justify-between">
@@ -179,7 +188,7 @@ function HeroStory() {
                     <span className="text-[10px] font-extrabold text-violet-700">BUILDING…</span>
                   </div>
                   <span className="st-wait">Waiting for your requirement…</span>
-                  <img className="st-grow h-[86px] w-full rounded-[10px] object-cover" style={{ animationDelay: "4.6s" }} src="/showcase/cat-jewellery-240.webp" alt="" width={240} height={300} decoding="async" loading="lazy" />
+                  <img className="st-grow h-[86px] w-full rounded-[10px] object-cover" style={{ animationDelay: "4.6s" }} src={P.story.bannerSmall} alt="" width={240} height={300} decoding="async" loading="lazy" />
                   <div className="grid grid-cols-4 gap-2">
                     {ST_PRODUCTS.map((p, i) => (
                       <img key={p.name} className="st-pop h-[78px] w-full rounded-lg object-cover" style={{ animationDelay: `${5.1 + i * 0.2}s` }} src={p.img} alt="" width={240} height={240} decoding="async" loading="lazy" />
@@ -187,7 +196,7 @@ function HeroStory() {
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {ST_CHIP(I.Card, "UPI Pay", "#7c3aed", "6s")}
-                    {ST_CHIP(I.Wallet, "COD", "#0f766e", "6.3s")}
+                    {ST_CHIP(I.Wallet, "COD", "var(--k9)", "6.3s")}
                     {ST_CHIP(I.Receipt, "GST Invoice", "#0284c7", "6.6s")}
                     {ST_CHIP(I.Truck, "ShipFast", "#ea580c", "6.9s")}
                     {ST_CHIP(I.Chat, "Chat Alerts", "#16a34a", "7.2s")}
@@ -206,10 +215,10 @@ function HeroStory() {
                     </span>
                   </div>
                   <div className="relative h-[82px] overflow-hidden rounded-[10px] text-white">
-                    <img className="absolute inset-0 h-full w-full object-cover" src="/showcase/cat-jewellery.webp" alt="" width={400} height={500} decoding="async" loading="lazy" />
+                    <img className="absolute inset-0 h-full w-full object-cover" src={P.story.banner} alt="" width={400} height={500} decoding="async" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-r from-[#0a1416]/85 to-transparent p-3.5">
-                      <b className="block font-display text-base">Handmade with love</b>
-                      <span className="text-[10px]">Free shipping · COD available</span>
+                      <b className="block font-display text-base">{P.story.bannerTitle}</b>
+                      <span className="text-[10px]">{P.story.bannerSub}</span>
                     </div>
                   </div>
                   <div className="grid grid-cols-4 gap-2">
@@ -223,7 +232,7 @@ function HeroStory() {
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {ST_CHIP(I.Card, "UPI", "#7c3aed")}
-                    {ST_CHIP(I.Wallet, "COD", "#0f766e")}
+                    {ST_CHIP(I.Wallet, "COD", "var(--k9)")}
                     {ST_CHIP(I.Truck, "Free shipping", "#ea580c")}
                     {ST_CHIP(I.Receipt, "GST bill", "#0284c7")}
                   </div>
@@ -248,9 +257,9 @@ function HeroStory() {
               <span className="st-lbl">Mobile / WhatsApp</span>
               <span className="st-field"><span className="st-cc">+91</span><span className="st-type st-type2" style={{ left: 34 }}>98XXX XXX21</span></span>
               <span className="st-lbl">What do you need?</span>
-              <span className="st-pop st-field st-field-on" style={{ animationDelay: "1.5s" }}>New WooCommerce store <span className="text-teal-700">▾</span></span>
+              <span className="st-pop st-field st-field-on" style={{ animationDelay: "1.5s" }}>{P.needs[0]} <span className="text-teal-700">▾</span></span>
               <span className="st-lbl">What do you sell?</span>
-              <span className="st-pop st-field st-field-txt" style={{ animationDelay: "1.9s" }}>Jewellery · 80 products</span>
+              <span className="st-pop st-field st-field-txt" style={{ animationDelay: "1.9s" }}>{P.story.formSell}</span>
               <span className="st-press">Get my free quote →</span>
             </div>
             <span className="st-pop st-done" style={{ animationDelay: "2.9s" }}><span className="st-done-ic"><I.Check className="size-3" /></span>Request received</span>
@@ -261,12 +270,8 @@ function HeroStory() {
         <div className="st-link st-link2"><span className="st-run st-run2" /></div>
 
         <div className="st-orders">
-          {[
-            { img: "/showcase/earrings.webp", t: "New order · ₹1,299", d: "Paid via UPI", delay: "12.2s" },
-            { img: "/showcase/necklace.webp", t: "New order · ₹2,149", d: "Cash on delivery", delay: "12.9s" },
-            { img: "/showcase/bangles.webp", t: "Shipped · ₹699", d: "Courier pickup booked", delay: "13.6s" },
-          ].map((o) => (
-            <div key={o.t} className="st-pop st-order" style={{ animationDelay: o.delay }}>
+          {P.story.orders.map((o, i) => (
+            <div key={o.t} className="st-pop st-order" style={{ animationDelay: `${12.2 + i * 0.7}s` }}>
               <img src={o.img} alt="" width={240} height={240} className="size-9 rounded-[10px] object-cover" decoding="async" loading="lazy" />
               <span className="grid text-[11.5px] leading-snug"><b className="text-ink">{o.t}</b><span className="text-muted">{o.d}</span></span>
             </div>
@@ -303,13 +308,14 @@ function HeroStory() {
 }
 
 const STORY_STEPS = [
-  { n: "01", t: "Requirement", c: "#2dd4bf" },
+  { n: "01", t: "Requirement", c: "var(--k2)" },
   { n: "02", t: "We build", c: "#a78bfa" },
   { n: "03", t: "Store live", c: "#fbbf24" },
   { n: "04", t: "Orders", c: "#f472b6" },
 ];
 
 function Hero() {
+  const P = usePage();
   return (
     <section id="top" aria-labelledby="hero-title" className="band-dark hero hero-story" data-hero>
       <div className="hero-aurora" aria-hidden="true"><i /><i /><i /></div>
@@ -320,10 +326,10 @@ function Hero() {
             <span className="size-2 rounded-full bg-teal-300" aria-hidden="true" /> 10+ years · 100+ projects delivered
           </p>
           <h1 id="hero-title" className="mt-4 text-[2rem] font-bold leading-[1.12] sm:text-[2.4rem] lg:text-[2.5rem]">
-            WooCommerce Website Development Company in <span className="tricolour">India</span>
+            {P.h1} <span className="tricolour">India</span>
           </h1>
           <p className="mt-4 max-w-xl text-base text-white/85 sm:text-lg">
-            Fill a 30-second form or message us on WhatsApp. We design, build and launch your store with UPI, Razorpay, COD, GST invoices and Shiprocket ready, so you can focus on the orders.
+            {P.heroSub}
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <a href="#quote" data-track="cta_click" data-loc="hero" className="btn cta-primary">Share your requirement <I.Arrow /></a>
@@ -348,6 +354,7 @@ function Hero() {
 }
 
 function Proof() {
+  const { PROOF, PLATFORMS } = usePage().c;
   return (
     <section aria-label={`${SITE.shortBrand} at a glance`} className="border-b border-line bg-white">
       <div className="container-x py-10">
@@ -429,7 +436,7 @@ function BgFx({ kind }: { kind: "pains" | "gyro" | "plane" | "iso" | "bars" | "m
         <div className="fx-plane-wrap">
           <svg className="fx-trail" viewBox="0 0 1440 300" fill="none" focusable="false"><path d={d} /></svg>
           <span className="fx-plane" style={{ offsetPath: `path("${d}")` } as React.CSSProperties}>
-            <svg viewBox="0 0 24 24" focusable="false"><path d="M2 11.5 22 3l-7.5 18-3.2-6.8z" fill="#fff" /><path d="m11.3 14.2 4.4-5.6" stroke="#2dd4bf" strokeWidth="1.6" strokeLinecap="round" /></svg>
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M2 11.5 22 3l-7.5 18-3.2-6.8z" fill="#fff" /><path d="m11.3 14.2 4.4-5.6" stroke="var(--k2)" strokeWidth="1.6" strokeLinecap="round" /></svg>
           </span>
         </div>
       </div>
@@ -471,7 +478,7 @@ function BgFx({ kind }: { kind: "pains" | "gyro" | "plane" | "iso" | "bars" | "m
   // bubbles
   return (
     <div className="bgx" aria-hidden="true">
-      {[[1, 0, "#d9fdd3", 5], [3, 7, "#ffffff", 4.5], [93, 3, "#ccfbf1", 5], [95, 10, "#fef3c7", 4], [92, 14, "#d9fdd3", 4.5], [2, 13, "#ede9fe", 4]].map(([x, d, c, w], i) => (
+      {[[1, 0, "#d9fdd3", 5], [3, 7, "#ffffff", 4.5], [93, 3, "var(--k11)", 5], [95, 10, "#fef3c7", 4], [92, 14, "#d9fdd3", 4.5], [2, 13, "#ede9fe", 4]].map(([x, d, c, w], i) => (
         <span key={i} className={`fx-bub ${i % 2 ? "fx-bub-r" : ""}`} style={{ left: `${x}%`, animationDelay: `-${d}s`, "--bc": c, width: `${w}rem` } as React.CSSProperties}><i /><i /></span>
       ))}
     </div>
@@ -479,6 +486,8 @@ function BgFx({ kind }: { kind: "pains" | "gyro" | "plane" | "iso" | "bars" | "m
 }
 
 function Pains() {
+  const P = usePage();
+  const { PAINS } = P.c;
   return (
     <section aria-labelledby="pains-title" className="b3-host pain-band py-10 sm:py-14">
       <BgFx kind="pains" />
@@ -488,7 +497,7 @@ function Pains() {
           tone="rose"
           eyebrow="Why most online stores don't sell"
           title="A good-looking website is not the same as a store that sells"
-          sub="These are the problems we hear most from Indian business owners, and exactly what our WooCommerce builds are designed to fix."
+          sub={P.copy.painsSub}
         />
         <div className="mt-6 hidden grid-cols-[1fr_5rem_1fr] text-center text-xs font-bold uppercase tracking-[0.16em] lg:grid">
           <span className="text-rose-700">The problem</span>
@@ -528,7 +537,7 @@ function Pains() {
   );
 }
 
-function TypeCard({ t, i }: { t: (typeof STORE_TYPES)[number]; i: number }) {
+function TypeCard({ t, i }: { t: Page["c"]["STORE_TYPES"][number]; i: number }) {
   return (
     <div className="type-card relative w-40 shrink-0 overflow-hidden rounded-2xl bg-surface shadow-xl sm:w-48">
       <img src={t.img} srcSet={`${t.img.replace(".webp", "-240.webp")} 240w, ${t.img} 400w`} sizes="192px" alt="" width={400} height={500} loading="lazy" decoding="async" className="aspect-[4/5] w-full object-cover" />
@@ -543,6 +552,7 @@ function TypeCard({ t, i }: { t: (typeof STORE_TYPES)[number]; i: number }) {
 }
 
 function StoreTypes() {
+  const { STORE_TYPES } = usePage().c;
   const rows = [STORE_TYPES];
   return (
     <section aria-labelledby="types-title" className="band-dark dk dk-types dk-dots py-10 sm:py-14">
@@ -593,10 +603,8 @@ function IconCards({ items, offset = 0 }: { items: readonly { icon: string; titl
   );
 }
 
-/** Short labels for the faces of the rotating prism, in FEATURES order. */
-const FEATURE_FACES = ["UPI, cards & COD", "Shipping", "GST invoices", "WhatsApp alerts", "Fast on 4G", "SEO & tracking"];
 const FACE_GRADS = [
-  "linear-gradient(150deg, #2dd4bf, #0b6e6a)",
+  "linear-gradient(150deg, var(--k2), var(--k6))",
   "linear-gradient(150deg, #fbbf24, #ea580c)",
   "linear-gradient(150deg, #a78bfa, #7c3aed)",
   "linear-gradient(150deg, #4ade80, #15803d)",
@@ -605,6 +613,9 @@ const FACE_GRADS = [
 ];
 
 function Features() {
+  const P = usePage();
+  const { FEATURES } = P.c;
+  const FEATURE_FACES = P.copy.featureFaces;
   const card = (f: (typeof FEATURES)[number], i: number) => {
     const Icon = ICONS[f.icon];
     return (
@@ -626,7 +637,7 @@ function Features() {
           tone="amber"
           eyebrow="Built for India"
           title="Everything your store needs to sell from day one"
-          sub="Every store we launch comes with the payments, shipping, tax and tracking Indian e-commerce businesses rely on."
+          sub={P.copy.featuresSub}
         />
         <div className="feat mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[1fr_20rem_1fr] lg:gap-10">
           <ul className="reveal grid gap-4 lg:order-1">{FEATURES.slice(0, 3).map((f, i) => card(f, i))}</ul>
@@ -664,6 +675,7 @@ const QUOTE_STEPS = [
 ];
 
 function QuoteBlock() {
+  const P = usePage();
   return (
     <section id="quote" aria-labelledby="quote-title" className="band-dark dk dk-quote quote-band scroll-mt-20 py-10 sm:py-14">
       <div className="container-x grid gap-12 lg:grid-cols-[1fr_minmax(0,31rem)] lg:items-center lg:gap-14">
@@ -673,7 +685,7 @@ function QuoteBlock() {
             Tell us about your store. <span className="why-grad">Get a fixed quote in 24 hours.</span>
           </h2>
           <p className="mt-5 max-w-xl text-base text-white/75">
-            No sales pressure. A RannLab WooCommerce expert reviews your needs and sends a clear, itemised plan with price and timeline.
+            {P.copy.quoteSub}
           </p>
 
           <ol className="quote-steps mt-9" aria-label="What happens next">
@@ -735,13 +747,16 @@ const SVC_SCENES: Record<string, () => React.JSX.Element> = {
       <div className="sc-toast"><I.Check className="size-3.5" /> New order · ₹1,299</div>
     </div>
   ),
-  refresh: () => (
+  refresh: function Migrate() {
+    const { copy } = usePage();
+    return (
     <div className="sc sc-migrate">
-      <ul>{["Shopify", "Wix", "Magento", "OpenCart"].map((n, k) => <li key={n} style={{ "--d": k } as React.CSSProperties}>{n}</li>)}</ul>
+      <ul>{copy.migrateFrom.map((n, k) => <li key={n} style={{ "--d": k } as React.CSSProperties}>{n}</li>)}</ul>
       <div className="sc-pipe">{[0, 1, 2].map((k) => <i key={k} style={{ "--d": k } as React.CSSProperties} />)}</div>
-      <div className="sc-woo"><I.Cart className="size-5" /><b>WooCommerce</b><span><I.Check className="size-3" /> Data intact</span></div>
+      <div className="sc-woo"><I.Cart className="size-5" /><b>{copy.migrateTo}</b><span><I.Check className="size-3" /> Data intact</span></div>
     </div>
-  ),
+    );
+  },
   layers: () => (
     <div className="sc sc-redesign">
       <div className="sc-page sc-old"><b /><s /><s /><s className="w-2/3" /></div>
@@ -764,17 +779,20 @@ const SVC_SCENES: Record<string, () => React.JSX.Element> = {
       ))}
     </div>
   ),
-  shield: () => (
+  shield: function Care() {
+    const { copy } = usePage();
+    return (
     <div className="sc sc-care">
       <svg viewBox="0 0 320 64" fill="none" aria-hidden="true" focusable="false">
         <polyline className="base" points="0,34 70,34 84,12 98,54 112,34 186,34 200,16 214,50 228,34 320,34" />
         <polyline points="0,34 70,34 84,12 98,54 112,34 186,34 200,16 214,50 228,34 320,34" />
       </svg>
       <div className="sc-chips">
-        {["Daily backup", "SSL active", "Plugins updated"].map((c) => <span key={c}><I.Check className="size-3" /> {c}</span>)}
+        {copy.careChips.map((c) => <span key={c}><I.Check className="size-3" /> {c}</span>)}
       </div>
     </div>
-  ),
+    );
+  },
 };
 const SVC_TINTS = [
   "from-teal-50 via-cyan-50 to-sky-100",
@@ -785,13 +803,15 @@ const SVC_TINTS = [
   "from-rose-50 via-pink-50 to-orange-100",
 ];
 function Services() {
+  const P = usePage();
+  const { SERVICES } = P.c;
   return (
     <section id="services" aria-labelledby="services-title" className="b3-host svc-band scroll-mt-20 py-10 sm:py-14">
       <BgFx kind="iso" />
       <div className="container-x flex flex-wrap items-end justify-between gap-6">
         <div className="reveal max-w-2xl">
-          <p className="eyebrow text-violet-700">Our WooCommerce services</p>
-          <h2 id="services-title" className="mt-3 text-[1.7rem] leading-tight font-bold text-ink sm:text-[2.2rem]">From a brand-new store to a complete rebuild</h2>
+          <p className="eyebrow text-violet-700">{P.copy.svcEyebrow}</p>
+          <h2 id="services-title" className="mt-3 text-[1.7rem] leading-tight font-bold text-ink sm:text-[2.2rem]">{P.copy.svcTitle}</h2>
           <p className="mt-3 text-base text-muted">Whatever stage your store is at, one team handles it end to end.</p>
         </div>
         <div className="hidden gap-2 sm:flex">
@@ -799,7 +819,7 @@ function Services() {
           <button type="button" className="svc-nav" data-scroll-btn="1" aria-label="Next services" aria-controls="svc-track"><I.Arrow className="size-5" /></button>
         </div>
       </div>
-      <ul id="svc-track" className="svc-track mt-10" data-scroller tabIndex={0} aria-label="WooCommerce services">
+      <ul id="svc-track" className="svc-track mt-10" data-scroller tabIndex={0} aria-label={P.copy.svcEyebrow}>
         {SERVICES.map((sv, i) => {
           const Icon = ICONS[sv.icon];
           const Scene = SVC_SCENES[sv.icon];
@@ -822,7 +842,7 @@ function Services() {
           <p className="mt-3 text-white/75">A free 20-minute call, then a fixed, itemised quote within 24 hours.</p>
           <div className="mt-6 grid gap-3">
             <a href="#quote" data-track="cta_click" data-loc="services" className="btn bg-white text-night hover:bg-teal-50">Discuss my project <I.Arrow className="size-4" /></a>
-            <a href={WA_DEFAULT} data-track="whatsapp_click" data-loc="services" className="btn bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/15" rel="noopener" target="_blank"><I.WhatsApp className="size-5" /> WhatsApp us</a>
+            <a href={waFor(P)} data-track="whatsapp_click" data-loc="services" className="btn bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/15" rel="noopener" target="_blank"><I.WhatsApp className="size-5" /> WhatsApp us</a>
           </div>
         </li>
       </ul>
@@ -831,10 +851,12 @@ function Services() {
 }
 
 function Process() {
+  const P = usePage();
+  const { PROCESS } = P.c;
   return (
     <section id="process" aria-labelledby="process-title" className="band-dark dk dk-process scroll-mt-20 py-10 sm:py-14">
       <div className="container-x">
-        <SectionHead dark id="process-title" eyebrow="How it works" title="Your store live in about 4 weeks" sub="A simple, transparent process with your approval at every step." />
+        <SectionHead dark id="process-title" eyebrow="How it works" title={P.copy.processTitle} sub="A simple, transparent process with your approval at every step." />
         <ol className="stairs relative -mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
           <span className="absolute left-0 right-0 top-6 hidden h-0.5 bg-gradient-to-r from-teal-400/0 via-amber-400/70 to-rose-400/0 lg:block" aria-hidden="true" />
           {PROCESS.map((p, i) => (
@@ -856,12 +878,13 @@ function Process() {
 
 /** Per-tier look for the package picker (index matches PACKAGES). */
 const TIERS = [
-  { c: "#0f9d94", grad: "from-teal-400 to-emerald-600", btn: "from-teal-600 to-emerald-700", level: "Level 01", slabs: ["Launch"] },
+  { c: "var(--k4)", grad: "from-teal-400 to-emerald-600", btn: "from-teal-600 to-emerald-700", level: "Level 01", slabs: ["Launch"] },
   { c: "#f97316", grad: "from-amber-400 to-rose-500", btn: "from-orange-600 to-rose-600", level: "Level 02", slabs: ["Launch", "Grow"] },
   { c: "#7c3aed", grad: "from-violet-500 to-sky-500", btn: "from-violet-600 to-blue-600", level: "Level 03", slabs: ["Launch", "Grow", "Scale"] },
 ];
 
 function Packages() {
+  const { PACKAGES } = usePage().c;
   return (
     <section id="packages" aria-labelledby="packages-title" className="pk-band scroll-mt-20 py-10 sm:py-14">
       <div className="container-x">
@@ -932,12 +955,14 @@ function Packages() {
 }
 
 const VS_META = [
-  { tag: "Your WooCommerce partner", Icon: I.Users, ring: "#0f9d94" },
+  { tag: "", Icon: I.Users, ring: "var(--k4)" },
   { tag: "Single developer", Icon: I.Code, ring: "#f59e0b" },
   { tag: "Do it yourself", Icon: I.Layout, ring: "#f43f5e" },
 ];
 
 function Compare() {
+  const P = usePage();
+  const { COMPARE } = P.c;
   const total = COMPARE.rows.length;
   // Show RannLab in the middle on desktop, first on mobile.
   const order = [1, 0, 2];
@@ -962,7 +987,7 @@ function Compare() {
                     </span>
                     <div>
                       <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider ${hero ? "text-teal-700" : "text-muted"}`}>
-                        <meta.Icon className="size-3.5" /> {meta.tag}
+                        <meta.Icon className="size-3.5" /> {hero ? P.copy.vsTag : meta.tag}
                       </p>
                       <h3 className={`mt-1 font-display text-xl font-bold ${hero ? "text-ink sm:text-2xl" : "text-ink-2"}`}>{name}</h3>
                     </div>
@@ -1005,7 +1030,7 @@ function Compare() {
 /** Client regions for the live dotted globe (drawn on canvas by enhance.ts). First entry is the hub. */
 const GLOBE_PINS = [
   { label: "India", lat: 21, lon: 78, c: "#fbbf24" },
-  { label: "USA", lat: 39, lon: -98, c: "#2dd4bf" },
+  { label: "USA", lat: 39, lon: -98, c: "var(--k2)" },
   { label: "UK", lat: 53, lon: -2, c: "#a78bfa" },
   { label: "Canada", lat: 56, lon: -106, c: "#fb7185" },
   { label: "Australia", lat: -25, lon: 134, c: "#38bdf8" },
@@ -1017,6 +1042,8 @@ const WHY_STATS = [
 ];
 
 function WhyRannlab() {
+  const P = usePage();
+  const { WHY } = P.c;
   return (
     <section aria-labelledby="why-title" className="band-dark dk dk-why dk-dots why-band py-10 sm:py-14">
       <div className="container-x">
@@ -1027,7 +1054,7 @@ function WhyRannlab() {
               An AI-first software company that <span className="why-grad">builds stores to last</span>
             </h2>
             <p className="mt-5 max-w-xl text-base text-white/75">
-              {SITE.brand} has spent 10+ years building web, mobile and custom software for businesses worldwide. Your WooCommerce store gets the same engineering standards.
+              {SITE.brand} {P.copy.whyBody}
             </p>
             <dl className="mt-8 grid max-w-lg grid-cols-3 gap-3">
               {WHY_STATS.map((st) => (
@@ -1072,28 +1099,30 @@ function WhyRannlab() {
 }
 
 function Faq() {
+  const P = usePage();
+  const { FAQS } = P.c;
   return (
     <section id="faq" aria-labelledby="faq-title" className="b3-host faq-band scroll-mt-20 py-10 sm:py-14">
       <BgFx kind="bubbles" />
       <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">FAQ</p>
-          <h2 id="faq-title" className="mt-3 text-[1.7rem] leading-tight font-bold text-ink sm:text-[2.2rem]">WooCommerce development: common questions</h2>
+          <h2 id="faq-title" className="mt-3 text-[1.7rem] leading-tight font-bold text-ink sm:text-[2.2rem]">{P.copy.faqTitle}</h2>
           <p className="mt-4 text-base text-muted">Straight answers on cost, timelines, payments and what happens after launch.</p>
           <div className="faq-chat reveal">
             <div className="faq-chat-head">
               <span className="faq-chat-av" aria-hidden="true">R</span>
               <span className="min-w-0 flex-1 leading-tight">
-                <b className="block text-sm text-white">RannLab WooCommerce team</b>
+                <b className="block text-sm text-white">RannLab {P.platform} team</b>
                 <span className="text-xs text-white/80">Usually replies within a few hours</span>
               </span>
               <I.WhatsApp className="size-5 text-white" />
             </div>
             <div className="faq-chat-body" aria-hidden="true">
-              <p className="chat-msg chat-out" style={{ "--d": 0 } as React.CSSProperties}>Hi! How much will a WooCommerce store cost for my brand?</p>
+              <p className="chat-msg chat-out" style={{ "--d": 0 } as React.CSSProperties}>{P.copy.chatQ}</p>
               <p className="chat-msg chat-in" style={{ "--d": 1 } as React.CSSProperties}>Depends on products and features. Share a few details and we'll send a fixed, itemised quote within 24 hours.</p>
-              <p className="chat-msg chat-out" style={{ "--d": 2 } as React.CSSProperties}>Can you set up UPI and COD too?</p>
-              <p className="chat-msg chat-in" style={{ "--d": 3 } as React.CSSProperties}>Yes. Razorpay or PhonePe, COD rules, GST invoices and Shiprocket, all ready at launch.</p>
+              <p className="chat-msg chat-out" style={{ "--d": 2 } as React.CSSProperties}>{P.copy.chatQ2}</p>
+              <p className="chat-msg chat-in" style={{ "--d": 3 } as React.CSSProperties}>{P.copy.chatA2}</p>
               <span className="chat-typing" style={{ "--d": 4 } as React.CSSProperties}><i /><i /><i /></span>
             </div>
             <div className="faq-chat-foot">
@@ -1124,7 +1153,7 @@ function Faq() {
 }
 
 const CTA_NOTES = [
-  { t: "New order #4821", d: "₹3,148 · Priya S., Pune", Icon: I.Cart, c: "#0f9d94" },
+  { t: "New order #4821", d: "", Icon: I.Cart, c: "var(--k4)" },
   { t: "Payment received", d: "₹2,449 via UPI", Icon: I.Wallet, c: "#7c3aed" },
   { t: "Order shipped", d: "Shiprocket AWB generated", Icon: I.Truck, c: "#ea580c" },
   { t: "GST invoice sent", d: "Invoice INV-1027 emailed", Icon: I.Receipt, c: "#0284c7" },
@@ -1132,15 +1161,16 @@ const CTA_NOTES = [
 ];
 
 function FinalCta() {
+  const P = usePage();
   return (
     <section aria-labelledby="final-title" className="band-dark dk dk-cta cta-band py-10 sm:py-14" data-cta3d>
       <div className="container-x grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="reveal text-center lg:text-left">
           <p className="eyebrow eyebrow-dark">Let's build it</p>
           <h2 id="final-title" className="mt-3 text-[1.7rem] font-bold leading-tight sm:text-[2.5rem] sm:leading-[1.1]">
-            Ready to start selling online? <span className="why-grad">Let's build your WooCommerce store.</span>
+            Ready to start selling online? <span className="why-grad">{P.copy.ctaTitle}</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base text-white/80 lg:mx-0">Talk to a RannLab WooCommerce expert today. Free consultation, fixed quote within 24 hours.</p>
+          <p className="mx-auto mt-5 max-w-xl text-base text-white/80 lg:mx-0">{P.copy.ctaSub}</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
             <a href="#quote" data-track="cta_click" data-loc="final" className="btn cta-primary">Get my free quote <I.Arrow /></a>
             <WaButton location="final" className="" />
@@ -1167,7 +1197,7 @@ function FinalCta() {
                         <span className="cta-note-ic" style={{ background: n.c }}><n.Icon className="size-4" /></span>
                         <span className="min-w-0 flex-1">
                           <b>{n.t}</b>
-                          <span>{n.d}</span>
+                          <span>{n.d || P.copy.ctaOrder}</span>
                         </span>
                         <small>now</small>
                       </div>
@@ -1186,6 +1216,7 @@ function FinalCta() {
 }
 
 function Footer() {
+  const P = usePage();
   const year = new Date().getFullYear();
   const socials: [string, string, (p: { className?: string }) => React.JSX.Element][] = [
     ["LinkedIn", SITE.social.linkedin, I.LinkedIn],
@@ -1197,7 +1228,7 @@ function Footer() {
   const a = "underline-offset-2 transition-colors hover:text-teal-300 hover:underline";
   return (
     <footer className="border-t border-white/10 bg-night pb-28 pt-14 text-white/75 md:pb-10">
-      <div className="container-x grid gap-10 md:grid-cols-[1.3fr_1fr_0.8fr]">
+      <div className="container-x grid gap-10 md:grid-cols-[1.3fr_1fr_0.8fr_0.8fr]">
         <div>
           <img src="/brand/rannlab-logo-light-203.webp" srcSet="/brand/rannlab-logo-light-203.webp 203w, /brand/rannlab-logo-light.webp 405w" sizes="203px" alt={`${SITE.brand}: ${SITE.tagline}`} width={203} height={56} loading="lazy" className="h-14 w-auto" />
           <p className="mt-4 max-w-sm">AI-first software development company building websites, e-commerce stores, mobile apps and custom software for businesses worldwide.</p>
@@ -1226,6 +1257,14 @@ function Footer() {
             <li className="flex gap-2.5"><I.Pin className="mt-1 size-4 shrink-0 text-teal-300" /><a className={a} href={SITE.mapUrl} rel="noopener" target="_blank">{SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.postalCode}</a></li>
           </ul>
         </address>
+        <nav aria-label="Our e-commerce services">
+          <p className="font-display font-bold text-white">E-commerce services</p>
+          <ul className="mt-4 space-y-2">
+            {PAGES.map((pg) => (
+              <li key={pg.key}><a className={a} href={pg.path} aria-current={pg.key === P.key ? "page" : undefined}>{pg.label}</a></li>
+            ))}
+          </ul>
+        </nav>
         <nav aria-label="Company links">
           <p className="font-display font-bold text-white">Company</p>
           <ul className="mt-4 space-y-2">
@@ -1250,12 +1289,13 @@ function Footer() {
 }
 
 function MobileBar() {
+  const P = usePage();
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 gap-2 border-t border-line bg-white/95 p-2 shadow-[0_-6px_24px_rgb(0_0_0/0.08)] backdrop-blur md:hidden">
       <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="mobile-bar" className="btn btn-outline btn-sm !min-h-11 gap-1.5 !px-2 !py-1.5 text-[0.82rem]">
         <I.Phone className="size-4" /> Call
       </a>
-      <a href={WA_DEFAULT} target="_blank" rel="noopener" data-track="whatsapp_click" data-loc="mobile-bar" className="btn btn-wa btn-sm !min-h-11 gap-1.5 !px-2 !py-1.5 text-[0.82rem]">
+      <a href={waFor(P)} target="_blank" rel="noopener" data-track="whatsapp_click" data-loc="mobile-bar" className="btn btn-wa btn-sm !min-h-11 gap-1.5 !px-2 !py-1.5 text-[0.82rem]">
         <I.WhatsApp className="size-4" /> WhatsApp
       </a>
       <a href="#quote" data-track="cta_click" data-loc="mobile-bar" className="btn btn-primary btn-sm !min-h-11 gap-1.5 !px-2 !py-1.5 text-[0.82rem]">
@@ -1265,9 +1305,10 @@ function MobileBar() {
   );
 }
 
-export function Landing() {
+export function Landing({ page }: { page: Page }) {
   return (
-    <>
+    <PageCtx.Provider value={page}>
+    <div className={page.theme}>
       <a href="#main" className="skip-link">Skip to content</a>
       <Header />
       <main id="main">
@@ -1289,9 +1330,10 @@ export function Landing() {
       <MobileBar />
       <script
         dangerouslySetInnerHTML={{
-          __html: `(${enhance.toString()})(${JSON.stringify({ brand: SITE.shortBrand, wa: SITE.whatsappNumber, endpoint: SITE.leadEndpoint, ...TRACKING })})`,
+          __html: `(${enhance.toString()})(${JSON.stringify({ brand: SITE.shortBrand, wa: SITE.whatsappNumber, endpoint: SITE.leadEndpoint, platform: page.platform, ...TRACKING })})`,
         }}
       />
-    </>
+    </div>
+    </PageCtx.Provider>
   );
 }
