@@ -321,13 +321,13 @@ function Hero() {
   const center = v === "centered";
   const wrap = center
     ? "container-x flex flex-col items-center gap-8 pb-10 pt-10 text-center lg:pb-14 lg:pt-14"
-    : `container-x grid gap-8 pb-10 pt-8 lg:items-center lg:gap-10 lg:pb-14 lg:pt-12 ${light ? "lg:grid-cols-[1.1fr_0.9fr]" : "lg:grid-cols-[0.9fr_1.1fr]"}`;
+    : `container-x grid gap-8 pb-10 pt-8 lg:items-center lg:gap-10 lg:pb-14 lg:pt-12 lg:grid-cols-[0.9fr_1.1fr]`;
   return (
     <section id="top" aria-labelledby="hero-title" className={`hero hero-story ${light ? "hero-light" : "band-dark"} ${center ? "hero-center" : ""} ${v === "split" ? "hero-split" : ""}`} data-hero>
       <div className="hero-aurora" aria-hidden="true"><i /><i /><i /></div>
       <canvas className="dot-wave" data-wave aria-hidden="true" />
       <div className={wrap}>
-        <div className={`${light ? "lg:order-2" : ""} ${center ? "flex max-w-3xl flex-col items-center" : ""}`}>
+        <div className={`${center ? "flex max-w-3xl flex-col items-center" : ""}`}>
           <p className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ring-1 ${light ? "bg-teal-50 text-teal-800 ring-teal-200" : "bg-teal-500/15 text-teal-100 ring-teal-300/30"}`}>
             <span className={`size-2 rounded-full ${light ? "bg-teal-500" : "bg-teal-300"}`} aria-hidden="true" /> 10+ years · 100+ projects delivered
           </p>
@@ -361,7 +361,7 @@ function Hero() {
             ))}
           </ol>
         </div>
-        <div className={`min-w-0 ${light ? "lg:order-1" : ""} ${center ? "w-full max-w-5xl" : ""}`}><HeroStory /></div>
+        <div className={`min-w-0 ${center ? "w-full max-w-5xl" : ""}`}><HeroStory /></div>
       </div>
     </section>
   );
