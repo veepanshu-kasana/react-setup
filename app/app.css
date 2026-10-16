@@ -293,15 +293,15 @@
 }
 
 /* Override: reduce lg:text-[3rem] to 2.6rem */
-@media (width >= 64rem) {
+@media (min-width: 64rem) {
     .lg\:text-\[3rem\] {
-        font-size: 2.6rem;
+        font-size: 2.6rem !important;
     }
 }
 
 /* Set hero-title font-size at large breakpoint */
-@media (width >= 64rem) {
+@media (min-width: 64rem) {
   .hero-title {
-    font-size: 2.6rem;
+    font-size: 2.6rem !important;
   }
 }
