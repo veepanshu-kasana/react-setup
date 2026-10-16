@@ -272,11 +272,28 @@ function HeroStory() {
             </div>
           ))}
           <div className="st-pop st-sales" style={{ animationDelay: "14.2s" }}>
-            <span className="text-[11px] text-white/75">Sales this week</span>
-            <div className="flex h-[54px] items-end gap-1.5">
-              {[["30%", "#2dd4bf"], ["45%", "#2dd4bf"], ["40%", "#2dd4bf"], ["65%", "#fbbf24"], ["92%", "#f472b6"]].map(([h, c], i) => (
-                <span key={i} className="st-rise flex-1 rounded-t" style={{ height: h, background: c, animationDelay: `${14.3 + i * 0.1}s` }} />
+            <div className="flex items-center justify-between gap-2">
+              <span className="grid leading-tight">
+                <span className="text-[10.5px] font-semibold text-muted">Sales this week</span>
+                <b className="font-display text-[17px] text-ink">₹64,820</b>
+              </span>
+              <span className="st-trend">
+                <svg viewBox="0 0 24 24" className="size-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8M15 7h6v6" /></svg>
+                Growing
+              </span>
+            </div>
+            <div className="st-chart">
+              {[28, 40, 34, 52, 48, 70, 94].map((h, i) => (
+                <span key={i} className="st-col">
+                  <span className={`st-rise st-bar ${i === 6 ? "st-bar-hi" : ""}`} style={{ height: `${h}%`, animationDelay: `${14.3 + i * 0.08}s` }}>
+                    {i === 6 && <em className="st-tip">₹18.4k</em>}
+                  </span>
+                  <small>{"MTWTFSS"[i]}</small>
+                </span>
               ))}
+            </div>
+            <div className="flex items-center justify-between text-[10px] font-semibold text-muted">
+              <span>52 orders</span><span>UPI 68% · COD 32%</span>
             </div>
           </div>
         </div>
