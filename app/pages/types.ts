@@ -15,7 +15,7 @@ export type Page = {
   seo: { title: string; description: string; ogImage: string; ogAlt: string; serviceName: string };
   /** Layout choices so each page looks different */
   layout: {
-    hero: "dark" | "light" | "centered";
+    hero: "dark" | "light" | "centered" | "split";
     features: "prism" | "cards" | "ring";
     packages: "towers" | "cards";
     pains: "rows" | "cards" | "cards-dark";

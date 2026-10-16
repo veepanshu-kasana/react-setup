@@ -323,7 +323,7 @@ function Hero() {
     ? "container-x flex flex-col items-center gap-8 pb-10 pt-10 text-center lg:pb-14 lg:pt-14"
     : `container-x grid gap-8 pb-10 pt-8 lg:items-center lg:gap-10 lg:pb-14 lg:pt-12 ${light ? "lg:grid-cols-[1.1fr_0.9fr]" : "lg:grid-cols-[0.9fr_1.1fr]"}`;
   return (
-    <section id="top" aria-labelledby="hero-title" className={`hero hero-story ${light ? "hero-light" : "band-dark"} ${center ? "hero-center" : ""}`} data-hero>
+    <section id="top" aria-labelledby="hero-title" className={`hero hero-story ${light ? "hero-light" : "band-dark"} ${center ? "hero-center" : ""} ${v === "split" ? "hero-split" : ""}`} data-hero>
       <div className="hero-aurora" aria-hidden="true"><i /><i /><i /></div>
       <canvas className="dot-wave" data-wave aria-hidden="true" />
       <div className={wrap}>
@@ -344,6 +344,14 @@ function Hero() {
           <p className={`mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm ${light ? "text-muted" : "text-white/70"} ${center ? "justify-center" : ""}`}>
             <span>Fixed price</span><span aria-hidden="true">·</span><span>Quote in 24 hours</span><span aria-hidden="true">·</span><span>You own your store</span>
           </p>
+          {v === "split" && (
+            <ul className="ec-plat mt-6" aria-label="Platforms we build on">
+              {[["WooCommerce", I.Cart], ["Shopify", I.Layers], ["Custom build", I.Code], ["Mobile app", I.Mobile]].map(([t, Ic]) => {
+                const Icon = Ic as (p: { className?: string }) => React.JSX.Element;
+                return <li key={t as string}><Icon className="size-4" />{t as string}</li>;
+              })}
+            </ul>
+          )}
           <ol className={`st-steps mt-7 ${center ? "w-full max-w-xl" : ""}`} aria-label="How it works">
             {STORY_STEPS.map((st, i) => (
               <li key={st.n}>

@@ -15,7 +15,7 @@ export const ECOM: Page = {
     ogAlt: "eCommerce website development in India by RannLab Technologies",
     serviceName: "eCommerce Website Development",
   },
-  layout: { hero: "centered", features: "ring", packages: "towers", pains: "cards-dark", process: "stairs", faq: "dark", why: "globe", cta: "phone", order: ["proof", "services", "pains", "features", "types", "process", "quote", "compare", "packages", "why", "faq", "cta"] },
+  layout: { hero: "split", features: "ring", packages: "towers", pains: "cards-dark", process: "stairs", faq: "dark", why: "globe", cta: "phone", order: ["proof", "services", "pains", "features", "types", "process", "quote", "compare", "packages", "why", "faq", "cta"] },
   h1: "eCommerce Website Development Company in",
   heroSub:
     "Fill a 30-second form or message us on WhatsApp. We plan, design and build your online store on WooCommerce, Shopify or a fully custom stack, with UPI, COD, GST and shipping ready, so you can focus on the orders.",
