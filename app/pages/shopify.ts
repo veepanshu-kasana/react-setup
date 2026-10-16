@@ -15,6 +15,7 @@ export const SHOPIFY: Page = {
     ogAlt: "Shopify website development in India by RannLab Technologies",
     serviceName: "Shopify Website Development",
   },
+  layout: { hero: "light", features: "cards", packages: "cards", pains: "cards", process: "timeline", faq: "grid", why: "stats", cta: "banner", order: ["proof", "features", "pains", "services", "quote", "types", "packages", "process", "why", "compare", "faq", "cta"] },
   h1: "Shopify Website Development Company in",
   heroSub:
     "Fill a 30-second form or message us on WhatsApp. We design, build and launch your Shopify store with Razorpay, COD, GST, Shiprocket and only the apps you need, so you can focus on the orders.",
@@ -29,13 +30,13 @@ export const SHOPIFY: Page = {
     bannerSub: "Easy returns · COD available",
     products: [
       { img: "/showcase/kurta.webp", name: "Chanderi kurta", price: "₹2,449" },
-      { img: "/showcase/cat-fashion-240.webp", name: "Festive suit set", price: "₹3,199" },
+      { img: "/showcase/earrings.webp", name: "Festive jhumkas", price: "₹1,199" },
       { img: "/showcase/cat-beauty-240.webp", name: "Glow care kit", price: "₹899" },
       { img: "/showcase/bangles.webp", name: "Lac bangles", price: "₹699" },
     ],
     orders: [
       { img: "/showcase/kurta.webp", t: "New order · ₹2,449", d: "Paid via UPI" },
-      { img: "/showcase/cat-fashion-240.webp", t: "New order · ₹3,199", d: "Cash on delivery" },
+      { img: "/showcase/earrings.webp", t: "New order · ₹1,199", d: "Cash on delivery" },
       { img: "/showcase/cat-beauty-240.webp", t: "Shipped · ₹899", d: "Courier pickup booked" },
     ],
     formSell: "Ethnic wear · 120 products",

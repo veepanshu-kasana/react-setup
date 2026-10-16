@@ -15,6 +15,7 @@ export const WOO: Page = {
     ogAlt: "WooCommerce website development in India by RannLab Technologies",
     serviceName: "WooCommerce Website Development",
   },
+  layout: { hero: "dark", features: "prism", packages: "towers", pains: "rows", process: "stairs", faq: "chat", why: "globe", cta: "phone", order: ["proof", "pains", "types", "features", "quote", "services", "process", "packages", "compare", "why", "faq", "cta"] },
   h1: "WooCommerce Website Development Company in",
   heroSub:
     "Fill a 30-second form or message us on WhatsApp. We design, build and launch your store with UPI, Razorpay, COD, GST invoices and Shiprocket ready, so you can focus on the orders.",

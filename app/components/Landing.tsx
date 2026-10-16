@@ -1,6 +1,6 @@
 import { SITE, TRACKING, waLink } from "../site";
 import { enhance } from "../lib/enhance";
-import { PageCtx, usePage, type Page } from "../pages/types";
+import { PageCtx, usePage, type Page, type SectionKey } from "../pages/types";
 import { PAGES } from "../pages";
 import { LeadForm } from "./LeadForm";
 import * as I from "./icons";
@@ -316,29 +316,35 @@ const STORY_STEPS = [
 
 function Hero() {
   const P = usePage();
+  const v = P.layout.hero;
+  const light = v === "light";
+  const center = v === "centered";
+  const wrap = center
+    ? "container-x flex flex-col items-center gap-8 pb-10 pt-10 text-center lg:pb-14 lg:pt-14"
+    : `container-x grid gap-8 pb-10 pt-8 lg:items-center lg:gap-10 lg:pb-14 lg:pt-12 ${light ? "lg:grid-cols-[1.1fr_0.9fr]" : "lg:grid-cols-[0.9fr_1.1fr]"}`;
   return (
-    <section id="top" aria-labelledby="hero-title" className="band-dark hero hero-story" data-hero>
+    <section id="top" aria-labelledby="hero-title" className={`hero hero-story ${light ? "hero-light" : "band-dark"} ${center ? "hero-center" : ""}`} data-hero>
       <div className="hero-aurora" aria-hidden="true"><i /><i /><i /></div>
       <canvas className="dot-wave" data-wave aria-hidden="true" />
-      <div className="container-x grid gap-8 pb-10 pt-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:pb-14 lg:pt-12">
-        <div>
-          <p className="inline-flex items-center gap-2 rounded-full bg-teal-500/15 px-3 py-1 text-sm font-semibold text-teal-100 ring-1 ring-teal-300/30">
-            <span className="size-2 rounded-full bg-teal-300" aria-hidden="true" /> 10+ years · 100+ projects delivered
+      <div className={wrap}>
+        <div className={`${light ? "lg:order-2" : ""} ${center ? "flex max-w-3xl flex-col items-center" : ""}`}>
+          <p className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ring-1 ${light ? "bg-teal-50 text-teal-800 ring-teal-200" : "bg-teal-500/15 text-teal-100 ring-teal-300/30"}`}>
+            <span className={`size-2 rounded-full ${light ? "bg-teal-500" : "bg-teal-300"}`} aria-hidden="true" /> 10+ years · 100+ projects delivered
           </p>
-          <h1 id="hero-title" className="mt-4 text-[2rem] font-bold leading-[1.12] sm:text-[2.4rem] lg:text-[2.5rem]">
+          <h1 id="hero-title" className={`mt-4 text-[2rem] font-bold leading-[1.12] sm:text-[2.4rem] lg:text-[2.5rem] ${light ? "text-ink" : ""}`}>
             {P.h1} <span className="tricolour">India</span>
           </h1>
-          <p className="mt-4 max-w-xl text-base text-white/85 sm:text-lg">
+          <p className={`mt-4 max-w-xl text-base sm:text-lg ${light ? "text-ink-2" : "text-white/85"}`}>
             {P.heroSub}
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <a href="#quote" data-track="cta_click" data-loc="hero" className="btn cta-primary">Share your requirement <I.Arrow /></a>
+          <div className={`mt-6 flex flex-col gap-3 sm:flex-row ${center ? "sm:justify-center" : ""}`}>
+            <a href="#quote" data-track="cta_click" data-loc="hero" className={`btn ${light ? "btn-primary" : "cta-primary"}`}>Share your requirement <I.Arrow /></a>
             <WaButton location="hero" className="" />
           </div>
-          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/70">
+          <p className={`mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm ${light ? "text-muted" : "text-white/70"} ${center ? "justify-center" : ""}`}>
             <span>Fixed price</span><span aria-hidden="true">·</span><span>Quote in 24 hours</span><span aria-hidden="true">·</span><span>You own your store</span>
           </p>
-          <ol className="st-steps mt-7" aria-label="How it works">
+          <ol className={`st-steps mt-7 ${center ? "w-full max-w-xl" : ""}`} aria-label="How it works">
             {STORY_STEPS.map((st, i) => (
               <li key={st.n}>
                 <span className="st-seg"><span style={{ background: st.c, animationDelay: `${i * 4}s` }} /></span>
@@ -347,7 +353,7 @@ function Hero() {
             ))}
           </ol>
         </div>
-        <HeroStory />
+        <div className={`min-w-0 ${light ? "lg:order-1" : ""} ${center ? "w-full max-w-5xl" : ""}`}><HeroStory /></div>
       </div>
     </section>
   );
@@ -485,9 +491,47 @@ function BgFx({ kind }: { kind: "pains" | "gyro" | "plane" | "iso" | "bars" | "m
   );
 }
 
+/** Shopify (light) / eCommerce (dark): three problem → fix cards that tilt in 3D. */
+function PainsCards() {
+  const P = usePage();
+  const dark = P.layout.pains === "cards-dark";
+  const { PAINS } = P.c;
+  return (
+    <section aria-labelledby="pains-title" className={`py-10 sm:py-14 ${dark ? "band-dark dk dk-why dk-dots" : "pc-band"}`}>
+      <div className="container-x">
+        <SectionHead dark={dark} id="pains-title" tone="rose" eyebrow="Why most online stores don't sell" title="A good-looking website is not the same as a store that sells" sub={P.copy.painsSub} />
+        <ol className="mt-8 grid gap-6 lg:mt-10 lg:grid-cols-3">
+          {PAINS.map((p, i) => (
+            <li key={p.title} className={`pc tilt reveal ${dark ? "pc-dark" : ""}`} data-tilt3d style={{ "--glow": acc(i).glow, animationDelay: `${i * 100}ms` } as React.CSSProperties}>
+              <span className="pc-num" aria-hidden="true">{`0${i + 1}`}</span>
+              <div className="pc-bad">
+                <span className="pain-ic pain-ic-bad"><I.Cross className="size-4" /></span>
+                <div className="min-w-0">
+                  <p className="pc-tag pc-tag-bad">The problem</p>
+                  <h3 className="pc-title">{p.title}</h3>
+                  <p className="pc-body">{p.body}</p>
+                </div>
+              </div>
+              <span className="pc-arrow" aria-hidden="true"><I.Arrow className="size-4 rotate-90" /></span>
+              <div className="pc-good">
+                <span className="pain-ic pain-ic-good"><I.Check className="size-4" /></span>
+                <div className="min-w-0">
+                  <p className="pc-tag pc-tag-good">The RannLab fix</p>
+                  <p className="pc-fix">{p.fix}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
 function Pains() {
   const P = usePage();
   const { PAINS } = P.c;
+  if (P.layout.pains !== "rows") return <PainsCards />;
   return (
     <section aria-labelledby="pains-title" className="b3-host pain-band py-10 sm:py-14">
       <BgFx kind="pains" />
@@ -585,9 +629,9 @@ function StoreTypes() {
   );
 }
 
-function IconCards({ items, offset = 0 }: { items: readonly { icon: string; title: string; body: string }[]; offset?: number }) {
+function IconCards({ items, offset = 0, cols = "lg:grid-cols-3" }: { items: readonly { icon: string; title: string; body: string }[]; offset?: number; cols?: string }) {
   return (
-    <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className={`mt-8 grid gap-6 sm:grid-cols-2 ${cols}`}>
       {items.map((f, i) => {
         const Icon = ICONS[f.icon];
         return (
@@ -611,6 +655,41 @@ const FACE_GRADS = [
   "linear-gradient(150deg, #fb7185, #be123c)",
   "linear-gradient(150deg, #38bdf8, #1d4ed8)",
 ];
+
+/** eCommerce page: features on a slowly turning 3D carousel; the list stays readable on mobile. */
+function FeatureRing() {
+  const { FEATURES } = usePage().c;
+  return (
+    <div className="fring-wrap mt-8 lg:mt-10">
+      <div className="fring-stage" aria-hidden="true">
+        <div className="fring-floor" />
+        <div className="fring">
+          {FEATURES.map((f, i) => {
+            const Icon = ICONS[f.icon];
+            return (
+              <div key={f.title} className="fring-card" style={{ "--i": i, "--fc": FACE_GRADS[i] } as React.CSSProperties}>
+                <span className="feat-ic"><Icon className="size-5" /></span>
+                <b>{f.title}</b>
+                <small>{f.body}</small>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <ul className="fring-list">
+        {FEATURES.map((f, i) => {
+          const Icon = ICONS[f.icon];
+          return (
+            <li key={f.title} className="feat-card" style={{ "--i": i, "--fc": FACE_GRADS[i] } as React.CSSProperties}>
+              <span className="feat-ic"><Icon className="size-5" /></span>
+              <div className="min-w-0"><h3 className="font-bold text-ink">{f.title}</h3><p className="mt-1 text-[0.93rem] leading-relaxed text-muted">{f.body}</p></div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 
 function Features() {
   const P = usePage();
@@ -639,7 +718,9 @@ function Features() {
           title="Everything your store needs to sell from day one"
           sub={P.copy.featuresSub}
         />
-        <div className="feat mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[1fr_20rem_1fr] lg:gap-10">
+        {P.layout.features === "cards" && <IconCards items={FEATURES} />}
+        {P.layout.features === "ring" && <FeatureRing />}
+        {P.layout.features === "prism" && <div className="feat mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[1fr_20rem_1fr] lg:gap-10">
           <ul className="reveal grid gap-4 lg:order-1">{FEATURES.slice(0, 3).map((f, i) => card(f, i))}</ul>
           <div className="feat-stage order-first lg:order-2" aria-hidden="true">
             <div className="feat-orbit"><i /><i /><i /></div>
@@ -662,7 +743,7 @@ function Features() {
             <div className="feat-floor" />
           </div>
           <ul className="reveal grid gap-4 lg:order-3">{FEATURES.slice(3).map((f, i) => card(f, i + 3))}</ul>
-        </div>
+        </div>}
       </div>
     </section>
   );
@@ -850,9 +931,36 @@ function Services() {
   );
 }
 
+/** Shopify: light timeline with spinning 3D step coins and a pulse running along the line. */
+function ProcessTimeline() {
+  const P = usePage();
+  const { PROCESS } = P.c;
+  return (
+    <section id="process" aria-labelledby="process-title" className="tl-band scroll-mt-20 py-10 sm:py-14">
+      <div className="container-x">
+        <SectionHead id="process-title" eyebrow="How it works" title={P.copy.processTitle} sub="A simple, transparent process with your approval at every step." />
+        <ol className="tl mt-10">
+          <span className="tl-line" aria-hidden="true"><i /></span>
+          {PROCESS.map((p, i) => (
+            <li key={p.step} className="tl-item reveal" style={{ "--i": i, animationDelay: `${i * 110}ms` } as React.CSSProperties}>
+              <span className="tl-node" aria-hidden="true"><b>{p.step}</b></span>
+              <div className="tl-card">
+                <span className="tl-time">{p.time}</span>
+                <h3 className="mt-2 text-lg font-bold text-ink">{p.title}</h3>
+                <p className="mt-1.5 text-[0.95rem] text-muted">{p.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
 function Process() {
   const P = usePage();
   const { PROCESS } = P.c;
+  if (P.layout.process === "timeline") return <ProcessTimeline />;
   return (
     <section id="process" aria-labelledby="process-title" className="band-dark dk dk-process scroll-mt-20 py-10 sm:py-14">
       <div className="container-x">
@@ -883,8 +991,49 @@ const TIERS = [
   { c: "#7c3aed", grad: "from-violet-500 to-sky-500", btn: "from-violet-600 to-blue-600", level: "Level 03", slabs: ["Launch", "Grow", "Scale"] },
 ];
 
-function Packages() {
+/** Shopify page: three package cards in a 3D fan, featured one raised with a moving border. */
+function PackageCards() {
   const { PACKAGES } = usePage().c;
+  return (
+    <ul className="pk3 mt-8 grid gap-6 lg:mt-12 lg:grid-cols-3 lg:items-center">
+      {PACKAGES.map((p, i) => (
+        <li key={p.name} className={`pk3-card reveal pk3-${i} ${p.featured ? "pk3-hero" : ""}`} style={{ "--c": TIERS[i].c } as React.CSSProperties}>
+          {p.featured && <span className="vs-badge"><I.Star className="size-3.5" /> Most popular</span>}
+          <span className={`pkx-badge bg-gradient-to-br ${TIERS[i].grad}`}>{`0${i + 1}`}</span>
+          <h3 className="mt-4 font-display text-2xl font-bold text-ink">{p.name}</h3>
+          <p className="text-sm text-muted">{p.forWho}</p>
+          <p className="pk3-price">{p.price ? <>From {p.price}</> : <>Fixed quote <span>in 24 hrs</span></>}</p>
+          {i > 0 && <p className="mt-4 text-sm font-semibold text-ink-2">Everything in {PACKAGES[i - 1].name}, plus:</p>}
+          <ul className={`${i > 0 ? "mt-2" : "mt-4"} grid gap-2`}>
+            {p.items.map((it) => (
+              <li key={it} className="flex gap-2.5 text-[0.95rem] text-ink-2">
+                <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-gradient-to-br text-white ${TIERS[i].grad}`}><I.Check className="size-3" /></span>
+                {it}
+              </li>
+            ))}
+          </ul>
+          <a href="#quote" data-track="cta_click" data-loc="packages" data-pkg={p.name} className={`btn mt-6 w-full ${p.featured ? "btn-primary" : "btn-ghost"}`}>
+            Get {p.name} quote <I.Arrow className="size-4" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Packages() {
+  const P = usePage();
+  const { PACKAGES } = P.c;
+  if (P.layout.packages === "cards") {
+    return (
+      <section id="packages" aria-labelledby="packages-title" className="pk-band scroll-mt-20 py-10 sm:py-14">
+        <div className="container-x">
+          <SectionHead id="packages-title" tone="sky" eyebrow="Packages" title="Choose a starting point. We tailor the rest." sub="Every package is a fixed-price project. Get an exact quote within 24 hours." />
+          <PackageCards />
+        </div>
+      </section>
+    );
+  }
   return (
     <section id="packages" aria-labelledby="packages-title" className="pk-band scroll-mt-20 py-10 sm:py-14">
       <div className="container-x">
@@ -1041,9 +1190,41 @@ const WHY_STATS = [
   { v: "ISO", l: "27001 security practices", c: "from-violet-200 to-fuchsia-400" },
 ];
 
+/** Shopify: light "why us" with 3D stat tiles instead of the globe. */
+function WhyStats() {
+  const P = usePage();
+  const { WHY, PROOF } = P.c;
+  return (
+    <section aria-labelledby="why-title" className="ws-band py-10 sm:py-14">
+      <div className="container-x">
+        <div className="grid items-center gap-8 lg:grid-cols-[1fr_1fr]">
+          <div className="reveal">
+            <p className="eyebrow">Why {SITE.shortBrand}</p>
+            <h2 id="why-title" className="mt-3 text-[1.7rem] font-bold leading-tight text-ink sm:text-[2.5rem] sm:leading-[1.1]">
+              An AI-first software company that <span className="text-teal-700">builds stores to last</span>
+            </h2>
+            <p className="mt-5 max-w-xl text-base text-muted">{SITE.brand} {P.copy.whyBody}</p>
+            <a href={SITE.links.about} className="btn btn-ghost mt-7">About {SITE.brand} <I.Arrow className="size-4" /></a>
+          </div>
+          <dl className="ws-tiles reveal">
+            {PROOF.map((st, i) => (
+              <div key={st.label} className={`ws-tile ws-tile-${i}`} style={{ "--glow": acc(i).glow } as React.CSSProperties}>
+                <dt className="order-2 text-sm font-medium text-muted">{st.label}</dt>
+                <dd className="order-1 font-display text-3xl font-bold text-ink sm:text-4xl" data-count={/^\d+/.test(st.value) ? st.value : undefined}>{st.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <IconCards items={WHY} offset={1} cols="lg:grid-cols-4" />
+      </div>
+    </section>
+  );
+}
+
 function WhyRannlab() {
   const P = usePage();
   const { WHY } = P.c;
+  if (P.layout.why === "stats") return <WhyStats />;
   return (
     <section aria-labelledby="why-title" className="band-dark dk dk-why dk-dots why-band py-10 sm:py-14">
       <div className="container-x">
@@ -1098,9 +1279,71 @@ function WhyRannlab() {
   );
 }
 
+function FaqItems({ dark = false }: { dark?: boolean }) {
+  const { FAQS } = usePage().c;
+  return (
+    <>
+      {FAQS.map((f, i) => (
+        <details key={f.q} className={`faq-item group ${dark ? "faq-dark" : ""}`} open={i === 0}>
+          <summary className="flex cursor-pointer list-none items-center gap-4">
+            <span className="faq-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            <h3 className={`flex-1 font-sans text-[1.02rem] font-bold tracking-normal sm:text-lg ${dark ? "text-white" : "text-ink"}`}>{f.q}</h3>
+            <span className="faq-chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </span>
+          </summary>
+          <p className={`faq-answer mt-3 sm:pl-[3.25rem] ${dark ? "text-white/75" : "text-muted"}`}>{f.a}</p>
+        </details>
+      ))}
+    </>
+  );
+}
+
+/** Shopify: centred heading, two-column accordion. eCommerce: dark band with a contact card. */
+function FaqAlt() {
+  const P = usePage();
+  const dark = P.layout.faq === "dark";
+  if (!dark) {
+    return (
+      <section id="faq" aria-labelledby="faq-title" className="faq-band scroll-mt-20 py-10 sm:py-14">
+        <div className="container-x">
+          <SectionHead id="faq-title" eyebrow="FAQ" title={P.copy.faqTitle} sub="Straight answers on cost, timelines, payments and what happens after launch." />
+          <div className="faq-cols mt-8"><FaqItems /></div>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 text-center sm:flex-row">
+            <p className="font-semibold text-ink-2">Still have a question?</p>
+            <WaButton location="faq" label="Ask on WhatsApp" />
+            <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="faq" className="btn btn-ghost"><I.Phone /> Call now</a>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  return (
+    <section id="faq" aria-labelledby="faq-title" className="band-dark dk dk-quote scroll-mt-20 py-10 sm:py-14">
+      <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)] lg:gap-14">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <p className="eyebrow eyebrow-dark">FAQ</p>
+          <h2 id="faq-title" className="mt-3 text-[1.7rem] font-bold leading-tight text-white sm:text-[2.2rem]">{P.copy.faqTitle}</h2>
+          <p className="mt-4 text-base text-white/75">Straight answers on platforms, cost, timelines and what happens after launch.</p>
+          <div className="faq-glass mt-6">
+            <p className="font-display text-lg font-bold text-white">Talk to an expert</p>
+            <p className="mt-1 text-white/70">We usually reply within a few hours.</p>
+            <div className="mt-5 grid gap-3">
+              <WaButton location="faq" label="Ask on WhatsApp" />
+              <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="faq" className="btn btn-ghost-dark"><I.Phone /> {SITE.phoneDisplay}</a>
+            </div>
+          </div>
+        </div>
+        <div className="min-w-0 space-y-3"><FaqItems dark /></div>
+      </div>
+    </section>
+  );
+}
+
 function Faq() {
   const P = usePage();
   const { FAQS } = P.c;
+  if (P.layout.faq !== "chat") return <FaqAlt />;
   return (
     <section id="faq" aria-labelledby="faq-title" className="b3-host faq-band scroll-mt-20 py-10 sm:py-14">
       <BgFx kind="bubbles" />
@@ -1160,8 +1403,44 @@ const CTA_NOTES = [
   { t: "Cart recovered", d: "WhatsApp reminder worked", Icon: I.Chat, c: "#16a34a" },
 ];
 
+/** Shopify: a big brand-gradient banner with fanned 3D product tiles. */
+function CtaBanner() {
+  const P = usePage();
+  return (
+    <section aria-labelledby="final-title" className="py-10 sm:py-14">
+      <div className="container-x">
+        <div className="cb reveal">
+          <div className="cb-ripples" aria-hidden="true">{[0, 1, 2].map((k) => <i key={k} style={{ "--k": k } as React.CSSProperties} />)}</div>
+          <div className="relative grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="text-center lg:text-left">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/80">Let's build it</p>
+              <h2 id="final-title" className="mt-3 text-[1.7rem] font-bold leading-tight text-white sm:text-[2.5rem] sm:leading-[1.1]">
+                Ready to start selling online? {P.copy.ctaTitle}
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-base text-white/85 lg:mx-0">{P.copy.ctaSub}</p>
+              <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                <a href="#quote" data-track="cta_click" data-loc="final" className="btn bg-white text-ink hover:bg-white/90">Get my free quote <I.Arrow /></a>
+                <WaButton location="final" />
+              </div>
+            </div>
+            <div className="cb-fan" aria-hidden="true">
+              {P.story.products.slice(0, 3).map((pr, i) => (
+                <div key={pr.name} className={`cb-tile cb-tile-${i}`}>
+                  <img src={pr.img} alt="" width={240} height={240} loading="lazy" decoding="async" />
+                  <span><b>{pr.name}</b><em>{pr.price}</em></span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCta() {
   const P = usePage();
+  if (P.layout.cta === "banner") return <CtaBanner />;
   return (
     <section aria-labelledby="final-title" className="band-dark dk dk-cta cta-band py-10 sm:py-14" data-cta3d>
       <div className="container-x grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
@@ -1305,6 +1584,11 @@ function MobileBar() {
   );
 }
 
+const SECTIONS: Record<SectionKey, () => React.JSX.Element> = {
+  proof: Proof, pains: Pains, types: StoreTypes, features: Features, quote: QuoteBlock, services: Services,
+  process: Process, packages: Packages, compare: Compare, why: WhyRannlab, faq: Faq, cta: FinalCta,
+};
+
 export function Landing({ page }: { page: Page }) {
   return (
     <PageCtx.Provider value={page}>
@@ -1313,18 +1597,10 @@ export function Landing({ page }: { page: Page }) {
       <Header />
       <main id="main">
         <Hero />
-        <Proof />
-        <Pains />
-        <StoreTypes />
-        <Features />
-        <QuoteBlock />
-        <Services />
-        <Process />
-        <Packages />
-        <Compare />
-        <WhyRannlab />
-        <Faq />
-        <FinalCta />
+        {page.layout.order.map((k) => {
+          const S = SECTIONS[k];
+          return <S key={k} />;
+        })}
       </main>
       <Footer />
       <MobileBar />
