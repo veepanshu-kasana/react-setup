@@ -1151,14 +1151,14 @@ function Footer() {
 function MobileBar() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 gap-2 border-t border-line bg-white/95 p-2 shadow-[0_-6px_24px_rgb(0_0_0/0.08)] backdrop-blur md:hidden">
-      <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="mobile-bar" className="btn btn-outline btn-sm flex-col gap-0.5 !py-2 text-xs">
-        <I.Phone className="size-5" /> Call
+      <a href={`tel:${SITE.phoneE164}`} data-track="call_click" data-loc="mobile-bar" className="btn btn-outline btn-sm !min-h-11 gap-1.5 !px-2 !py-1.5 text-[0.82rem]">
+        <I.Phone className="size-4" /> Call
       </a>
-      <a href={WA_DEFAULT} target="_blank" rel="noopener" data-track="whatsapp_click" data-loc="mobile-bar" className="btn btn-wa btn-sm flex-col gap-0.5 !py-2 text-xs">
-        <I.WhatsApp className="size-5" /> WhatsApp
+      <a href={WA_DEFAULT} target="_blank" rel="noopener" data-track="whatsapp_click" data-loc="mobile-bar" className="btn btn-wa btn-sm !min-h-11 gap-1.5 !px-2 !py-1.5 text-[0.82rem]">
+        <I.WhatsApp className="size-4" /> WhatsApp
       </a>
-      <a href="#quote" data-track="cta_click" data-loc="mobile-bar" className="btn btn-primary btn-sm flex-col gap-0.5 !py-2 text-xs">
-        <I.Receipt className="size-5" /> Free quote
+      <a href="#quote" data-track="cta_click" data-loc="mobile-bar" className="btn btn-primary btn-sm !min-h-11 gap-1.5 !px-2 !py-1.5 text-[0.82rem]">
+        <I.Receipt className="size-4" /> Free quote
       </a>
     </div>
   );
