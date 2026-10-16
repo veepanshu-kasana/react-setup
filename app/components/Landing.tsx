@@ -302,7 +302,7 @@ function Hero() {
           <p className="inline-flex items-center gap-2 rounded-full bg-teal-500/15 px-3 py-1 text-sm font-semibold text-teal-100 ring-1 ring-teal-300/30">
             <span className="size-2 rounded-full bg-teal-300" aria-hidden="true" /> 10+ years · 100+ projects delivered
           </p>
-          <h1 id="hero-title" className="mt-4 text-[2rem] font-bold leading-[1.12] sm:text-[2.6rem] lg:text-[3rem]">
+          <h1 id="hero-title" className="mt-4 text-[2rem] font-bold leading-[1.12] sm:text-[2.4rem] lg:text-[2.5rem]">
             WooCommerce Website Development Company in <span className="tricolour">India</span>
           </h1>
           <p className="mt-4 max-w-xl text-base text-white/85 sm:text-lg">
