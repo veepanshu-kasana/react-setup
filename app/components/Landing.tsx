@@ -299,9 +299,27 @@ function Proof() {
   );
 }
 
+/** Decorative floating 3D shapes for section backgrounds (CSS only, behind content). */
+type Shape = { k: "cube" | "ring" | "sphere"; x: string; y: string; s: string; c: string; d?: number };
+function Bg3D({ shapes, dark = false }: { shapes: Shape[]; dark?: boolean }) {
+  return (
+    <div className={`b3 ${dark ? "b3-dark" : ""}`} aria-hidden="true">
+      {shapes.map((sh, i) => {
+        const style = { left: sh.x, top: sh.y, "--s": sh.s, "--c": sh.c, animationDelay: `${-(sh.d ?? i * 3)}s` } as React.CSSProperties;
+        return sh.k === "cube" ? (
+          <div key={i} className="b3-cube" style={style}>{[0, 1, 2, 3, 4, 5].map((f) => <i key={f} />)}</div>
+        ) : (
+          <div key={i} className={`b3-${sh.k}`} style={style} />
+        );
+      })}
+    </div>
+  );
+}
+
 function Pains() {
   return (
-    <section aria-labelledby="pains-title" className="pain-band py-16 sm:py-24">
+    <section aria-labelledby="pains-title" className="b3-host pain-band py-16 sm:py-24">
+      <Bg3D shapes={[{ k: "cube", x: "3%", y: "8%", s: "4.5rem", c: "#f43f5e" }, { k: "ring", x: "88%", y: "4%", s: "8rem", c: "#1fa59c" }, { k: "sphere", x: "92%", y: "78%", s: "3.5rem", c: "#f59e0b" }, { k: "cube", x: "45%", y: "88%", s: "3rem", c: "#8b5cf6" }]} />
       <div className="container-x">
         <SectionHead
           id="pains-title"
@@ -366,15 +384,17 @@ function StoreTypes() {
   const half = Math.ceil(STORE_TYPES.length / 2);
   const rows = [STORE_TYPES.slice(0, half), STORE_TYPES.slice(half)];
   return (
-    <section aria-labelledby="types-title" className="overflow-hidden bg-gradient-to-b from-white via-amber-50/70 to-white pb-20 sm:pb-28">
+    <section aria-labelledby="types-title" className="band-dark types-band py-16 sm:py-24">
+      <Bg3D dark shapes={[{ k: "cube", x: "4%", y: "10%", s: "5rem", c: "#fbbf24" }, { k: "ring", x: "86%", y: "6%", s: "9rem", c: "#2dd4bf" }, { k: "sphere", x: "70%", y: "70%", s: "4rem", c: "#a78bfa" }]} />
+      <div className="types-floor" aria-hidden="true" />
       <div className="container-x">
         <div className="reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <p className="eyebrow text-amber-700">Stores we build</p>
-            <h2 id="types-title" className="mt-3 text-3xl font-bold text-ink sm:text-4xl">Set up for what you sell</h2>
-            <p className="mt-4 text-lg text-muted">Every category sells differently. We set up the product pages, shipping rules and checkout your customers expect.</p>
+            <p className="eyebrow text-amber-300">Stores we build</p>
+            <h2 id="types-title" className="mt-3 text-3xl font-bold text-white sm:text-4xl">Set up for what you sell</h2>
+            <p className="mt-4 text-lg text-white/75">Every category sells differently. We set up the product pages, shipping rules and checkout your customers expect.</p>
           </div>
-          <a href="#quote" data-track="cta_click" data-loc="store-types" className="inline-flex items-center gap-2 font-bold text-teal-700 underline-offset-4 hover:underline">
+          <a href="#quote" data-track="cta_click" data-loc="store-types" className="btn btn-ghost-dark">
             Tell us what you sell <I.Arrow className="size-4" />
           </a>
         </div>
@@ -439,7 +459,8 @@ function Features() {
     );
   };
   return (
-    <section id="features" aria-labelledby="features-title" className="feat-band mesh-warm scroll-mt-20 py-16 sm:py-24">
+    <section id="features" aria-labelledby="features-title" className="b3-host feat-band mesh-warm scroll-mt-20 py-16 sm:py-24">
+      <Bg3D shapes={[{ k: "ring", x: "2%", y: "6%", s: "8rem", c: "#f59e0b" }, { k: "cube", x: "90%", y: "10%", s: "4.5rem", c: "#16a34a" }, { k: "sphere", x: "6%", y: "82%", s: "3.5rem", c: "#1fa59c" }]} />
       <div className="container-x">
         <SectionHead
           id="features-title"
@@ -486,6 +507,7 @@ const QUOTE_STEPS = [
 function QuoteBlock() {
   return (
     <section id="quote" aria-labelledby="quote-title" className="band-dark quote-band scroll-mt-20 py-16 sm:py-24">
+      <Bg3D dark shapes={[{ k: "cube", x: "46%", y: "8%", s: "4rem", c: "#2dd4bf" }, { k: "ring", x: "2%", y: "70%", s: "8rem", c: "#a78bfa" }]} />
       <div className="container-x grid gap-12 lg:grid-cols-[1fr_minmax(0,31rem)] lg:items-center lg:gap-14">
         <div className="reveal">
           <p className="eyebrow eyebrow-dark">Free quote</p>
@@ -606,7 +628,8 @@ const SVC_TINTS = [
 ];
 function Services() {
   return (
-    <section id="services" aria-labelledby="services-title" className="svc-band scroll-mt-20 py-14 sm:py-20">
+    <section id="services" aria-labelledby="services-title" className="b3-host svc-band scroll-mt-20 py-14 sm:py-20">
+      <Bg3D shapes={[{ k: "sphere", x: "88%", y: "8%", s: "4rem", c: "#8b5cf6" }, { k: "cube", x: "3%", y: "12%", s: "4rem", c: "#0ea5e9" }, { k: "ring", x: "70%", y: "78%", s: "7rem", c: "#f43f5e" }]} />
       <div className="container-x flex flex-wrap items-end justify-between gap-6">
         <div className="reveal max-w-2xl">
           <p className="eyebrow text-violet-700">Our WooCommerce services</p>
@@ -652,6 +675,7 @@ function Services() {
 function Process() {
   return (
     <section id="process" aria-labelledby="process-title" className="band-dark scroll-mt-20 py-16 sm:py-24">
+      <Bg3D dark shapes={[{ k: "cube", x: "4%", y: "12%", s: "4.5rem", c: "#fbbf24" }, { k: "sphere", x: "50%", y: "84%", s: "3.5rem", c: "#2dd4bf" }]} />
       <Circuit className="-right-32 -top-10 w-[34rem] opacity-70" />
       <div className="container-x">
         <SectionHead dark id="process-title" eyebrow="How it works" title="Your store live in about 4 weeks" sub="A simple, transparent process with your approval at every step." />
@@ -683,7 +707,8 @@ const TIERS = [
 
 function Packages() {
   return (
-    <section id="packages" aria-labelledby="packages-title" className="pk-band scroll-mt-20 py-16 sm:py-24">
+    <section id="packages" aria-labelledby="packages-title" className="b3-host pk-band scroll-mt-20 py-16 sm:py-24">
+      <Bg3D shapes={[{ k: "cube", x: "90%", y: "6%", s: "4.5rem", c: "#0ea5e9" }, { k: "sphere", x: "4%", y: "12%", s: "4rem", c: "#f59e0b" }, { k: "ring", x: "2%", y: "72%", s: "7rem", c: "#8b5cf6" }]} />
       <div className="container-x">
         <SectionHead
           id="packages-title"
@@ -765,7 +790,8 @@ function Compare() {
   // Show RannLab in the middle on desktop, first on mobile.
   const order = [1, 0, 2];
   return (
-    <section aria-labelledby="compare-title" className="vs-band relative overflow-hidden bg-surface py-16 sm:py-24">
+    <section aria-labelledby="compare-title" className="b3-host vs-band relative overflow-hidden bg-surface py-16 sm:py-24">
+      <Bg3D shapes={[{ k: "ring", x: "86%", y: "6%", s: "8rem", c: "#1fa59c" }, { k: "cube", x: "3%", y: "70%", s: "4.5rem", c: "#f43f5e" }, { k: "sphere", x: "8%", y: "8%", s: "3.5rem", c: "#8b5cf6" }]} />
       <div className="container-x">
         <SectionHead id="compare-title" eyebrow="Why choose us" title="Agency quality without agency headaches" sub="The same checklist, three ways to build your store. See what you actually get." />
         <ul className="vs-stage mt-14 grid gap-6 lg:grid-cols-[1fr_1.12fr_1fr] lg:items-center lg:gap-0">
@@ -841,6 +867,7 @@ const WHY_STATS = [
 function WhyRannlab() {
   return (
     <section aria-labelledby="why-title" className="band-dark why-band py-16 sm:py-24">
+      <Bg3D dark shapes={[{ k: "cube", x: "46%", y: "6%", s: "4rem", c: "#fbbf24" }, { k: "ring", x: "90%", y: "80%", s: "7rem", c: "#f472b6" }]} />
       <div className="container-x">
         <div className="grid items-center gap-6 lg:grid-cols-[1fr_1.1fr]">
           <div className="reveal">
@@ -895,7 +922,8 @@ function WhyRannlab() {
 
 function Faq() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="faq-band scroll-mt-20 py-16 sm:py-24">
+    <section id="faq" aria-labelledby="faq-title" className="b3-host faq-band scroll-mt-20 py-16 sm:py-24">
+      <Bg3D shapes={[{ k: "cube", x: "90%", y: "6%", s: "4.5rem", c: "#1fa59c" }, { k: "ring", x: "40%", y: "84%", s: "7rem", c: "#f59e0b" }, { k: "sphere", x: "4%", y: "4%", s: "3rem", c: "#8b5cf6" }]} />
       <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">FAQ</p>

@@ -544,6 +544,104 @@
     z-index: 2;
     transform: rotateX(var(--fx)) rotateY(var(--fy));
   }
+  /* ---------- Floating 3D background shapes ---------- */
+  .b3-host {
+    position: relative;
+    isolation: isolate;
+  }
+  .b3 {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    perspective: 900px;
+    opacity: 0.6;
+  }
+  .b3-dark {
+    opacity: 0.45;
+  }
+  .b3-cube,
+  .b3-ring,
+  .b3-sphere {
+    position: absolute;
+    width: var(--s);
+    height: var(--s);
+  }
+  .b3-cube {
+    transform-style: preserve-3d;
+    transform: rotateX(-24deg) rotateY(36deg);
+  }
+  .b3-cube i {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.5rem;
+    border: 1.5px solid color-mix(in srgb, var(--c) 65%, transparent);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--c) 18%, transparent), color-mix(in srgb, var(--c) 4%, transparent));
+  }
+  .b3-cube i:nth-child(1) { transform: translateZ(calc(var(--s) / 2)); }
+  .b3-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
+  .b3-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
+  .b3-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
+  .b3-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
+  .b3-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+  .b3-ring {
+    border-radius: 50%;
+    border: calc(var(--s) * 0.075) solid color-mix(in srgb, var(--c) 45%, transparent);
+    box-shadow: 0 0 30px -6px color-mix(in srgb, var(--c) 50%, transparent), inset 0 0 20px -6px color-mix(in srgb, var(--c) 50%, transparent);
+    transform: rotateX(66deg) rotateZ(0deg);
+  }
+  .b3-sphere {
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #fff, color-mix(in srgb, var(--c) 55%, white) 30%, var(--c) 68%, color-mix(in srgb, var(--c) 60%, black));
+    box-shadow: 0 20px 30px -14px color-mix(in srgb, var(--c) 70%, transparent);
+    opacity: 0.75;
+  }
+  @media (max-width: 639px) {
+    .b3 > :nth-child(n + 3) {
+      display: none;
+    }
+    .b3-cube,
+    .b3-ring,
+    .b3-sphere {
+      scale: 0.7;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .b3-cube {
+      animation: b3-tumble 30s linear infinite;
+    }
+    .b3-ring {
+      animation: b3-ring 22s linear infinite;
+    }
+    .b3-sphere {
+      animation: b3-float 9s ease-in-out infinite;
+    }
+  }
+  /* Stores we build: dark band with a glowing floor under the 3D wall */
+  .types-band::before {
+    background:
+      radial-gradient(40rem 24rem at 50% 100%, rgb(245 158 11 / 0.22), transparent 65%),
+      radial-gradient(30rem 22rem at 100% 0%, rgb(31 165 156 / 0.3), transparent 62%),
+      radial-gradient(26rem 20rem at 0% 20%, rgb(139 92 246 / 0.25), transparent 62%);
+  }
+  .types-floor {
+    position: absolute;
+    left: -30%;
+    right: -30%;
+    bottom: -3rem;
+    height: 22rem;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgb(251 191 36 / 0.22) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(94 234 212 / 0.16) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(520px) rotateX(66deg);
+    transform-origin: bottom;
+    mask-image: linear-gradient(to top, black 15%, transparent 90%);
+  }
+
   /* ---------- Pains: problem -> spinning coin -> fix rows ---------- */
   .pain-band {
     background:
@@ -2713,4 +2811,18 @@
 @keyframes pipe-run {
   from { left: 0; }
   to { left: calc(100% - 10px); }
+}
+
+@keyframes b3-tumble {
+  from { transform: rotateX(-24deg) rotateY(36deg) translateY(0); }
+  50% { transform: rotateX(156deg) rotateY(216deg) translateY(-14px); }
+  to { transform: rotateX(336deg) rotateY(396deg) translateY(0); }
+}
+@keyframes b3-ring {
+  from { transform: rotateX(66deg) rotateZ(0deg); }
+  to { transform: rotateX(66deg) rotateZ(360deg); }
+}
+@keyframes b3-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -18px; }
 }
