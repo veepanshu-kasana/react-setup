@@ -1319,12 +1319,12 @@ function WhyRannlab() {
   );
 }
 
-function FaqItems({ dark = false }: { dark?: boolean }) {
+function FaqItems({ dark = false, allClosed = false }: { dark?: boolean; allClosed?: boolean }) {
   const { FAQS } = usePage().c;
   return (
     <>
       {FAQS.map((f, i) => (
-        <details key={f.q} className={`faq-item group ${dark ? "faq-dark" : ""}`} open={i === 0}>
+        <details key={f.q} className={`faq-item group ${dark ? "faq-dark" : ""}`} open={!allClosed && i === 0}>
           <summary className="flex cursor-pointer list-none items-center gap-4">
             <span className="faq-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
             <h3 className={`flex-1 font-sans text-[1.02rem] font-bold tracking-normal sm:text-lg ${dark ? "text-white" : "text-ink"}`}>{f.q}</h3>
@@ -1348,7 +1348,7 @@ function FaqAlt() {
       <section id="faq" aria-labelledby="faq-title" className="faq-band scroll-mt-20 py-10 sm:py-14">
         <div className="container-x">
           <SectionHead id="faq-title" eyebrow="FAQ" title={P.copy.faqTitle} sub="Straight answers on cost, timelines, payments and what happens after launch." />
-          <div className="faq-cols mt-8"><FaqItems /></div>
+          <div className="faq-cols mt-8"><FaqItems allClosed /></div>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 text-center sm:flex-row">
             <p className="font-semibold text-ink-2">Still have a question?</p>
             <WaButton location="faq" label="Ask on WhatsApp" />
