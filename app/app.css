@@ -552,6 +552,149 @@
     border-radius: 0.6rem 0.6rem 0 0;
   }
 
+  /* ---------- Why choose us: 3D face-off cards ---------- */
+  .vs-band::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(34rem 22rem at 50% 62%, rgb(31 165 156 / 0.16), transparent 65%),
+      radial-gradient(24rem 18rem at 8% 20%, rgb(245 158 11 / 0.1), transparent 65%),
+      radial-gradient(24rem 18rem at 92% 80%, rgb(244 63 94 / 0.09), transparent 65%);
+  }
+  .vs-stage {
+    position: relative;
+    perspective: 1600px;
+  }
+  .vs-card {
+    position: relative;
+    border-radius: 1.5rem;
+    padding: 1.6rem;
+    background: rgb(255 255 255 / 0.85);
+    box-shadow: inset 0 0 0 1px var(--color-line), 0 20px 40px -28px rgb(15 23 42 / 0.35);
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.4s, opacity 0.4s;
+  }
+  .vs-hero {
+    z-index: 2;
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      conic-gradient(from var(--angle, 0deg), #1fa59c, #f59e0b, #f43f5e, #8b5cf6, #1fa59c) border-box;
+    border: 2px solid transparent;
+    box-shadow: 0 40px 70px -30px rgb(11 110 106 / 0.55), 0 0 0 8px rgb(31 165 156 / 0.06);
+    animation: spin-border 6s linear infinite;
+  }
+  .vs-badge {
+    position: absolute;
+    top: -0.85rem;
+    left: 50%;
+    translate: -50% 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    background: linear-gradient(90deg, #0b6e6a, #1fa59c 45%, #f59e0b);
+    box-shadow: 0 8px 18px -6px rgb(11 110 106 / 0.6);
+    white-space: nowrap;
+  }
+  @media (min-width: 1024px) {
+    .vs-card {
+      transform-style: preserve-3d;
+    }
+    .vs-left {
+      transform: rotateY(18deg) translateZ(-70px) translateX(24px);
+      transform-origin: right center;
+      opacity: 0.9;
+    }
+    .vs-right {
+      transform: rotateY(-18deg) translateZ(-70px) translateX(-24px);
+      transform-origin: left center;
+      opacity: 0.9;
+    }
+    .vs-hero {
+      transform: translateZ(40px) scale(1.03);
+      padding: 2rem;
+    }
+    .vs-left:hover,
+    .vs-right:hover {
+      transform: rotateY(0) translateZ(0);
+      opacity: 1;
+      z-index: 3;
+    }
+    .vs-hero:hover {
+      transform: translateZ(60px) scale(1.04) translateY(-6px);
+    }
+  }
+  .vs-ring {
+    --p: 0;
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: conic-gradient(var(--c) calc(var(--p) * 1%), rgb(15 23 42 / 0.08) 0);
+  }
+  .vs-ring::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .vs-ring b {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-ink);
+  }
+  .vs-ring small {
+    font-size: 0.7rem;
+    color: var(--color-muted);
+  }
+  .vs-hero .vs-ring {
+    width: 4.75rem;
+    height: 4.75rem;
+    box-shadow: 0 0 24px -4px rgb(31 165 156 / 0.6);
+  }
+  .vs-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.65rem 0;
+    border-top: 1px dashed var(--color-line);
+  }
+  .vs-ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.05rem;
+    border-radius: 50%;
+    font-weight: 800;
+  }
+  .vs-yes {
+    color: #fff;
+    background: linear-gradient(135deg, #1fa59c, #0b6e6a);
+    box-shadow: 0 4px 10px -3px rgb(11 110 106 / 0.55);
+  }
+  .vs-no {
+    color: #e11d48;
+    background: #ffe4e6;
+  }
+  .vs-mid {
+    color: #b45309;
+    background: #fef3c7;
+  }
+
   /* ---------- Why RannLab: aurora band, live dotted globe, glass cards ---------- */
   .why-band::before {
     background:

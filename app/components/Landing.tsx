@@ -546,42 +546,71 @@ function Packages() {
   );
 }
 
+const VS_META = [
+  { tag: "Your WooCommerce partner", Icon: I.Users, ring: "#0f9d94" },
+  { tag: "Single developer", Icon: I.Code, ring: "#f59e0b" },
+  { tag: "Do it yourself", Icon: I.Layout, ring: "#f43f5e" },
+];
+
 function Compare() {
-  const cell = (v: boolean | string) =>
-    v === true ? (
-      <><span className="mx-auto grid size-7 place-items-center rounded-full bg-teal-700 text-white"><I.Check className="size-4" /></span><span className="sr-only">Yes</span></>
-    ) : v === false ? (
-      <><I.Cross className="mx-auto size-5 text-danger" /><span className="sr-only">No</span></>
-    ) : (
-      <span className="text-sm text-muted">{v}</span>
-    );
+  const total = COMPARE.rows.length;
+  // Show RannLab in the middle on desktop, first on mobile.
+  const order = [1, 0, 2];
   return (
-    <section aria-labelledby="compare-title" className="bg-surface py-16 sm:py-24">
+    <section aria-labelledby="compare-title" className="vs-band relative overflow-hidden bg-surface py-16 sm:py-24">
       <div className="container-x">
-        <SectionHead id="compare-title" eyebrow="Why choose us" title="Agency quality without agency headaches" />
-        <div className="slab-wrap relative mt-12 overflow-x-auto rounded-2xl bg-white ring-1 ring-line" role="region" aria-labelledby="compare-title" tabIndex={0}>
-          <table className="w-full min-w-[640px] border-collapse text-left">
-            <caption className="sr-only">Comparison of {SITE.shortBrand} with a typical freelancer and a DIY website builder</caption>
-            <thead>
-              <tr>
-                <th scope="col" className="p-4 font-semibold text-ink">What you get</th>
-                {COMPARE.cols.map((c, i) => (
-                  <th key={c} scope="col" className={`p-4 text-center font-bold ${i === 0 ? "slab-top bg-teal-700 text-white" : "text-ink"}`}>{c}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {COMPARE.rows.map((r) => (
-                <tr key={r.label} className="border-t border-line">
-                  <th scope="row" className="p-4 font-medium text-ink-2">{r.label}</th>
-                  {r.v.map((v, i) => (
-                    <td key={i} className={`p-4 text-center ${i === 0 ? "slab bg-teal-50" : ""}`}>{cell(v)}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <SectionHead id="compare-title" eyebrow="Why choose us" title="Agency quality without agency headaches" sub="The same checklist, three ways to build your store. See what you actually get." />
+        <ul className="vs-stage mt-14 grid gap-6 lg:grid-cols-[1fr_1.12fr_1fr] lg:items-center lg:gap-0">
+          {order.map((col) => {
+            const name = COMPARE.cols[col];
+            const meta = VS_META[col];
+            const score = COMPARE.rows.filter((r) => r.v[col] === true).length;
+            const hero = col === 0;
+            return (
+              <li key={name} className={`reveal ${hero ? "order-first lg:order-none" : ""}`}>
+                <article className={`vs-card ${hero ? "vs-hero" : col === 1 ? "vs-left" : "vs-right"}`} aria-label={`${name}: ${score} of ${total} covered`}>
+                  {hero && <span className="vs-badge"><I.Star className="size-3.5" /> Recommended</span>}
+                  <header className="flex items-center gap-4">
+                    <span className="vs-ring" style={{ "--p": (score / total) * 100, "--c": meta.ring } as React.CSSProperties} aria-hidden="true">
+                      <b>{score}<small>/{total}</small></b>
+                    </span>
+                    <div>
+                      <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider ${hero ? "text-teal-700" : "text-muted"}`}>
+                        <meta.Icon className="size-3.5" /> {meta.tag}
+                      </p>
+                      <h3 className={`mt-1 font-display text-xl font-bold ${hero ? "text-ink sm:text-2xl" : "text-ink-2"}`}>{name}</h3>
+                    </div>
+                  </header>
+                  <ul className="mt-5">
+                    {COMPARE.rows.map((r) => {
+                      const v = r.v[col];
+                      return (
+                        <li key={r.label} className="vs-row">
+                          {v === true ? (
+                            <span className="vs-ic vs-yes"><I.Check className="size-3.5" /><span className="sr-only">Yes:</span></span>
+                          ) : v === false ? (
+                            <span className="vs-ic vs-no"><I.Cross className="size-3.5" /><span className="sr-only">No:</span></span>
+                          ) : (
+                            <span className="vs-ic vs-mid" aria-hidden="true">~</span>
+                          )}
+                          <span className={`text-[0.95rem] leading-snug ${v === false ? "text-muted line-through decoration-rose-300/70" : "text-ink-2"}`}>
+                            {r.label}
+                            {typeof v === "string" && <span className="ml-1.5 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">{v}</span>}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {hero && (
+                    <a href="#quote" data-track="cta_click" data-loc="compare" className="btn btn-primary mt-6 w-full">
+                      Get my fixed quote <I.Arrow className="size-4" />
+                    </a>
+                  )}
+                </article>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );
