@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "falling-poetry-5fae",
+  "main": "workers/app.js",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Static files + prerendered pages (/, /shopify-development, /ecommerce-development)
+  "assets": {
+    "directory": "./build/client"
+  },
+  "observability": { "enabled": true }
+}
