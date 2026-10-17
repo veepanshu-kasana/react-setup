@@ -7,7 +7,7 @@ export const SITE = {
   shortBrand: "RannLab",
   tagline: "Your Problems Are Our Priority",
   /** Final public URL of this page (used for canonical, OG and schema). No trailing slash. */
-  url: "https://react-setup-xi-rose.vercel.app",
+  url: "https://rannlab.in",
   mainSite: "https://rannlab.com",
   phoneDisplay: "+91 99906 13366",
   phoneE164: "+919990613366",
