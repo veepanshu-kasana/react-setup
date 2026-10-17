@@ -2,7 +2,7 @@
  * Tiny progressive-enhancement script (no framework, ~1 kB) that runs on the
  * pre-rendered landing page. It handles:
  *  - conversion tracking: any element with data-track pushes to window.dataLayer (GTM / GA4 ready)
- *  - the lead form: validation, optional POST to a CRM endpoint, then WhatsApp hand-off
+ *  - the lead form: validation, POST to the CRM endpoint, then the thank-you page (WhatsApp if saving fails)
  *
  * It is serialised with Function.prototype.toString(), so it must be fully self-contained.
  */
@@ -490,8 +490,9 @@ export function enhance(cfg: EnhanceConfig) {
     nameInput.addEventListener("blur", () => { if (nameInput.value.trim()) setErr("name", nameError(nameInput.value.trim())); });
     nameInput.addEventListener("input", () => { if (nameInput.hasAttribute("aria-invalid") && !nameError(nameInput.value.trim())) setErr("name", ""); });
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (form.dataset.busy) return;
       const fd = new FormData(form);
       const name = String(fd.get("name") || "").trim().replace(/\s+/g, " ");
       const phone = cleanPhone(String(fd.get("phone") || ""));
@@ -507,8 +508,19 @@ export function enhance(cfg: EnhanceConfig) {
 
       const idempotencyKey =
         form.dataset.key || (form.dataset.key = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12));
+      const msg =
+        `Hi ${cfg.brand}, I'd like a quote for a ${cfg.platform || "WooCommerce"} website.\n\n` +
+        `Name: ${name}\nMobile: ${phone}\nRequirement: ${need}` +
+        (details ? `\nAbout my business: ${details}` : "");
+      const link = `https://wa.me/${cfg.wa}?text=${encodeURIComponent(msg)}`;
+
+      // Save the lead first; a saved lead goes to the thank-you page.
+      let saved = false;
       if (cfg.endpoint) {
-        // Captured in the CRM even if the visitor never presses Send in WhatsApp.
+        const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+        const label = btn ? btn.innerHTML : "";
+        form.dataset.busy = "1";
+        if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
         const utm: Record<string, string> = {};
         ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "gbraid", "wbraid", "fbclid"].forEach((k) => {
           let v = "";
@@ -516,33 +528,40 @@ export function enhance(cfg: EnhanceConfig) {
           if (v) utm[k] = v.slice(0, 200);
         });
         try {
-          fetch(cfg.endpoint, {
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 12000);
+          const res = await fetch(cfg.endpoint, {
             method: "POST",
             keepalive: true,
-            // text/plain keeps this a "simple" cross-origin request (no preflight), so it
-            // still sends with keepalive while the visitor switches to WhatsApp.
+            signal: ctrl.signal,
             headers: { "Content-Type": "text/plain;charset=UTF-8" },
             body: JSON.stringify({
               name, phone, need, details, utm, idempotencyKey,
               website: String(fd.get("website") || ""),
               page: location.pathname,
             }),
-          }).catch(() => {});
+          });
+          clearTimeout(timer);
+          saved = res.ok;
         } catch {
-          /* WhatsApp hand-off below still captures the lead */
+          saved = false;
         }
+        delete form.dataset.busy;
+        if (btn) { btn.disabled = false; btn.innerHTML = label; }
       }
 
-      const msg =
-        `Hi ${cfg.brand}, I'd like a quote for a ${cfg.platform || "WooCommerce"} website.\n\n` +
-        `Name: ${name}\nMobile: ${phone}\nRequirement: ${need}` +
-        (details ? `\nAbout my business: ${details}` : "");
-      const link = `https://wa.me/${cfg.wa}?text=${encodeURIComponent(msg)}`;
       dl.push({ event: "generate_lead", form_location: form.dataset.lead, requirement: need });
       W.gtag?.("event", "generate_lead", { form_location: form.dataset.lead, requirement: need });
       conv(cfg.adsLeadLabel, { transaction_id: idempotencyKey });
       W.fbq?.("track", "Lead", { content_name: need }, { eventID: idempotencyKey });
 
+      if (saved) {
+        // Short pause so analytics beacons leave before the page changes.
+        setTimeout(() => { location.href = "/thank-you"; }, 300);
+        return;
+      }
+
+      // Lead could not be saved (or no endpoint): fall back to the WhatsApp hand-off.
       doneLink.href = link;
       form.hidden = true;
       done.hidden = false;

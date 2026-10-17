@@ -46,7 +46,7 @@ export const SITE = {
    * off to WhatsApp. "/api/lead" uses this site's own route instead (needs the
    * RANNCX_* env vars on this site's Vercel project). "" = WhatsApp only.
    */
-  leadEndpoint: "https://rannlab-lead-connector.vercel.app/api/lead",
+  leadEndpoint: "/api/lead",
 } as const;
 
 export const SEO = {
